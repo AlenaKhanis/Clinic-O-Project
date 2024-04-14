@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+console.log(BACKEND_URL);
 
 type LoginFormProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
