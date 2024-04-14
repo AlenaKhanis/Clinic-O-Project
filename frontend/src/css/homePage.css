@@ -1,0 +1,36 @@
+.bg-body-tertiary {
+  background-color: #1995AD !important;
+}
+
+body {
+  background-image: url('https://www.loyalmedicalclinic.com/wp-content/themes/lmclinic/img/loyal-medical-banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+}
+
+.body-content {
+  padding: 20px;
+}
+
+.welcome-content {
+  position: absolute; /* Position the content absolutely within its container */
+  top: 50%; /* Align the content vertically centered */
+  left: 80%; /* Align the content horizontally centered */
+  transform: translate(-50%, -50%); /* Center the content using translate */
+  text-align: center; /* Center-align the text */
+  color: #1995ad; /* Set text color to white */
+}
+
+.welcome-content h1 {
+  font-size: 3rem; /* Adjust font size as needed */
+  margin-bottom: 1rem; /* Add spacing between elements */
+}
+
+.welcome-content p {
+  font-size: 1.5rem; /* Adjust font size as needed */
+  margin-bottom: 2rem; /* Add spacing between elements */
+}
+
