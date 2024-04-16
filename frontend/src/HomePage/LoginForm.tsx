@@ -4,40 +4,53 @@ import '../css/LoginForm.css';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
-console.log(BACKEND_URL);
+
 
 type LoginFormProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
-}
+  setUserName: (userName: string) => void;
+};
 
-function LoginForm({ setShowLoginPopup, setUserToken }: LoginFormProps) {
+function LoginForm({ setShowLoginPopup, setUserToken , setUserName }: LoginFormProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
+
   const handleLoginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
-
+  
     fetch(BACKEND_URL + "/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" }, // ?
-      body: JSON.stringify({ username, password }), //?
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
     })
       .then(response => response.json())
       .then(data => {
+        const userId = data.user_id;
+        const userRole = data.user_role;
         localStorage.setItem("access_token", data.access_token);
         setUserToken(data.access_token);
+        setShowLoginPopup(false);
+        setUserName(userId);
+        localStorage.setItem("userid", JSON.stringify(userId));
+        localStorage.setItem("user_role" , JSON.stringify(userRole));
+        if (userRole === "patient") {
+          window.location.href = "/patient";
+        } else {
+          window.location.href = "/";
+        }
       })
       .catch((error) => alert("Error logging in: " + error));
-      console.log(username , password)
-            
+  
     event.preventDefault();
-    setShowLoginPopup(false);
   };
+  
 
   const handleClickOutside = (event: MouseEvent) => {
     if (formRef.current && !formRef.current.contains(event.target as Node)) {
@@ -51,6 +64,7 @@ function LoginForm({ setShowLoginPopup, setUserToken }: LoginFormProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
 
   return <>
     

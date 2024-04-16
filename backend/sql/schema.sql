@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS clinic (
 DROP  TABLE IF EXISTS patients CASCADE;
 CREATE TABLE IF NOT EXISTS patients (
     id SERIAL PRIMARY KEY, 
-    package TEXT NOT NULL CHECK (package IN('premium', 'gold', 'silver')),
+    package TEXT NOT NULL CHECK (package IN('premium', 'gold', 'silver')) DEFAULT 'silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     patient_id INTEGER NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS patients (
 DROP  TABLE IF EXISTS doctors CASCADE;
 CREATE TABLE IF NOT EXISTS doctors (
     id SERIAL PRIMARY KEY,
-    specialuty TEXT NOT NULL,
+    specialuty TEXT NOT NULL DEFAULT '',
     open_appointments TIMESTAMP,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -80,12 +80,41 @@ CREATE TABLE IF NOT EXISTS medical_records (
 );
 
 
+-- Drop the existing trigger
+DROP TRIGGER IF EXISTS insert_user_data_trigger ON users;
+
+-- Create a trigger function to handle insertion based on user's role
+CREATE OR REPLACE FUNCTION insert_user_data_based_on_role()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert into patients table if role is 'patient'
+    IF NEW.role = 'patient' THEN
+        INSERT INTO patients (patient_id) VALUES (NEW.id);
+    -- Insert into doctors table if role is 'doctor'
+    ELSIF NEW.role = 'doctor' THEN
+        INSERT INTO doctors (doctor_id) VALUES (NEW.id);
+    END IF;
+
+    -- Return NEW to allow the original insertion into the users table to proceed
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger to execute the trigger function after insertion into the users table
+CREATE TRIGGER insert_user_data_trigger
+AFTER INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION insert_user_data_based_on_role();
 
 -- Insert data into the users table first
 INSERT INTO users (username, password, email, age, full_name, phone, role)
 VALUES ('Alona', '1234', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'owner'),
-    ('user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient');
+    ('user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient'),
+    ('doctor', '5454', 'docrot@mysite.com', 45, 'doctor', '555', 'doctor');
 
 -- Now, insert data into the clinic table with a valid owner_id
 INSERT INTO clinic (clinic_name, clinic_phone, clinic_address, clinic_description, owner_id)
 VALUES ('Clinic-O', '*456', 'My Street 4', 'Clinic for all family', 1);
+
+
+

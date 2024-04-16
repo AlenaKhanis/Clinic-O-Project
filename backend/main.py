@@ -1,6 +1,7 @@
 from pathlib import Path
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt, jwt_required
+from psycopg2.extras import RealDictCursor
 from db import get_db, close_db
 from flask_cors import CORS
 
@@ -13,28 +14,40 @@ print(FRONTEND_URL)
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
 
-
 @app.route('/login', methods=['POST'])
 def login():
-
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)  
 
-    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
     user = cursor.fetchone()
-
-    if user:
-        # If authentication succeeds, return a success response with an access token
-        # Here you might generate and return a JWT token as an access token
-        return jsonify({'access_token': 'your_access_token_here'}), 200
+    
+    if user is None:
+        
+        return {"error": "Invalid username or password"}
     else:
-        # If authentication fails, return an error response
-        return jsonify({'error': 'Invalid username or password'}), 401
+        print(user["id"])
+        access_token = create_access_token(identity=user["id"])
+        return {"access_token": access_token ,"user_id": user["id"] , "user_role": user["role"]}
 
-
-
+@app.route("/patient/<user_id>")
+@jwt_required()
+def get_patient(user_id) -> dict:
+    token_data = get_jwt()
+    user_id = token_data["sub"]
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT full_name , username, role, email, age FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    if user is None:
+        return {"error": "User not found"}
+    else:
+        return {
+            "id": user_id,
+            "username": user["username"],
+            "role": user["role"],
+            "email": user["email"],
+            "age": user["age"],
+        }
    

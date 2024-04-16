@@ -97,7 +97,7 @@ export default function Register({ setShowRegisterPopup }: RegisterFormProps) {
                                     </div>
                                     <div className="d-flex flex-row align-items-center mb-4 ">
                                         <FontAwesomeIcon icon={faUser} className="me-3" size="lg" />
-                                        <MDBInput placeholder='Name' id='form1' type='text' className='w-100' />
+                                        <MDBInput placeholder='Name' id='form5' type='text' className='w-100' />
                                     </div>
                                     <div className="d-flex flex-row align-items-center mb-4">
                                         <FontAwesomeIcon icon={faEnvelope} className="me-3" size="lg" />
