@@ -2,13 +2,14 @@
   display: flex;
   flex-wrap: wrap; /* Allow articles to wrap to the next row */
   justify-content: flex-start; /* Align articles to the left */
+  margin-top: 500px;
 }
 
 .article {
   flex: 1 30px; /* Set the width of each article to 50% minus margin */
   margin: 10px; /* Add margin between articles */
   background-color: #1995ad;
-  padding: 20px;
+  padding: 10px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

@@ -27,9 +27,12 @@ def login():
         
         return {"error": "Invalid username or password"}
     else:
-        print(user["id"])
+        user_dict = {
+            "id": user["id"],
+            "role": user["role"],
+        }
         access_token = create_access_token(identity=user["id"])
-        return {"access_token": access_token ,"user_id": user["id"] , "user_role": user["role"]}
+        return {"access_token": access_token ,"user": user_dict}
 
 @app.route("/patient/<user_id>")
 @jwt_required()

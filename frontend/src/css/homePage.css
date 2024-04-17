@@ -12,7 +12,7 @@ body {
 }
 
 .body-content {
-  padding: 20px;
+  padding: 0%;
 }
 
 .welcome-content {
@@ -22,6 +22,7 @@ body {
   transform: translate(-50%, -50%); /* Center the content using translate */
   text-align: center; /* Center-align the text */
   color: #1995ad; /* Set text color to white */
+  margin-top: -150px;
 }
 
 .welcome-content h1 {

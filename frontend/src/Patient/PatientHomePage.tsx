@@ -4,7 +4,6 @@ type HomePagePatient = {
   
 }
 
-
 function HomePagePatient ({children}: HomePagePatient) {
   console.log("im in patient page!");
     return <>

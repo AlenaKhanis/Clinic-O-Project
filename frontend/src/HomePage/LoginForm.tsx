@@ -13,9 +13,10 @@ type LoginFormProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
   setUserName: (userName: string) => void;
+  setShowLogo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function LoginForm({ setShowLoginPopup, setUserToken , setUserName }: LoginFormProps) {
+function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setShowLogo }: LoginFormProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -32,19 +33,13 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName }: LoginFormP
     })
       .then(response => response.json())
       .then(data => {
-        const userId = data.user_id;
-        const userRole = data.user_role;
         localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("userinfo",JSON.stringify(data.user));
         setUserToken(data.access_token);
         setShowLoginPopup(false);
-        setUserName(userId);
-        localStorage.setItem("userid", JSON.stringify(userId));
-        localStorage.setItem("user_role" , JSON.stringify(userRole));
-        if (userRole === "patient") {
-          window.location.href = "/patient";
-        } else {
-          window.location.href = "/";
-        }
+        setShowLogo(true);
+        setUserName(data.user.role);
+        
       })
       .catch((error) => alert("Error logging in: " + error));
   
