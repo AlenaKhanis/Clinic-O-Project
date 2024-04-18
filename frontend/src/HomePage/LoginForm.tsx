@@ -4,7 +4,7 @@ import '../css/LoginForm.css';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -13,13 +13,19 @@ type LoginFormProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
   setUserName: (userName: string) => void;
-  setShowLogo: React.Dispatch<React.SetStateAction<boolean>>;
+  setRole: (userRole: string) => void;
 };
 
-function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setShowLogo }: LoginFormProps) {
+
+
+//TODO: if 
+
+
+function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: LoginFormProps) {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
 
 
   const handleLoginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,19 +37,33 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setShowLogo 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     })
-      .then(response => response.json())
-      .then(data => {
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("userinfo",JSON.stringify(data.user));
-        setUserToken(data.access_token);
-        setShowLoginPopup(false);
-        setShowLogo(true);
-        setUserName(data.user.role);
-        
-      })
-      .catch((error) => alert("Error logging in: " + error));
+    .then((response) => {
+      if (response.ok) {
+        // Parse JSON response
+        return response.json();
+      } else if (response.status === 400) {
+        // If status is 401, username or password is invalid
+        throw new Error("Invalid username or password");
+      } else {
+        // Handle other status codes as needed
+        throw new Error("Error logging in: " + response.status);
+      }
+    })
+    .then((data) => {
+      // Handle successful login
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("userinfo", JSON.stringify(data.user));
+      setUserToken(data.access_token);
+      setShowLoginPopup(false);
+      setUserName(data.user.full_name);
+      setRole(data.user.role);
+    })
+    .catch((error) => {
+      // Catch and handle any errors that occur during the fetch or parsing of response
+      alert("Error logging in: " + error.message);
+    });
   
-    event.preventDefault();
+  event.preventDefault()
   };
   
 

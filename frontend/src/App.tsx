@@ -7,33 +7,39 @@ import Footer from "./HomePage/Footer";
 import HomePagePatient from "./Patient/PatientHomePage";
 import DoctorHomePage from "./Doctor/DoctorHomePage";
 import AdminPagePatient from "./Admin/AdminHomePage";
-import MainPage, { MainBody } from "./HomePage/HomePage";
+import HomePage from "./HomePage/HomePage";
+import { MainBody } from "./HomePage/MainBody";
+
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showLogo, setShowLogo] = useState(false);
   const [showRegisternPopup, setShowRegisterPopup] = useState(false);
-  const [userToken, setUserToken] = useState<string | null>(null);
-  const [roleUser, setRoleUser] = useState<string>(() => {
-    const userinfoString = localStorage.getItem('userinfo');
+  const [userToken, setUserToken] = useState<string | null>(() => {
+    const token = localStorage.getItem('access_token');
+    return token;
+  });
   
-    if (userinfoString !== null) {
-      const userinfo = JSON.parse(userinfoString);
-      const role = userinfo.role;
-      return role || "Guest"; 
+  const [userName, setUserName] = useState<string>(() => {
+    const usernameInfo = localStorage.getItem('userinfo');
+
+    if (usernameInfo !== null) {
+      const userinfo = JSON.parse(usernameInfo);
+    
+      return userinfo.full_name;
     }
-    return "Guest"; 
+    return "Guest";
   });
 
-  // Check authentication status upon page load
-  useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = !!localStorage.getItem('userToken');
-    if (isAuthenticated) {
-      // If authenticated, set the user token
-      setUserToken(localStorage.getItem('userToken'));
+  const [userRole, setRole] = useState<string>(() => {
+    const userinfo = localStorage.getItem('userinfo');
+    if (userinfo) {
+      const { role } = JSON.parse(userinfo);
+      return role;
+    } else {
+      return "";
     }
-  }, []);
+  });
+
 
   const NotFoundPage = () => {
     return (
@@ -47,16 +53,16 @@ function App() {
   return (
     <Router>
       <>
-        <MainPage setShowLoginPopup={setShowLoginPopup} setShowLogo={setShowLogo} showLogo={showLogo} setUserName={setRoleUser} setUserToken={setUserToken} />
+        <HomePage setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userRole={userRole} userToken={userToken} setRole={setRole} />
         <Routes>
-          <Route path="/patient" element={roleUser === "patient" ? <HomePagePatient /> : <Navigate to="/404" />} />
-          <Route path="/doctor" element={roleUser === "doctor" ? <DoctorHomePage /> : <Navigate to="/404" />} />
-          <Route path="/admin" element={roleUser === "owner" ? <AdminPagePatient /> : <Navigate to="/404" />} />
+          <Route path="/patient" element={userRole === "patient" ? <HomePagePatient /> : <Navigate to="/404" />} />
+          <Route path="/doctor" element={userRole === "doctor" ? <DoctorHomePage /> : <Navigate to="/404" />} />
+          <Route path="/admin" element={userRole === "owner" ? <AdminPagePatient /> : <Navigate to="/404" />} />
           <Route
             path="/"
             element={
               <div>
-                <MainBody userRole={roleUser} setShowRegisterPopup={setShowRegisterPopup} />
+                <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} userName={userName} />
                 <BlogSection />
                 <Footer />
               </div>
@@ -65,7 +71,7 @@ function App() {
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
-        {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setRoleUser}  setShowLogo={setShowLogo}/>}
+        {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
         {showRegisternPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
       </>
     </Router>
@@ -73,3 +79,4 @@ function App() {
 }
 
 export default App;
+

@@ -22,17 +22,19 @@ def login():
 
     cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
     user = cursor.fetchone()
-    
+
     if user is None:
-        
-        return {"error": "Invalid username or password"}
+        return jsonify({"error": "Username and password are required"}), 400
     else:
+       
         user_dict = {
             "id": user["id"],
             "role": user["role"],
+            "full_name": user["full_name"]
         }
+
         access_token = create_access_token(identity=user["id"])
-        return {"access_token": access_token ,"user": user_dict}
+        return jsonify({"access_token": access_token, "user": user_dict}), 200
 
 @app.route("/patient/<user_id>")
 @jwt_required()
