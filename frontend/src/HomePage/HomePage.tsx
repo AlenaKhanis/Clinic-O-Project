@@ -6,6 +6,7 @@ import '../css/App.css';
 import '../css/homePage.css';
 import { Link } from 'react-router-dom';
 import "../css/homePage.css";
+import { useNavigate } from 'react-router-dom';
 
 type HomePageProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,6 +18,7 @@ type HomePageProps = {
 };
 
 function HomePage({ setShowLoginPopup , setUserName , setUserToken , userRole , userToken ,setRole}: HomePageProps) {
+  const navigate = useNavigate();
 
   function logOut() {
     if (userToken) {
@@ -25,7 +27,7 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userRole , 
       setUserToken(null);
       setUserName("Guest");
       setRole("")
-      
+      navigate("/");
     } else {
       setShowLoginPopup(true);
     }

@@ -1,46 +1,33 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+
+
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: #f0f0f0; /* Optional: Change background color */
+}
+
+.toolbar-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: blue; /* Optional: Change button background color */
+  cursor: pointer;
+}
+
+.toolbar-button:hover {
+  background-color: black; /* Optional: Change button background color on hover */
+}
+
+.toolbar-label {
+  font-size: 16px;
+}
+p {
+  font-size: 16px;
+  font-size: larger;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  color: #4a97a8;
   
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-  }
-  
-  header h1 {
-    margin: 0;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  nav ul li {
-    display: inline;
-    margin-right: 20px;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-  }
-  
-  main {
-    padding: 20px;
-  }
-  
-  section {
-    margin-bottom: 30px;
-  }
-  
-  footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-  }
-  
+}

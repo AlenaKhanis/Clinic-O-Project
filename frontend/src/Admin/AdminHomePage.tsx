@@ -1,36 +1,22 @@
+import { Tab, Tabs } from "react-bootstrap";
 
 
-import "../css/adminPage.css"
+function AdminPagePatient() {
 
-type AdminPagePatient =  {
-    children?: React.ReactNode
-};
-
-
-function AdminPagePatient ({children}: AdminPagePatient) {
-    return <>
-  <header>
-    <h1>Notifications and Updates</h1>
-    <nav>
-      <ul>
-        <li><a href="#notifications">Notifications</a></li>
-        <li><a href="#updates">Updates</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <section id="notifications">
-      <h2>Notifications</h2>
-    </section>
-    <section id="updates">
-      <h2>Updates</h2>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2024 Your Company</p>
-  </footer>
-    {children}
-    </>
-};
+    return (
+        <div style={{ width: '700px', height: '700px' }}>
+            <Tabs defaultActiveKey="home" id="uncontrolled-tab-example" className="mb-3">
+                <Tab eventKey="home" title="Open Appointments">
+                </Tab>
+                <Tab eventKey="profile" title="Profile">
+                    Tab content for Profile
+                </Tab>
+                <Tab eventKey="contact" title="Contact">
+                    Tab content for Contact
+                </Tab>
+            </Tabs>
+        </div>
+    );
+}
 
 export default AdminPagePatient;

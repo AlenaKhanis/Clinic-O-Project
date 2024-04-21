@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit';
 import '../css/LoginForm.css';
-import { Button } from 'react-bootstrap';
+import { Button, PageItem } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
+import { Patient, Doctor } from '../types.tsx';
+
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -15,10 +17,6 @@ type LoginFormProps = {
   setUserName: (userName: string) => void;
   setRole: (userRole: string) => void;
 };
-
-
-
-//TODO: if 
 
 
 function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: LoginFormProps) {
@@ -38,6 +36,7 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
       body: JSON.stringify({ username, password }),
     })
     .then((response) => {
+      console.log("in login")
       if (response.ok) {
         // Parse JSON response
         return response.json();
@@ -52,20 +51,40 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
     .then((data) => {
       // Handle successful login
       localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("userinfo", JSON.stringify(data.user));
       setUserToken(data.access_token);
       setShowLoginPopup(false);
-      setUserName(data.user.full_name);
-      setRole(data.user.role);
+      // Fetch user information
+      fetch(BACKEND_URL + "/get_user", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${data.access_token}`
+        }
+    })
+        .then(response => {
+          console.log("in get user")
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("Error fetching user information");
+            }
+        })
+        .then((userData: Patient | Doctor) => {
+          localStorage.setItem("userinfo", JSON.stringify(userData));
+          setShowLoginPopup(false);
+          setUserName(userData.full_name);
+          setRole(userData.role);
+        })
+        .catch(error => {
+            alert("Error fetching user information: " + error.message);
+        });
     })
     .catch((error) => {
-      // Catch and handle any errors that occur during the fetch or parsing of response
-      alert("Error logging in: " + error.message);
+        // Catch and handle any errors that occur during the fetch or parsing of response
+        alert("Error logging in: " + error.message);
     });
-  
-  event.preventDefault()
-  };
-  
+
+    event.preventDefault();
+    };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (formRef.current && !formRef.current.contains(event.target as Node)) {
@@ -104,7 +123,7 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
             <FontAwesomeIcon icon={faKey} className="me-3 mt-n1" size="lg" />
             <MDBInput type="password" name="password" placeholder="Password" ref={passwordRef} required />
             </div>
-            <Button variant="primary" type="submit"  onClick={() => {handleLoginFormSubmit}}>Continue</Button>
+            <Button variant="primary" type="submit" >Continue</Button>
           </form>
         </MDBCol>
       </MDBRow>

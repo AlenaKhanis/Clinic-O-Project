@@ -5,44 +5,45 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     email TEXT,
     age INTEGER,
-    full_name TEXT,  
+    full_name TEXT NOT NULL,  
     phone TEXT,
-    role TEXT NOT NULL CHECK (role IN ('owner', 'patient', 'doctor', 'pharmacy_manager')), 
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    role TEXT NOT NULL CHECK (role IN ('owner', 'patient', 'doctor', 'pharmacy_manager')) 
 );
 
-DROP  TABLE IF EXISTS clinic CASCADE;
-CREATE TABLE IF NOT EXISTS clinic (
-    id SERIAL PRIMARY KEY,
-    clinic_name TEXT,
-    clinic_phone TEXT,
-    clinic_address TEXT,
-    clinic_description TEXT,
-    owner_id INTEGER NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES users (id)
-);
 
 DROP  TABLE IF EXISTS patients CASCADE;
 CREATE TABLE IF NOT EXISTS patients (
-    id SERIAL PRIMARY KEY, 
+    id SERIAL PRIMARY KEY,
+    patient_id  INTEGER NOT NULL, 
     package TEXT NOT NULL CHECK (package IN('premium', 'gold', 'silver')) DEFAULT 'silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    patient_id INTEGER NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES users (id)
 );
 
 DROP  TABLE IF EXISTS doctors CASCADE;
 CREATE TABLE IF NOT EXISTS doctors (
     id SERIAL PRIMARY KEY,
-    specialuty TEXT NOT NULL DEFAULT '',
-    open_appointments TIMESTAMP,
+    doctor_id INTEGER NOT NULL,
+    specialty TEXT NOT NULL DEFAULT '',
+    open_appointments TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    doctor_id INTEGER NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES users (id)
 );
+
+
+DROP  TABLE IF EXISTS clinic CASCADE;
+CREATE TABLE IF NOT EXISTS clinic (
+    id SERIAL PRIMARY KEY,
+    owner_id INTEGER NOT NULL,
+    clinic_name TEXT,
+    clinic_phone TEXT,
+    clinic_address TEXT,
+    clinic_description TEXT,
+    FOREIGN KEY (owner_id) REFERENCES users (id)
+);
+
 
 DROP  TABLE IF EXISTS doctor_patient CASCADE;
 CREATE TABLE IF NOT EXISTS doctor_patient (
@@ -54,12 +55,11 @@ CREATE TABLE IF NOT EXISTS doctor_patient (
 
 DROP  TABLE IF EXISTS appointments CASCADE;
 CREATE TABLE IF NOT EXISTS appointments (
-    id SERIAL PRIMARY KEY,
+    patient_id INTEGER NOT NULL,
     date_time TIMESTAMP NOT NULL,
     status TEXT NOT NULL CHECK (status IN('pending', 'confirmed', 'cancelled')),
     doctor_id INTEGER NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES doctors (id),
-    patient_id INTEGER NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES patients (id),
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -79,6 +79,13 @@ CREATE TABLE IF NOT EXISTS medical_records (
     prescription TEXT NOT NULL
 );
 
+DROP TABLE IF EXISTS owner CASCADE;
+CREATE TABLE IF NOT EXISTS owner (
+    id SERIAL PRIMARY KEY,
+    owner_id INTEGER NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES users (id)
+);
+
 
 -- Drop the existing trigger
 DROP TRIGGER IF EXISTS insert_user_data_trigger ON users;
@@ -93,6 +100,9 @@ BEGIN
     -- Insert into doctors table if role is 'doctor'
     ELSIF NEW.role = 'doctor' THEN
         INSERT INTO doctors (doctor_id) VALUES (NEW.id);
+
+    ELSEIF NEW.role = 'owner' THEN
+        INSERT INTO owner (owner_id) VALUES (NEW.id);
     END IF;
 
     -- Return NEW to allow the original insertion into the users table to proceed
@@ -115,6 +125,11 @@ VALUES ('Alona', '1234', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 
 -- Now, insert data into the clinic table with a valid owner_id
 INSERT INTO clinic (clinic_name, clinic_phone, clinic_address, clinic_description, owner_id)
 VALUES ('Clinic-O', '*456', 'My Street 4', 'Clinic for all family', 1);
+
+UPDATE doctors 
+SET specialty = 'dentist'
+WHERE doctor_id = 3;
+
 
 
 
