@@ -1,11 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit';
-import '../css/LoginForm.css';
 import { Button, PageItem } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Patient, Doctor } from '../types.tsx';
+import { Patient, Doctor , Owner } from '../UserTypes.tsx';
+import '../css/LoginForm.css';
+import { Link } from 'react-router-dom';
 
+//TODO: handle when login faild becuse username or password not correct - give to the userftendly message
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -20,6 +22,7 @@ type LoginFormProps = {
 
 
 function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: LoginFormProps) {
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -35,53 +38,48 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     })
-    .then((response) => {
-      console.log("in login")
-      if (response.ok) {
-        // Parse JSON response
-        return response.json();
-      } else if (response.status === 400) {
-        // If status is 401, username or password is invalid
-        throw new Error("Invalid username or password");
-      } else {
-        // Handle other status codes as needed
-        throw new Error("Error logging in: " + response.status);
-      }
-    })
-    .then((data) => {
-      // Handle successful login
-      localStorage.setItem("access_token", data.access_token);
-      setUserToken(data.access_token);
-      setShowLoginPopup(false);
-      // Fetch user information
-      fetch(BACKEND_URL + "/get_user", {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${data.access_token}`
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status === 401) {
+          return response.json().then((data) => {
+            throw new Error(data.error);
+          });
+        } else {
+          throw new Error("Error logging in: " + response.status);
         }
-    })
-        .then(response => {
-          console.log("in get user")
+      })
+      .then((data) => {
+        setShowLoginPopup(false);
+        fetch(BACKEND_URL + "/get_user", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.access_token}`,
+          },
+        })
+          .then((response) => {
             if (response.ok) {
-                return response.json();
+              localStorage.setItem("access_token", data.access_token);
+              setUserToken(data.access_token);
+              return response.json();
             } else {
-                throw new Error("Error fetching user information");
+              throw new Error("Error fetching user information");
             }
-        })
-        .then((userData: Patient | Doctor) => {
-          localStorage.setItem("userinfo", JSON.stringify(userData));
-          setShowLoginPopup(false);
-          setUserName(userData.full_name);
-          setRole(userData.role);
-        })
-        .catch(error => {
-            alert("Error fetching user information: " + error.message);
-        });
-    })
-    .catch((error) => {
-        // Catch and handle any errors that occur during the fetch or parsing of response
-        alert("Error logging in: " + error.message);
-    });
+          })
+          .then((userData: Patient | Doctor | Owner) => {
+            localStorage.setItem("userinfo", JSON.stringify(userData));
+            setShowLoginPopup(false);
+            setUserName(userData.full_name);
+            setRole(userData.role);
+          })
+          .catch(() => {
+            setErrorMessage("An error occurred while fetching user information.");
+          });
+      })
+      .catch((error) => {
+      
+        setErrorMessage(error.message);
+      });
 
     event.preventDefault();
     };
@@ -114,6 +112,7 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
           <div className="d-flex justify-content-end">
            <FontAwesomeIcon icon={faTimes} size="lg" onClick={() => setShowLoginPopup(false)} style={{ cursor: 'pointer' }} />
           </div>
+          {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
             <h1 className='login'>Login</h1>
             <div className="d-flex flex-row align-items-center mb-4">
             <FontAwesomeIcon icon={faUser} className="me-3" size="lg" />

@@ -15,7 +15,7 @@ DROP  TABLE IF EXISTS patients CASCADE;
 CREATE TABLE IF NOT EXISTS patients (
     id SERIAL PRIMARY KEY,
     patient_id  INTEGER NOT NULL, 
-    package TEXT NOT NULL CHECK (package IN('premium', 'gold', 'silver')) DEFAULT 'silver',
+    package TEXT NOT NULL CHECK (package IN('Premium', 'Gold', 'Silver')) DEFAULT 'Silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES users (id)
@@ -83,53 +83,80 @@ DROP TABLE IF EXISTS owner CASCADE;
 CREATE TABLE IF NOT EXISTS owner (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES users (id)
+    FOREIGN KEY (owner_id) REFERENCES users (id),
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 );
 
 
--- Drop the existing trigger
-DROP TRIGGER IF EXISTS insert_user_data_trigger ON users;
+-- -- Drop the existing trigger
+-- DROP TRIGGER IF EXISTS insert_user_data_trigger ON users;
 
--- Create a trigger function to handle insertion based on user's role
-CREATE OR REPLACE FUNCTION insert_user_data_based_on_role()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Insert into patients table if role is 'patient'
-    IF NEW.role = 'patient' THEN
-        INSERT INTO patients (patient_id) VALUES (NEW.id);
-    -- Insert into doctors table if role is 'doctor'
-    ELSIF NEW.role = 'doctor' THEN
-        INSERT INTO doctors (doctor_id) VALUES (NEW.id);
+-- -- Create a trigger function to handle insertion based on user's role
+-- CREATE OR REPLACE FUNCTION insert_user_data_based_on_role()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     -- Insert into patients table if role is 'patient'
+--     IF NEW.role = 'patient' THEN
+--         INSERT INTO patients (patient_id) VALUES (NEW.id);
+--     -- Insert into doctors table if role is 'doctor'
+--     ELSIF NEW.role = 'doctor' THEN
+--         INSERT INTO doctors (doctor_id) VALUES (NEW.id);
 
-    ELSEIF NEW.role = 'owner' THEN
-        INSERT INTO owner (owner_id) VALUES (NEW.id);
-    END IF;
+--     ELSEIF NEW.role = 'owner' THEN
+--         INSERT INTO owner (owner_id) VALUES (NEW.id);
+--     END IF;
 
-    -- Return NEW to allow the original insertion into the users table to proceed
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--     -- Return NEW to allow the original insertion into the users table to proceed
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
--- Create the trigger to execute the trigger function after insertion into the users table
-CREATE TRIGGER insert_user_data_trigger
-AFTER INSERT ON users
-FOR EACH ROW
-EXECUTE FUNCTION insert_user_data_based_on_role();
+-- -- Create the trigger to execute the trigger function after insertion into the users table
+-- CREATE TRIGGER insert_user_data_trigger
+-- AFTER INSERT ON users
+-- FOR EACH ROW
+-- EXECUTE FUNCTION insert_user_data_based_on_role();
 
 -- Insert data into the users table first
 INSERT INTO users (username, password, email, age, full_name, phone, role)
 VALUES ('Alona', '1234', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'owner'),
-    ('user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient'),
+    ('example user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient'),
     ('doctor', '5454', 'docrot@mysite.com', 45, 'doctor', '555', 'doctor');
 
 -- Now, insert data into the clinic table with a valid owner_id
 INSERT INTO clinic (clinic_name, clinic_phone, clinic_address, clinic_description, owner_id)
 VALUES ('Clinic-O', '*456', 'My Street 4', 'Clinic for all family', 1);
 
-UPDATE doctors 
-SET specialty = 'dentist'
-WHERE doctor_id = 3;
+SELECT * FROM users WHERE id = 1;
+
+-- Now, insert data into the patients table
+INSERT INTO owner (
+    owner_id,
+    created_date,
+    updated_date
+)
+VALUES (
+    1,  -- Replace with the valid patient_id from the users table
+    CURRENT_TIMESTAMP,  -- Set the created_date to the current timestamp
+    CURRENT_TIMESTAMP  -- Set the updated_date to the current timestamp
+);
 
 
+SELECT * FROM users WHERE id = 3;
 
-
+-- Now, insert data into the patients table
+INSERT INTO doctors (
+    doctor_id,
+    specialty,
+    open_appointments,
+    created_date,
+    updated_date
+)
+VALUES (
+    3,  -- Replace with the valid patient_id from the users table
+    'Cardiologist',
+    NULL,
+    CURRENT_TIMESTAMP,  -- Set the created_date to the current timestamp
+    CURRENT_TIMESTAMP  -- Set the updated_date to the current timestamp
+);

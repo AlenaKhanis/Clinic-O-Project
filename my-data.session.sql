@@ -1,6 +1,12 @@
-
-SELECT DISTINCT p.*, u.username, u.email, u.age, u.full_name, u.phone, u.role
-FROM patients p
-INNER JOIN users u ON u.id = p.patient_id
-WHERE u.id = 2;
-
+INSERT INTO patients (
+    patient_id,
+    package,
+    created_date,
+    updated_date
+)
+VALUES (
+    2,  -- Replace with the valid patient_id from the users table
+    'Gold',
+    CURRENT_TIMESTAMP,  -- Set the created_date to the current timestamp
+    CURRENT_TIMESTAMP  -- Set the updated_date to the current timestamp
+);

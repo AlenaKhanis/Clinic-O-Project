@@ -1,13 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
 from models.users import User 
-from db import get_db
-from psycopg2.extras import RealDictCursor
 
 
 @dataclass
 class Patient(User):
-    patient_id: int = 1
+    patient_id: int = None
     package: str = "silver"
     created_date: datetime = datetime.now()
     updated_date: datetime = datetime.now()
@@ -20,18 +18,29 @@ class Patient(User):
             INNER JOIN users u ON u.id = p.patient_id
             WHERE u.id = %s;
             """, (user_id,))
-        patient_data = cursor.fetchone()
+        patient_data = cursor.fetchone() 
 
+        print("patient_data: ",patient_data)
 
         if patient_data:
-           
-            patient_fields = ['patient_id', 'package', 'created_date', 'updated_date']
-            patient_values = [patient_data[field] for field in patient_fields]
-
-            user_fields = ['username', 'full_name', 'age', 'email', 'phone', 'role']
-            user_values = [patient_data[field] for field in user_fields]
-
-            
-            return cls(*user_values, *patient_values)
+            return patient_data
         else:
             return None
+        
+    def add_patient(self, cursor):
+        try:
+            cursor.execute(
+                """
+                INSERT INTO patients (patient_id, package, created_date, updated_date)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (self.patient_id, self.package, self.created_date, self.updated_date)
+            )
+
+            return True 
+        except Exception as e:
+            print("Error inserting patient:", e)
+            return False  
+
+ 
+

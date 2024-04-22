@@ -12,8 +12,9 @@
   padding: 5px 10px;
   font-size: 14px;
   border: none;
-  background-color: blue; /* Optional: Change button background color */
+  background-color: #4a97a8; /* Optional: Change button background color */
   cursor: pointer;
+  align-items: center;
 }
 
 .toolbar-button:hover {
