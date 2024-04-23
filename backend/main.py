@@ -52,9 +52,11 @@ def get_user():
         current_user_id = get_jwt_identity()
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
-        
+
+      
         cursor.execute("SELECT * FROM users WHERE id = %s", (current_user_id,))
         user_data = cursor.fetchone()
+        
 
         if not user_data:
             return jsonify({'message': 'User not found'}), 404
