@@ -11,6 +11,7 @@ from models.doctor import Doctor
 from models.owner import Owner
 
 from views.users import bp as users_bp
+from views.appointments import bp as appointments_bp
 # from views.owner import bp as products_bp
 # from views.patient import bp as carts_bp
 # from views.doctor import bp as doctors_bp
@@ -25,13 +26,14 @@ print(FRONTEND_URL)
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
 app.register_blueprint(users_bp)
+app.register_blueprint(appointments_bp)
 # app.register_blueprint(products_bp)
 # app.register_blueprint(carts_bp)
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = request.json
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)  
 

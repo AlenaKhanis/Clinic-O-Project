@@ -13,7 +13,6 @@ class Doctor(User):
 
     @classmethod
     def get_doctor(cls, cursor, user_id):
-        print(user_id)
         cursor.execute("""
             SELECT DISTINCT d.*, u.username, u.full_name, u.age, u.email, u.phone, u.role 
             FROM doctors d

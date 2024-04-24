@@ -32,7 +32,6 @@ def register():
     db = get_db()
     cursor = db.cursor()
 
-    print("DATA:" , data)
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     # Create a User object

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 DROP  TABLE IF EXISTS patients CASCADE;
 CREATE TABLE IF NOT EXISTS patients (
     id SERIAL PRIMARY KEY,
-    patient_id  INTEGER NOT NULL, 
+    patient_id  INTEGER UNIQUE  NOT NULL, 
     package TEXT NOT NULL CHECK (package IN('Premium', 'Gold', 'Silver')) DEFAULT 'Silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -24,9 +24,8 @@ CREATE TABLE IF NOT EXISTS patients (
 DROP  TABLE IF EXISTS doctors CASCADE;
 CREATE TABLE IF NOT EXISTS doctors (
     id SERIAL PRIMARY KEY,
-    doctor_id INTEGER NOT NULL,
+    doctor_id  INTEGER UNIQUE NOT NULL ,
     specialty TEXT NOT NULL DEFAULT '',
-    open_appointments TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (doctor_id) REFERENCES users (id)
@@ -47,6 +46,7 @@ CREATE TABLE IF NOT EXISTS clinic (
 
 DROP  TABLE IF EXISTS doctor_patient CASCADE;
 CREATE TABLE IF NOT EXISTS doctor_patient (
+    id SERIAL PRIMARY KEY,
     doctor_id INTEGER NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES doctors (id),
     patient_id INTEGER NOT NULL,
@@ -55,12 +55,13 @@ CREATE TABLE IF NOT EXISTS doctor_patient (
 
 DROP  TABLE IF EXISTS appointments CASCADE;
 CREATE TABLE IF NOT EXISTS appointments (
-    patient_id INTEGER NOT NULL,
+    id SERIAL PRIMARY KEY,
+    patient_id INTEGER,
     date_time TIMESTAMP NOT NULL,
-    status TEXT NOT NULL CHECK (status IN('pending', 'confirmed', 'cancelled')),
+    status TEXT NOT NULL CHECK (status IN('scedual', 'cancelled')),
     doctor_id INTEGER NOT NULL,
-    FOREIGN KEY (doctor_id) REFERENCES doctors (id),
-    FOREIGN KEY (patient_id) REFERENCES patients (id),
+    FOREIGN KEY (doctor_id) REFERENCES doctors (doctor_id),
+    FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -149,14 +150,18 @@ SELECT * FROM users WHERE id = 3;
 INSERT INTO doctors (
     doctor_id,
     specialty,
-    open_appointments,
     created_date,
     updated_date
 )
 VALUES (
     3,  -- Replace with the valid patient_id from the users table
     'Cardiologist',
-    NULL,
     CURRENT_TIMESTAMP,  -- Set the created_date to the current timestamp
     CURRENT_TIMESTAMP  -- Set the updated_date to the current timestamp
 );
+
+-- Now, insert data into the patients table
+INSERT INTO patients (patient_id, package, created_date, updated_date)
+VALUES
+    (2, 'Gold', CURRENT_TIMESTAMP , CURRENT_TIMESTAMP )
+

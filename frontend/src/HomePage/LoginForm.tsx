@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit';
-import { Button, PageItem } from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Patient, Doctor , Owner } from '../UserTypes.tsx';
 import '../css/LoginForm.css';
-import { Link } from 'react-router-dom';
 
 //TODO: handle when login faild becuse username or password not correct - give to the userftendly message
 
