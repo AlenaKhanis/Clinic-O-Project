@@ -41,12 +41,15 @@ export type Owner = {
 }
 
 export type Appointment =  {
-  date: string;
-  time: string;
   status: string;
   patient_id: number | null;
   id: number;
+  date: string;
+  time: string; // Adjusted type to accept either string or Date
+
 }
+
+
 
 export type PatientDetails =  {
   patient_name: string;
