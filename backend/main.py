@@ -13,7 +13,7 @@ from models.owner import Owner
 from views.users import bp as users_bp
 from views.appointments import bp as appointments_bp
 # from views.owner import bp as products_bp
-# from views.patient import bp as carts_bp
+from views.patient import bp as patient
 # from views.doctor import bp as doctors_bp
 
 
@@ -27,7 +27,7 @@ jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
 app.register_blueprint(users_bp)
 app.register_blueprint(appointments_bp)
-# app.register_blueprint(products_bp)
+app.register_blueprint(patient)
 # app.register_blueprint(carts_bp)
 
 

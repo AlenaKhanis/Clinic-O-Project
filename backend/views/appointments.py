@@ -17,21 +17,21 @@ def add_appointment():
         try:
             data = request.get_json()
             doctor_id = data.get("doctor_id")
-            date_time_str = data.get("date")  
-            status = "scedual" 
+            date_str = data.get("date")
+            time_str = data.get("time")
+            status = "open" 
 
-            date_time_format = '%Y-%m-%dT%H:%M:%S'
-            date_time = datetime.strptime(date_time_str, date_time_format)
+            time_format = "%H:%M"
+            time = datetime.strptime(time_str, time_format)
+            date_format = '%Y-%m-%d'
+            date = datetime.strptime(date_str, date_format)
    
-            appointment = Appointment(date_time=date_time,
+            appointment = Appointment(date=date,
+                                      time=time,
                                       doctor_id=doctor_id,
                                       status=status)
-
-            print(appointment)
-
         
             if appointment.add_open_appointment_for_doctor(cursor): 
-                print("added appointment")
                 db.commit()
                 return jsonify({'message': 'Added successful'}), 200
             else:
@@ -48,18 +48,27 @@ def add_appointment():
 @bp.route("/check_appointment", methods=['GET'])
 def check_appointment():
     appointment_date_str = request.args.get('date')
-    date_time_format = '%Y-%m-%dT%H:%M:%S'
-    date_time = datetime.strptime(appointment_date_str, date_time_format)
-
+    appointment_time_str = request.args.get('time')
     doctor_id = request.args.get('doctor_id')
-    print("Appointment",date_time)
-    print("doctor id",doctor_id)
-    db = get_db()
-    cursor = db.cursor()
 
-    exists = Appointment.check_appointment_exists(date_time,doctor_id, cursor)
-    print(exists)
-    return jsonify({'exists': exists}), 200
+    try:
+        date_format = '%Y-%m-%d'
+        time_format = '%H:%M:%S'
+
+        appointment_date = datetime.strptime(appointment_date_str, date_format)
+        appointment_time = datetime.strptime(appointment_time_str, time_format)
+
+
+        db = get_db()
+        cursor = db.cursor()
+
+        exists = Appointment.check_appointment_exists(appointment_date,appointment_time, doctor_id, cursor)
+
+        return jsonify({'exists': exists}), 200
+
+    except ValueError as e:
+        print(e)
+        return jsonify({'error': str(e)}), 400
 
 
 @bp.route("/get_appointments", methods=['GET'])
@@ -74,7 +83,6 @@ def get_appointments():
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
-
     return jsonify(appointments), 200
 
 

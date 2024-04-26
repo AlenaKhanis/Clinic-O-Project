@@ -4,7 +4,8 @@ from datetime import datetime
 
 @dataclass
 class Appointment:
-    date_time: datetime
+    date: datetime
+    time: datetime
     doctor_id: int
     status: str
     created_date: datetime = datetime.now()
@@ -13,26 +14,27 @@ class Appointment:
 
     def add_open_appointment_for_doctor(self, cursor):
         sql = """
-            INSERT INTO appointments (date_time, doctor_id, status, created_date, updated_date)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO appointments (date, time , doctor_id, status, created_date, updated_date)
+            VALUES (%s, %s, %s, %s, %s ,%s)
         """
         try:
-            cursor.execute(sql, (self.date_time, self.doctor_id, self.status, self.created_date, self.updated_date))
+            cursor.execute(sql, (self.date , self.time, self.doctor_id, self.status, self.created_date, self.updated_date))
             return True 
         except Exception as e:
             print(f"Error occurred while adding appointment: {e}")
             return False
 
     @classmethod
-    def check_appointment_exists(cls, appointment_date,doctor_id, cursor):
+    def check_appointment_exists(cls, appointment_date, appointment_time , doctor_id, cursor):
         try:
             cursor.execute(
                 """
-                SELECT id FROM appointments WHERE date_time = %s AND doctor_id = %s
+                SELECT id FROM appointments WHERE date = %s AND time= %s AND doctor_id = %s
                 """,
-                (appointment_date, doctor_id,)
+                (appointment_date,appointment_time, doctor_id,)
             )
             existing_appointment = cursor.fetchone()
+            print(existing_appointment)
             
 
             if existing_appointment:

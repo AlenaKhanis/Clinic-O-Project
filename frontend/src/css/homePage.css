@@ -3,7 +3,7 @@
 }
 
 body {
-  background-image: url('https://www.loyalmedicalclinic.com/wp-content/themes/lmclinic/img/loyal-medical-banner.jpg');
+  /* background-image: url('https://www.loyalmedicalclinic.com/wp-content/themes/lmclinic/img/loyal-medical-banner.jpg'); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -35,3 +35,6 @@ body {
   margin-bottom: 2rem; /* Add spacing between elements */
 }
 
+body.fixed-content {
+  padding-top: 100px; /* Adjust according to the height of the fixed content */
+}

@@ -57,8 +57,9 @@ DROP  TABLE IF EXISTS appointments CASCADE;
 CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     patient_id INTEGER,
-    date_time TIMESTAMP NOT NULL,
-    status TEXT NOT NULL CHECK (status IN('scedual', 'cancelled')),
+    date TIMESTAMP NOT NULL,
+    time TIMESTAMP NOT NULL,
+    status TEXT NOT NULL CHECK (status IN('scedual', 'cancelled' , 'open')),
     doctor_id INTEGER NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES doctors (doctor_id),
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id),

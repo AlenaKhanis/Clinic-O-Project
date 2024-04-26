@@ -1,30 +1,45 @@
 import { Tabs, Tab } from 'react-bootstrap';
 import 'react-calendar/dist/Calendar.css'; // Import default styles
 import '../css/adminPage.css';
-import AddApointmet from './AddAppointment';
+import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
+import { useEffect, useState } from 'react';
+
 
 function DoctorHomePage() {
-
     const userInfo = localStorage.getItem('userinfo');
-    let doctorId = null;
-    if (userInfo) {
-        const userInfoObject = JSON.parse(userInfo);
-        if (userInfoObject.hasOwnProperty('doctor_id')) {
-            doctorId = userInfoObject.doctor_id;
+    const [doctorId, setDoctorId] = useState<string | null>(null);
+    const [appointmentsKey, setAppointmentsKey] = useState<string>("appointments"); 
+
+    useEffect(() => {
+        if (userInfo) {
+            const userInfoObject = JSON.parse(userInfo);
+            if (userInfoObject.hasOwnProperty('doctor_id')) {
+                setDoctorId(userInfoObject.doctor_id);
+            }
         }
-    }
+    }, [userInfo]);
+
+    // Function to force re-render DisplayAppointments component
+    const refreshAppointments = () => {
+        setAppointmentsKey((prevKey) => prevKey === "appointments" ? "appointments-refresh" : "appointments");
+    };
 
     return (
-        <div style={{ width: '700px', height: '700px' }}>
-            <Tabs id="uncontrolled-tab-example" className="mb-3">
-                <Tab eventKey="home" title="Open Appointments">
-                    <AddApointmet />
+        <div style={{ width: '900px', height: '700px' }}>
+
+            <Tabs id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor: "#f1f1f2"}}>
+                <Tab eventKey="home" title="Open Appointments" className='tabs' >
+                    <AddApointment doctorId={doctorId} onSuccess={refreshAppointments} />
                 </Tab>
-                <Tab eventKey="profile" title="Profile">
-                    <DisplayAppointments tabKey="profile" doctorId={doctorId} />
+                <Tab eventKey="appointments" title="Appointments" className='tabs'>
+                    <DisplayAppointments
+
+                        doctorId={doctorId}
+                        onAppointmentAdded={refreshAppointments} // Pass the function as a prop
+                    />
                 </Tab>
-                <Tab eventKey="contact" title="Contact">
+                <Tab eventKey="contact" title="Contact" className='tabs'>
                     Tab content for Contact
                 </Tab>
             </Tabs>

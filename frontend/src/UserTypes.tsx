@@ -39,3 +39,17 @@ export type Owner = {
   phone: string;
   role: string;
 }
+
+export type Appointment =  {
+  date: string;
+  time: string;
+  status: string;
+  patient_id: number | null;
+  id: number;
+}
+
+export type PatientDetails =  {
+  patient_name: string;
+  diagnosis: string | null;
+  prescription: string | null;
+}

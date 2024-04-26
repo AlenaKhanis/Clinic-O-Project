@@ -41,6 +41,34 @@ class Patient(User):
         except Exception as e:
             print("Error inserting patient:", e)
             return False  
+        
+    @classmethod    
+    def get_patient_by_id(cls , patient_id , cursore):
+        try:
+            cursore.execute(
+            """                
+            SELECT
+            u.full_name AS patient_name,
+            m.diagnosis,
+            m.prescription
+            FROM
+                patients p
+            JOIN
+                users u ON p.patient_id = u.id
+            LEFT JOIN
+                medical_records m ON p.id = m.patient_id
+            WHERE
+            p.patient_id = %s;
 
- 
+                            """,
+            (patient_id,) )
+
+            patient = cursore.fetchone()
+
+            return patient
+        except Exception as e:
+            print("Error inserting patient:", e)
+            return None  
+        
+
 

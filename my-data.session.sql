@@ -1,1 +1,3 @@
-SELECT date_time FROM appointments WHERE doctor_id = 3;
+UPDATE appointments
+SET patient_id = '2'
+WHERE id = 1;

@@ -70,3 +70,8 @@ p {
     color: rgb(10, 6, 6); /* Set text color for Saturdays and Sundays */
 }
 
+.tabs {
+  background-color: #f1f1f1;
+}
+
+
