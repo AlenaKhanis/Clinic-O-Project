@@ -64,7 +64,10 @@ CREATE TABLE IF NOT EXISTS appointments (
     FOREIGN KEY (doctor_id) REFERENCES doctors (doctor_id),
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    summery TEXT,
+    writen_prescription TEXT,
+    writen_diagnosis TEXT
 );
 
 

@@ -2,12 +2,12 @@ from flask import Blueprint, jsonify, request
 from models.appointments import Appointment
 from db import get_db
 from psycopg2.extras import RealDictCursor
+from datetime import datetime
 
 
 bp = Blueprint("appointments", __name__)
 
-
-from datetime import datetime
+#TODO:  add to appointment data sumery , written prescriptions ,  written diagnoses
 
 @bp.route("/add_appointment", methods=["POST"])
 def add_appointment():

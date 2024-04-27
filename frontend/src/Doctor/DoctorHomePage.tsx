@@ -7,6 +7,11 @@ import { useEffect, useState } from 'react';
 import HistoryAppointments from './HistoryAppointments';
 
 
+
+//TODO: Add open / scedual app tab - and if the time past add button add sunnery app and add tab show all detaile app with description\diagnoses\summery that written
+//TODO: disable button if not chose time or date
+//TODO: sent data sunnery appointment
+
 function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
     const [doctorId, setDoctorId] = useState<string | null>(null);
