@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import '../css/adminPage.css';
 import 'react-calendar/dist/Calendar.css'; 
 
-interface AddAppointmentProps {
+type AddAppointmentProps = {
     doctorId: string | null;
     onSuccess: () => void; // Function to trigger when a new appointment is successfully added
 }

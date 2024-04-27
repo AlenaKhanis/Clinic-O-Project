@@ -10,6 +10,8 @@ export type Patient = {
   email: string;
   phone: string;
   role: string;
+  diagnosis: string | null;
+  prescription: string | null;
 };
 
 export type Doctor = {
@@ -49,10 +51,7 @@ export type Appointment =  {
 
 }
 
-
-
-export type PatientDetails =  {
-  patient_name: string;
-  diagnosis: string | null;
-  prescription: string | null;
-}
+export type DisplayAppointmentsProps = {
+  doctorId: string | null;
+  onAppointmentAdded: () => void;
+};

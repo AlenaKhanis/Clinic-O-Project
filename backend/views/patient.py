@@ -10,7 +10,7 @@ def get_patient_by_id(patient_id):
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
-        patient = Patient.get_patient_by_id(patient_id, cursor)
+        patient = Patient.get_patient(cursor ,patient_id)
         print(patient)
 
         return patient

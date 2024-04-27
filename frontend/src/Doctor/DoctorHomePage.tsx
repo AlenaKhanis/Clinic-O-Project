@@ -4,6 +4,7 @@ import '../css/adminPage.css';
 import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
 import { useEffect, useState } from 'react';
+import HistoryAppointments from './HistoryAppointments';
 
 
 function DoctorHomePage() {
@@ -37,10 +38,14 @@ function DoctorHomePage() {
 
                         doctorId={doctorId}
                         onAppointmentAdded={refreshAppointments} // Pass the function as a prop
+                        
                     />
                 </Tab>
-                <Tab eventKey="contact" title="Contact" className='tabs'>
-                    Tab content for Contact
+                <Tab eventKey="history appointments" title="History appointments" className='tabs'>
+                    <HistoryAppointments
+                        doctorId={doctorId}
+                        onAppointmentAdded={refreshAppointments}
+                    />
                 </Tab>
             </Tabs>
         </div>

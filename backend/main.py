@@ -64,16 +64,10 @@ def get_user():
             return jsonify({'message': 'User not found'}), 404
         
         role = user_data['role']
-        print()
-        print("role:" , role)
-        print()
-      
+
         if role == 'patient':
-            print("here")
             patient_info = Patient.get_patient(cursor, current_user_id)
-            print()
-            print("patient_info:" , patient_info)
-            print()
+
             if patient_info:
                 return jsonify(patient_info), 200
             
