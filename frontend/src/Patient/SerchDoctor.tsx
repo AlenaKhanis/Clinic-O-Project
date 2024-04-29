@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
-import { Doctor } from '../UserTypes';
+import { Doctor ,PatientProps } from '../UserTypes';
 import { useAppointments } from "../Doctor/appointmentsFunction";
 import '../css/displayAppontments.css'; // Import CSS file
 
-type SearchDoctorsProps = {
-    BACKEND_URL: string;
-    patientId : string | null;
-};
 
-function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
+function SearchDoctors({ BACKEND_URL , patientId }:  PatientProps) {
     const [searchDoctor, setSearchDoctor] = useState<Doctor[]>([]);
     const [specialties, setSpecialties] = useState<string[]>([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState('');
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
+    const [MessageScedual , setMessageScedual] = useState<string>('');
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
 
     useEffect(() => {
@@ -38,6 +35,7 @@ function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
                     setSearchDoctor(doctors);
                     setSelectedDoctorId(null);
                     setSelectedDoctorAppointments([]);
+                    
                 })
                 .catch(error => console.error('Error fetching doctors:', error));
         }
@@ -48,24 +46,37 @@ function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
         if (doctorId) {
             const appointmentsURL = `${BACKEND_URL}/get_appointments?doctor_id=${doctorId}`;
             fetchAppointments(appointmentsURL);
+            setMessageScedual('');
         }
     };
 
-    const scheduleAppointment = (appointmentId: number) => {
-
-        fetch(`${BACKEND_URL}/scedual_appointment/${appointmentId}/${patientId}`, {
-            method: 'POST',
-        })
-        .then(response => {
-            if (response.ok){
-                console.log('added')
-            }
-        })
-        .catch(error => {
-            console.error('Error scheduling appointment:', error);
-        });
-
+    const scheduleAppointment = (appointmentId: number, appointmentDate: string, appointmentTime: string) => {
+        if (isAppointmentExists(appointmentDate, appointmentTime)) {
+            setMessageScedual('You already have an appointment at this date and time.');
+        } else {
+            fetch(`${BACKEND_URL}/scedual_appointment/${appointmentId}/${patientId}`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok){
+                    setMessageScedual('Appointment scheduled successfully');
+                    setSelectedDoctorAppointments([]);
+                }
+            })
+            .catch(error => {
+                console.error('Error scheduling appointment:', error);
+                setMessageScedual('Failed to schedule appointment');
+            });
+        }
     };
+    
+
+    const isAppointmentExists = (date: string, time: string) => {
+        return selectedDoctorAppointments.some(appointment => {
+            return appointment.date === date && appointment.time === time && appointment.status !== 'scedual';
+        });
+    };
+    
 
     return (
         <>
@@ -106,8 +117,15 @@ function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
             )}
             {selectedDoctorId !== null && (
                 <div>
-                    <h2>Doctor's Appointments</h2>
+                    
+                    {MessageScedual && (
+                        <div>
+                            <h2>{MessageScedual}</h2>
+                        </div>
+                    )}
                     {selectedDoctorAppointments.length > 0 ? (
+                        <>
+                        <h2>Doctor's Appointments</h2>
                         <Table>
                             <thead>
                                 <tr>
@@ -119,6 +137,9 @@ function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
                             </thead>
                             <tbody>
                                 {selectedDoctorAppointments
+                                    .filter(appointment => {
+                                        return appointment.status !== 'scedual';
+                                    })
                                     .filter(appointment => {
                                         const [day, month, year] = appointment.date.split('/');
                                         const [hours, minutes, seconds] = appointment.time.split(':');
@@ -138,20 +159,25 @@ function SearchDoctors({ BACKEND_URL , patientId }:  SearchDoctorsProps) {
                                             <td>{index + 1}</td>
                                             <td>{appointment.date}</td>
                                             <td>{appointment.time}</td>
-                                            <td><button onClick={() => scheduleAppointment(appointment.id)}>Schedule</button></td>
+                                            <td><button onClick={() => scheduleAppointment(appointment.id , appointment.date , appointment.time)}>Schedule</button></td>
                                         </tr>
                                     ))}
                             </tbody>      
                         </Table>
+                        </>
                     ) : (
-                        <div className="no-appointments">
-                            <h3>No appointments available</h3>
-                        </div>
+                        MessageScedual ? null : (
+                            <div className="no-appointments">
+                                <h3>No appointments available</h3>
+                            </div>
+                        )
                     )}
                 </div>
             )}
         </>
     ); 
+    
+    
     
 }
 

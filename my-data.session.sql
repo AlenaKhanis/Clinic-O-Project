@@ -1,4 +1,2 @@
 
-INSERT INTO doctors (doctor_id, specialty)
-VALUES (7, 'General Medicine');
-
+SELECT * FROM appointments WHERE patient_id = 2

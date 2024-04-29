@@ -2,6 +2,7 @@
 import { Tab, Tabs } from "react-bootstrap";
 import SearchDoctors from "./SerchDoctor";
 import { useEffect, useState } from "react";
+import ShowPatientAppointments from "./ShowPatientAppointment";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -28,8 +29,11 @@ function HomePagePatient() {
                     patientId={patientId}
                      />
                 </Tab>
-                <Tab eventKey="home" title="Open Appointments" className='tabs'>
-                    Schedule Appointment
+                <Tab eventKey="home" title="Show My Appointments" className='tabs'>
+                    <ShowPatientAppointments
+                    BACKEND_URL={BACKEND_URL}
+                    patientId={patientId}
+                    />
                 </Tab>
                 <Tab eventKey="appointments" title="Appointments" className='tabs'>
                     See Appointment

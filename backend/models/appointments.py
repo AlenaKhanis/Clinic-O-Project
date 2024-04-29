@@ -30,13 +30,13 @@ class Appointment:
             return False
 
     @classmethod
-    def check_appointment_exists(cls, appointment_date, appointment_time , doctor_id, cursor):
+    def check_appointment_exists(cls, appointment_date, appointment_time , id, cursor):
         try:
             cursor.execute(
                 """
                 SELECT id FROM appointments WHERE date = %s AND time= %s AND doctor_id = %s
                 """,
-                (appointment_date,appointment_time, doctor_id,)
+                (appointment_date,appointment_time, id,)
             )
             existing_appointment = cursor.fetchone()
             print(existing_appointment)
@@ -68,16 +68,45 @@ class Appointment:
         except Exception as e:
             print("Error getting appointments:", e)
 
-    def scedual_appointment_for_patient(cursor , appointment_id , patient_id):
+    @classmethod
+    def scedual_appointment_for_patient(cls , cursor , appointment_id , patient_id):
         try:
             cursor.execute(
+            """
+            SELECT status FROM appointments WHERE id = %s
+            """,
+            (appointment_id,)
+            )
+            appointment_status = cursor.fetchone()
+            
+            if appointment_status and appointment_status['status'] == 'scedual':
+
+                return False
+
+            cursor.execute(
                 """
-                UPDATE appointments SET patient_id = %s , status = 'scedual' WHERE id = %s
-                """ , 
-                ( patient_id , appointment_id,))
+                UPDATE appointments SET patient_id = %s, status = 'scedual' WHERE id = %s
+                """,
+                (patient_id, appointment_id,)
+            )
+            return True
+        
         except Exception as e:
             print("Error scedualing appointment:", e)
             return False
 
-    
+    @classmethod
+    def get_appointments_by_patient_id(cls, cursor, patient_id):
+        try:
+            print("Patient ID:", patient_id)
+            cursor.execute("""
+                SELECT * FROM appointments WHERE patient_id = %s
+            """, (patient_id,))
+            appointments = cursor.fetchall()
+            print("Appointments:", appointments)
+            return appointments
+        except Exception as e:
+            print("Error getting appointments:", e)
+            return None
+
     

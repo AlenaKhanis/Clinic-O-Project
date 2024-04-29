@@ -48,7 +48,7 @@ def add_appointment():
 def check_appointment():
     appointment_date_str = request.args.get('date')
     appointment_time_str = request.args.get('time')
-    doctor_id = request.args.get('doctor_id')
+    Id = request.args.get('doctor_id')
 
     try:
         date_format = '%Y-%m-%d'
@@ -61,7 +61,7 @@ def check_appointment():
         db = get_db()
         cursor = db.cursor()
 
-        exists = Appointment.check_appointment_exists(appointment_date,appointment_time, doctor_id, cursor)
+        exists = Appointment.check_appointment_exists(appointment_date,appointment_time, Id, cursor)
 
         return jsonify({'exists': exists}), 200
 
@@ -83,9 +83,23 @@ def get_appointments():
     return jsonify(appointments), 200
 
 @bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])
-def scedual_appointment(appointment_id , patient_id):
+def scedual_appointment(appointment_id, patient_id):
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
-    Appointment.scedual_appointment_for_patient(cursor, appointment_id ,patient_id)
-    db.commit()
-    return jsonify({'message': 'Added successful'}), 200
+   
+    if (Appointment.scedual_appointment_for_patient(cursor, appointment_id, patient_id)):
+        db.commit()
+        return jsonify({'message': "Appointment scheduled successfully."}), 200
+    else:
+        db.rollback()
+        return jsonify({'error': "Appointment is already scheduled."}), 400
+
+@bp.route("/get_appointments_by_patient_id/<patient_id>", methods=['GET'])
+def get_appointments_by_patient_id(patient_id):
+    print(patient_id)
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    appointments = Appointment.get_appointments_by_patient_id(cursor, patient_id)
+
+    return jsonify(appointments), 200
+

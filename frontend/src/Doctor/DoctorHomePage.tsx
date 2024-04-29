@@ -10,7 +10,7 @@ import HistoryAppointments from './HistoryAppointments';
 
 //TODO: Add open / scedual app tab - and if the time past add button add sunnery app and add tab show all detaile app with description\diagnoses\summery that written
 //TODO: disable button if not chose time or date
-//TODO: sent data sunnery appointment
+//TODO: sent data summery appointment
 
 function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
