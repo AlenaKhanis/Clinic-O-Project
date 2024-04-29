@@ -1,4 +1,4 @@
 
 INSERT INTO doctors (doctor_id, specialty)
-VALUES (5, 'Dermatology');
+VALUES (7, 'General Medicine');
 

@@ -7,10 +7,15 @@ class Appointment:
     date: datetime
     time: datetime
     doctor_id: int
-    status: str
+    status: str 
     created_date: datetime = datetime.now()
     updated_date: datetime = datetime.now()
     patient_id: int = None 
+    summery: str = None
+    written_diagnosis: str = None
+    written_prescriptions: str = None
+
+
 
     def add_open_appointment_for_doctor(self, cursor):
         sql = """
@@ -56,10 +61,23 @@ class Appointment:
                 (doctor_id,))
             
             all_appointments = cursor.fetchall()
-
             if all_appointments:
                 return all_appointments
             else:
                 return False
         except Exception as e:
             print("Error getting appointments:", e)
+
+    def scedual_appointment_for_patient(cursor , appointment_id , patient_id):
+        try:
+            cursor.execute(
+                """
+                UPDATE appointments SET patient_id = %s , status = 'scedual' WHERE id = %s
+                """ , 
+                ( patient_id , appointment_id,))
+        except Exception as e:
+            print("Error scedualing appointment:", e)
+            return False
+
+    
+    

@@ -6,6 +6,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 export const useAppointments = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
+    const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
 
 
 // Get All App
@@ -48,9 +49,11 @@ const fetchAppointments = (url: string) => {
             });
 
             setAppointments(appointmentsData);
+            setSelectedDoctorAppointments(appointmentsData);
         })
         .catch(error => {
             console.error("Error fetching appointments:", error);
+           
         });
 };
 
@@ -106,7 +109,7 @@ const filteredAppointments = appointments
         return 0;
     });
 
-return { appointments, selectedPatientDetails, fetchAppointments, handleViewDetails ,setSelectedPatientDetails ,filteredAppointments};
+return { appointments, selectedPatientDetails, fetchAppointments, handleViewDetails ,setSelectedPatientDetails ,filteredAppointments , selectedDoctorAppointments ,setSelectedDoctorAppointments};
 };
 
 

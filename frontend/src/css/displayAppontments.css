@@ -66,5 +66,10 @@ table {
 }
 
 .appointment-details button:hover {
-    background-color: #0056b3;
+    background-color: #007bff;
+}
+
+tr.doctor-row:hover td {
+  background-color: #007bff !important;
+  cursor: pointer;
 }

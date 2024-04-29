@@ -63,11 +63,11 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                 )}
             </div>
             <div>
-                //TODO: check why not close when clicking on button with patient id null
+                //TODO: check why not close when clicking on button with patient iSd null
             {selectedPatientDetails && (
                 <div>
                     <h3>Appointment Details</h3>
-                    <p>Name: {selectedPatientDetails.patient_name}</p>
+                    <p>Name: {selectedPatientDetails.full_name}</p>
                     <p>Diagnoses: {selectedPatientDetails.diagnosis}</p>
                     <p>Prescription: {selectedPatientDetails.prescription}</p>
                 </div>

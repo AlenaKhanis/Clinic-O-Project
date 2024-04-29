@@ -7,7 +7,6 @@ from datetime import datetime
 
 bp = Blueprint("appointments", __name__)
 
-#TODO:  add to appointment data sumery , written prescriptions ,  written diagnoses
 
 @bp.route("/add_appointment", methods=["POST"])
 def add_appointment():
@@ -74,15 +73,19 @@ def check_appointment():
 @bp.route("/get_appointments", methods=['GET'])
 def get_appointments():
     doctor_id = request.args.get("doctor_id")
-
-    print("doctor id:", doctor_id)
-
     if doctor_id is None:
         return jsonify({"error": "doctor_id parameter is required"}), 400
 
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
+    print(appointments)
     return jsonify(appointments), 200
 
-
+@bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])
+def scedual_appointment(appointment_id , patient_id):
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    Appointment.scedual_appointment_for_patient(cursor, appointment_id ,patient_id)
+    db.commit()
+    return jsonify({'message': 'Added successful'}), 200

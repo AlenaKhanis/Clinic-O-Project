@@ -26,7 +26,6 @@ export type Doctor = {
   email: string;
   phone: string;
   role: string;
-  open_appointment: Date;
 };
 
 export type Owner = {
@@ -47,7 +46,10 @@ export type Appointment =  {
   patient_id: number | null;
   id: number;
   date: string;
-  time: string; // Adjusted type to accept either string or Date
+  time: string;
+  summery?: string;
+  written_diagnosis?: string;
+  written_prescriptions?: string;
 
 }
 
