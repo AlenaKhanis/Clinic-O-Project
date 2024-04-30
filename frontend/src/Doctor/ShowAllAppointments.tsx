@@ -9,7 +9,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails  , setSelectedPatientDetails , filteredAppointments} = useAppointments();
+    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails  , filteredAppointments} = useAppointments();
 
 
     useEffect(() => {
@@ -38,11 +38,6 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                         </thead>
                         <tbody>
                             {filteredAppointments
-                                .sort((a, b) => {
-                                    const dateA = new Date(`${a.date} ${a.time}`).getTime();
-                                    const dateB = new Date(`${b.date} ${b.time}`).getTime();
-                                    return dateA - dateB;
-                                })
                                 
                                 .map((appointment, index) => (
                                     <tr key={index}>

@@ -6,7 +6,7 @@ import {DisplayAppointmentsProps} from '../UserTypes';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails, setSelectedPatientDetails } = useAppointments();
+    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails } = useAppointments();
 
     useEffect(() => {
         if (doctorId) {
@@ -30,10 +30,11 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
             parseInt(minutes),
             parseInt(seconds)
         );
-
         const currentDateTime = new Date();
         return appointmentDateTime < currentDateTime;
-    });
+    })
+    .filter(appointment => appointment.status === 'scedual');
+    ;
 
     return (
         <>
@@ -45,7 +46,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                             <tr>
                                 <th>Date</th>
                                 <th>Time</th>
-                                <th>Status</th>
+
                                 <th></th>
                             </tr>
                         </thead>
@@ -54,7 +55,6 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                 <tr key={index}>
                                     <td>{appointment.date}</td>
                                     <td>{appointment.time}</td>
-                                    <td>{appointment.status}</td>
                                     <td>
                                         <button onClick={() => handleViewDetails(appointment.patient_id)}>
                                             View Details

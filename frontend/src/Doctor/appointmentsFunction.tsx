@@ -87,29 +87,47 @@ const filteredAppointments = appointments
 
         // Construct a new Date object
         const appointmentDateTime = new Date(
-        parseInt(year),
-        parseInt(month) - 1,
-        parseInt(day),
-        parseInt(hours),
-        parseInt(minutes),
-        parseInt(seconds)
+            parseInt(year),
+            parseInt(month) - 1,
+            parseInt(day),
+            parseInt(hours),
+            parseInt(minutes),
+            parseInt(seconds)
         );
 
         const currentDateTime = new Date();
-        return appointmentDateTime >= currentDateTime;
+        return appointmentDateTime > currentDateTime;
     })
     .sort((a, b) => {
-        // Concatenate date and time strings for comparison
-        const dateTimeA = `${a.date} ${a.time}`;
-        const dateTimeB = `${b.date} ${b.time}`;
 
-        // Compare concatenated strings directly
-        if (dateTimeA < dateTimeB) return 1;
-        if (dateTimeA > dateTimeB) return -1;
+        const [monthA, yearA] = a.date.split('/');
+        const [monthB, yearB] = b.date.split('/');
+
+
+        if (yearA < yearB) return -1;
+        if (yearA > yearB) return 1;
+
+        if (monthA < monthB) return -1;
+        if (monthA > monthB) return 1;
+
+        const timeA = new Date(`2000-01-01T${a.time}`);
+        const timeB = new Date(`2000-01-01T${b.time}`);
+        if (timeA < timeB) return 1;
+        if (timeA > timeB) return -1;
+
         return 0;
     });
+    
 
-return { appointments, selectedPatientDetails, fetchAppointments, handleViewDetails ,setSelectedPatientDetails ,filteredAppointments , selectedDoctorAppointments ,setSelectedDoctorAppointments};
+return { appointments,
+       selectedPatientDetails,
+       fetchAppointments,
+       handleViewDetails,
+       setSelectedPatientDetails,
+       filteredAppointments,
+       selectedDoctorAppointments,
+       setSelectedDoctorAppointments,
+       };
 };
 
 

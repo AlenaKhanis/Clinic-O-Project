@@ -79,7 +79,6 @@ def get_appointments():
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
-    print(appointments)
     return jsonify(appointments), 200
 
 @bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])
@@ -96,10 +95,17 @@ def scedual_appointment(appointment_id, patient_id):
 
 @bp.route("/get_appointments_by_patient_id/<patient_id>", methods=['GET'])
 def get_appointments_by_patient_id(patient_id):
-    print(patient_id)
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointments_by_patient_id(cursor, patient_id)
 
     return jsonify(appointments), 200
 
+# @bp.route("/get_appointments_history/<doctor_id>")
+# def get_appointments_history(doctor_id):
+#     db = get_db()
+#     cursor = db.cursor(cursor_factory=RealDictCursor)
+#     print("doctor id: ",doctor_id)
+#     appointments = Appointment.get_appointments_history(cursor, doctor_id)
+
+#     return jsonify(appointments), 200

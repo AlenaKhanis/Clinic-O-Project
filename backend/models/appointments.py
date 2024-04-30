@@ -56,7 +56,8 @@ class Appointment:
     def get_appointment_by_doctor_id( cls ,cursor , doctor_id):
         try: 
             cursor.execute ("""
-                SELECT * FROM appointments WHERE doctor_id = %s
+                SELECT * FROM appointments 
+                WHERE doctor_id = %s 
                 """ ,
                 (doctor_id,))
             
@@ -103,10 +104,24 @@ class Appointment:
                 SELECT * FROM appointments WHERE patient_id = %s
             """, (patient_id,))
             appointments = cursor.fetchall()
-            print("Appointments:", appointments)
+        
             return appointments
         except Exception as e:
             print("Error getting appointments:", e)
             return None
 
-    
+    # @classmethod
+    # def get_appointments_history(cursor , doctor_id):
+    #     try:
+    #         cursor.execute("""
+    #             SELECT * FROM appointments 
+    #                 WHERE doctor_id = 3 
+    #                 AND (date < CURRENT_DATE 
+    #                     OR (date = CURRENT_DATE AND EXTRACT(HOUR FROM time) * 3600 + EXTRACT(MINUTE FROM time) * 60 + EXTRACT(SECOND FROM time) <= EXTRACT(HOUR FROM CURRENT_TIME) * 3600 + EXTRACT(MINUTE FROM CURRENT_TIME) * 60 + EXTRACT(SECOND FROM CURRENT_TIME)))
+    #                 AND status = 'scedual';
+    #         """, (doctor_id,))
+    #         appointments = cursor.fetchall()
+    #         return appointments
+    #     except Exception as e:
+    #         print("Error getting appointment history:", e)
+
