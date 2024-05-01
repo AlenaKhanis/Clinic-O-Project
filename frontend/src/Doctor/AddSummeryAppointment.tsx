@@ -5,7 +5,7 @@ import {DisplayAppointmentsProps} from '../Types';
 
 
 
-function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
+function SummeryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
     const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails , setSelectedPatientDetails } = useAppointments();
 
     useEffect(() => {
@@ -96,4 +96,4 @@ function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: Dis
     );
 }
 
-export default HistoryAppointments;
+export default SummeryAppointments;

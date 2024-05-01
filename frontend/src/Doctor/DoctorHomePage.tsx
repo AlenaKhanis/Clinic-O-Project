@@ -4,7 +4,7 @@ import '../css/Tabs.css';
 import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
 import { useEffect, useState } from 'react';
-import HistoryAppointments from './AddSummeryAppointment';
+import SummeryAppointments from './AddSummeryAppointment';
 
 
 //TODO: sent data summery appointment
@@ -29,6 +29,8 @@ function DoctorHomePage() {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };
 
+    //TODO: add function cancel appointment 
+
     return (
         <div style={{ width: '900px', height: '700px' }}>
 
@@ -45,17 +47,20 @@ function DoctorHomePage() {
                     />
                 </Tab>
                 <Tab eventKey="Addsummery" title="Add Summery Appointment" className='tabs'>
-                    <HistoryAppointments
+                    <SummeryAppointments
                         doctorId={doctorId}
                         onAppointmentAdded={refreshAppointments}
                         BACKEND_URL={BACKEND_URL}
                     />
                 </Tab>
                 <Tab eventKey="history appointments" title="History appointments" className='tabs'>
-                    
+                    see all history appointments
                 </Tab>
                 <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
-
+                        see my patient list
+                </Tab>
+                <Tab eventKey="My profile" title="My profile" className='tabs' >
+                        see and update my profile
                 </Tab>
             </Tabs>
         </div>

@@ -44,12 +44,16 @@ function HomePagePatient() {
                     patientId={patientId}
                     refreshAppointments={refreshAppointments}
                     />
+                    add bottun cancel appointment button
                 </Tab>
-                <Tab eventKey="appointments" title="Appointments" className='tabs'>
-                    See Appointment
+                <Tab eventKey="Histort Appointments" title="Histort Appointments" className='tabs'>
+                    See history Appointment +  button view details -  written summery\prescriprions\ diagnosis
                 </Tab>
-                <Tab eventKey="history appointments" title="History appointments" className='tabs'>
-                    History Appointment
+                <Tab eventKey="My profile" title="My profile" className='tabs'>
+                    Update profile \ see profile
+                </Tab>
+                <Tab eventKey="see my doctors" title="My Doctors" className='tabs'>
+                    see all the visited doctors
                 </Tab>
             </Tabs>
         </div>
