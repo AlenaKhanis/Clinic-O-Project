@@ -29,47 +29,53 @@ table {
   }
   
   .appointment-details {
+    max-height: 400px; /* Add maximum height for scrolling */
+    overflow-y: auto; /* Add vertical scrolling */
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 20px;
-    margin: 20px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .appointment-details h3 {
-    margin-top: 0;
-    color: #333;
+    margin-top: 20px;
 }
 
 .appointment-details p {
-    margin: 10px 0;
-    color: #555;
+    margin: 5px 0;
+    text-align: left;
+
+
 }
 
-.appointment-details input[type="text"],
-.appointment-details input[type="number"] {
+.appointment-details input {
     width: 100%;
-    padding: 8px;
+    padding: 5px;
     margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 3px;
+    background-color: white;
 }
 
 .appointment-details button {
-    padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 3px;
+    padding: 8px 16px;
+    border-radius: 4px;
     cursor: pointer;
-}
-
-.appointment-details button:hover {
-    background-color: #007bff;
-}
-
-tr.doctor-row:hover td {
-  background-color: #007bff !important;
-  cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    width: 100px;
 }

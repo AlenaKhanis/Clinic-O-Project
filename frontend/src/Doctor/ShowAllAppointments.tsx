@@ -1,7 +1,7 @@
 import{ useEffect } from "react";
 import "../css/displayAppontments.css";
-import { useAppointments } from "./appointmentsFunction";
-import {DisplayAppointmentsProps} from '../UserTypes';
+import { useAppointments } from "./doctorAppointmentFunction";
+import {DisplayAppointmentsProps} from '../Types';
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -19,8 +19,6 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
         }
     }, [doctorId, onAppointmentAdded]);
 
-
-// Filter appointments based on date and time
 
     return (
         <>

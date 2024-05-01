@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
-import { Doctor ,PatientProps } from '../UserTypes';
-import { useAppointments } from "../Doctor/appointmentsFunction";
+import { Doctor ,PatientProps } from '../Types';
+import { useAppointments } from "../Doctor/doctorAppointmentFunction";
 import '../css/displayAppontments.css'; // Import CSS file
 
 
@@ -14,7 +14,7 @@ function SearchDoctors({ BACKEND_URL , patientId }:  PatientProps) {
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/get_specialetys`)
+        fetch(`${BACKEND_URL}/get_specialties`)
             .then(response => response.json())
             .then((data: { specialtys: string[] }) => {
                 setSelectedDoctorId(null); // Reset selected doctor when searching by specialty
@@ -73,11 +73,26 @@ function SearchDoctors({ BACKEND_URL , patientId }:  PatientProps) {
 
     const isAppointmentExists = (date: string, time: string) => {
         return selectedDoctorAppointments.some(appointment => {
-            return appointment.date === date && appointment.time === time && appointment.status !== 'scedual';
+            return appointment.date === date && appointment.time === time && appointment.status !== 'scedual' && appointment.patient_id == patientId;
         });
     };
     
 
+    const filteredAppointments = selectedDoctorAppointments.filter(appointment => {
+        const [day, month, year] = appointment.date.split('/');
+        const [hours, minutes, seconds] = appointment.time.split(':');
+        const appointmentDateTime = new Date(
+            parseInt(year),
+            parseInt(month) - 1,
+            parseInt(day),
+            parseInt(hours),
+            parseInt(minutes),
+            parseInt(seconds)
+        );
+        const currentDateTime = new Date();
+        return appointmentDateTime >= currentDateTime && appointment.status !== 'scedual';
+    });
+    
     return (
         <>
             <div>
@@ -116,69 +131,36 @@ function SearchDoctors({ BACKEND_URL , patientId }:  PatientProps) {
                 </div>
             )}
             {selectedDoctorId !== null && (
-                <div>
-                    
-                    {MessageScedual && (
-                        <div>
-                            <h2>{MessageScedual}</h2>
+                <>
+                    <h2>Doctor's Appointments</h2>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredAppointments.map((appointment, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{appointment.date}</td>
+                                    <td>{appointment.time}</td>
+                                    <td><button onClick={() => scheduleAppointment(appointment.id, appointment.date, appointment.time)}>Schedule</button></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    {filteredAppointments.length === 0 && !MessageScedual && (
+                        <div className="no-appointments">
+                            <h3>No appointments available</h3>
                         </div>
                     )}
-                    {selectedDoctorAppointments.length > 0 ? (
-                        <>
-                        <h2>Doctor's Appointments</h2>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {selectedDoctorAppointments
-                                    .filter(appointment => {
-                                        return appointment.status !== 'scedual';
-                                    })
-                                    .filter(appointment => {
-                                        const [day, month, year] = appointment.date.split('/');
-                                        const [hours, minutes, seconds] = appointment.time.split(':');
-                                        const appointmentDateTime = new Date(
-                                            parseInt(year),
-                                            parseInt(month) - 1,
-                                            parseInt(day),
-                                            parseInt(hours),
-                                            parseInt(minutes),
-                                            parseInt(seconds)
-                                        );
-                                        const currentDateTime = new Date();
-                                        return appointmentDateTime >= currentDateTime;
-                                    })
-                                    .map((appointment, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{appointment.date}</td>
-                                            <td>{appointment.time}</td>
-                                            <td><button onClick={() => scheduleAppointment(appointment.id , appointment.date , appointment.time)}>Schedule</button></td>
-                                        </tr>
-                                    ))}
-                            </tbody>      
-                        </Table>
-                        </>
-                    ) : (
-                        MessageScedual ? null : (
-                            <div className="no-appointments">
-                                <h3>No appointments available</h3>
-                            </div>
-                        )
-                    )}
-                </div>
+                </>
             )}
         </>
-    ); 
-    
-    
-    
-}
+    );}
 
 export default SearchDoctors;

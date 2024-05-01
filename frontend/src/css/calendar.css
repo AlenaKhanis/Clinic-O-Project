@@ -1,0 +1,37 @@
+/* Custom styles for the calendar */
+.custom-calendar {
+    width: 100%; /* Set desired width */
+    height: 300px; /* Set desired height */
+    border: 2px solid #ccc; /* Add a border */
+    background-color: #4a97a8; /* Set background color */
+    color: #333; /* Set text color */
+  }
+  
+  /* Style for the selected date */
+  .react-calendar__tile--active {
+    color: black; /* Set text color for selected date */
+  }
+  
+  /* Style for hovered date */
+  .react-calendar__tile--hover {
+    background-color: #6aa3b8; /* Set background color for hovered date */
+  }
+  
+  /* Style for today's date */
+  .react-calendar__tile--now {
+    background-color: #63a1b3 !important; /* Set background color for today's date */
+    color: black; /* Set text color for today's date */
+  }
+  
+  /* Style for dates */
+  .react-calendar__tile {
+    font-weight: bold; /* Set font weight to bold */
+    font-size: 16px; /* Set font size to desired size */
+  }
+  
+  /* Style for Saturdays and Sundays */
+  .react-calendar__month-view__days__day:nth-child(7n+6),
+  .react-calendar__month-view__days__day:nth-child(7n+7) {
+      color: rgb(10, 6, 6); /* Set text color for Saturdays and Sundays */
+  }
+  

@@ -8,7 +8,7 @@ from psycopg2.extras import RealDictCursor
 bp = Blueprint("doctors", __name__)
 
 
-@bp.route('/get_specialetys')
+@bp.route('/get_specialties')
 def get_specialetys():
     db = get_db()
     cursor = db.cursor()

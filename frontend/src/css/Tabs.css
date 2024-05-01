@@ -1,0 +1,39 @@
+
+
+.custom-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: #f0f0f0; /* Optional: Change background color */
+}
+
+.toolbar-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #4a97a8; /* Optional: Change button background color */
+  cursor: pointer;
+  align-items: center;
+}
+
+.toolbar-button:hover {
+  background-color: black; /* Optional: Change button background color on hover */
+}
+
+.toolbar-label {
+  font-size: 16px;
+}
+p {
+  font-size: 16px;
+  font-size: larger;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  color: #4a97a8;
+  
+}
+
+.tabs {
+  background-color: #f1f1f1;
+}
+

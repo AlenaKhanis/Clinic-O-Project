@@ -3,6 +3,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import SearchDoctors from "./SerchDoctor";
 import { useEffect, useState } from "react";
 import ShowPatientAppointments from "./ShowPatientAppointment";
+import '../css/Tabs.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -10,6 +11,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 function HomePagePatient() {
     const userInfo = localStorage.getItem('userinfo');
     const [patientId, setpatientId] = useState<string | null>(null);
+    const [, setAppointmentsKey] = useState<string>("app"); 
 
     useEffect(() => {
         if (userInfo) {
@@ -20,6 +22,11 @@ function HomePagePatient() {
         }
     }, [userInfo]);
 
+    const refreshAppointments = () => {
+        setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
+    };
+
+
     return (
         <div style={{ width: '900px', height: '700px' }}>
             <Tabs id="uncontrolled-tab-example" className="mb-3" style={{ backgroundColor: "#f1f1f2" }}>
@@ -27,12 +34,15 @@ function HomePagePatient() {
                     <SearchDoctors 
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}
+                    refreshAppointments={refreshAppointments}
+                    
                      />
                 </Tab>
                 <Tab eventKey="home" title="Show My Appointments" className='tabs'>
                     <ShowPatientAppointments
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}
+                    refreshAppointments={refreshAppointments}
                     />
                 </Tab>
                 <Tab eventKey="appointments" title="Appointments" className='tabs'>

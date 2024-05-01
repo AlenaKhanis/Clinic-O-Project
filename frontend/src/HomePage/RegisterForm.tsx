@@ -184,7 +184,7 @@ export default function Register({ setShowRegisterPopup }: RegisterFormProps) {
                     </div>
                     <MDBRow>
                         <MDBCol col={12} md={6} className='order-2 order-lg-1 d-flex flex-column align-items-center' ref={formRef}>
-                            <form className='login-form' onSubmit={handleRegister}>
+                            <form className='register-form'  onSubmit={handleRegister}>
                                 <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
                                 <div className="d-flex flex-row align-items-center mb-4 ">
                                     <FontAwesomeIcon icon={faUser} className="me-3" size="lg" />
@@ -262,9 +262,7 @@ export default function Register({ setShowRegisterPopup }: RegisterFormProps) {
                                 <Button className='mb-4' size='lg' type='submit' disabled={!isFormValid}>Register</Button>
                             </form>
                         </MDBCol>
-                        <MDBCol md='10' lg='6' className='order-1 order-lg-2 d-flex align-items-center'>
-                            <MDBCardImage src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp' fluid />
-                        </MDBCol>
+
                     </MDBRow>
                 </MDBCardBody>
             </MDBCard>

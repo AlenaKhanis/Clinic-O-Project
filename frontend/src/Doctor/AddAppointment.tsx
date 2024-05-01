@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
-import '../css/adminPage.css';
+import '../css/Tabs.css';
 import 'react-calendar/dist/Calendar.css'; 
+import '../css/calendar.css';
 
 type AddAppointmentProps = {
     doctorId: string | null;
@@ -11,19 +12,19 @@ type AddAppointmentProps = {
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date>();
     const [selectedTime, setSelectedTime] = useState<string>(''); 
     const [scheduledAppointments, setScheduledAppointments] = useState<string>('');
 
     const formatDate = (date: Date): string => {
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits for month
-        const day = date.getDate().toString().padStart(2, '0'); // Ensure 2 digits for day
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
 
-    const handleDateChange = (date: Date | Date[]) => {
-        setSelectedDate(date instanceof Date ? date : null);
+    const handleDateChange = (date: Date) => {
+        setSelectedDate(date);// Set the selected date state to the received date if it's a valid Date object,otherwise set it to null
         setSelectedTime('');
         setScheduledAppointments('');
     };
@@ -90,7 +91,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
     };
 
     const isDisabled = () => {
-        if (!selectedDate) {
+        if (!selectedDate || !selectedTime) {
             return true;
         }
     
@@ -131,7 +132,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     onClickDay={handleDateChange}
                     value={selectedDate}
                     className="custom-calendar"
-                    tileDisabled={tileDisabled} // Pass the tileDisabled function to disable dates before today
+                    tileDisabled={tileDisabled} 
                 />
             </div>
             <div>

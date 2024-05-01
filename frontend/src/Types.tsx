@@ -57,9 +57,11 @@ export type Appointment =  {
 export type DisplayAppointmentsProps = {
   doctorId: string | null;
   onAppointmentAdded: () => void;
+  BACKEND_URL: string;
 };
 
 export type PatientProps = {
   BACKEND_URL: string;
   patientId : string | null;
+  refreshAppointments: () => void;
 };

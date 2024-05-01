@@ -35,24 +35,24 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userRole , 
   
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
-        <Container>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <Navbar.Brand >Clinic-O</Navbar.Brand>
-          </Link>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link onClick={() => logOut()}>
-                {userToken ? "Logout" : "Login"}
-              </Nav.Link>
-              <Nav.Link href="link">Link</Nav.Link>
-            </Nav>
-              <Nav.Item>{userToken ? userRole : "Role"}</Nav.Item>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
+  <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
+    <Container fluid> {/* Use fluid container for full width */}
+      <Link to="/" style={{ textDecoration: 'none' }}>
+        <Navbar.Brand>Clinic-O</Navbar.Brand>
+      </Link>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <Nav.Link onClick={() => logOut()}>
+            {userToken ? "Logout" : "Login"}
+          </Nav.Link>
+          <Nav.Link href="link">Link</Nav.Link>
+        </Nav>
+        <Nav.Item>{userToken ? userRole : "Role"}</Nav.Item>
+      </Navbar.Collapse>
+    </Container>
+  </Navbar>
+</>
   );
 }
 

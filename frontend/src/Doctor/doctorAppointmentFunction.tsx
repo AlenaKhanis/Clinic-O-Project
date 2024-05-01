@@ -1,15 +1,40 @@
 import { useState } from "react";
-import { Appointment, Patient } from "../UserTypes";
+import { Appointment, Patient } from "../Types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+
 
 export const useAppointments = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
 
+    //Pars the date time to string view
+    function parseDateTime(data: Appointment[]): Appointment[] {
+        return data.map(appointment => {
+            const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const date = new Date(appointment.date);
+            const dateString = date.toLocaleDateString('en-GB', options);
+    
+            const year = parseInt(appointment.time.slice(12, 16));
+            const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(appointment.time.slice(8, 11));
+            const day = parseInt(appointment.time.slice(5, 7));
+            const hours = parseInt(appointment.time.slice(17, 19));
+            const minutes = parseInt(appointment.time.slice(20, 22));
+            const seconds = parseInt(appointment.time.slice(23, 25));
+    
+            const time = new Date(year, month, day, hours, minutes, seconds);
+            const timeString = time.toLocaleTimeString('en-US', { hour12: false });
+    
+            return {
+                ...appointment,
+                date: dateString,
+                time: timeString
+            };
+        });
+    }
 
-// Get All App
+// Fetch appointments by doctorID
 const fetchAppointments = (url: string) => {
     fetch(url)
         .then(response => {
@@ -19,37 +44,10 @@ const fetchAppointments = (url: string) => {
             return response.json();
         })
         .then((data: Appointment[]) => {
-            const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-
-            const appointmentsData = data.map(appointment => {
-                const date = new Date(appointment.date);
-                const dateString = date.toLocaleDateString('en-GB', options);
-                
-                // Extract year, month, day, hours, minutes, and seconds from the time string
-                const year = parseInt(appointment.time.slice(12, 16));
-                const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(appointment.time.slice(8, 11));
-                const day = parseInt(appointment.time.slice(5, 7));
-                const hours = parseInt(appointment.time.slice(17, 19));
-                const minutes = parseInt(appointment.time.slice(20, 22));
-                const seconds = parseInt(appointment.time.slice(23, 25));
-
-                // Construct new Date object using extracted components
-                const time = new Date(year, month, day, hours, minutes, seconds);
-
-                // Format time back to string
-                const timeString = time.toLocaleTimeString('en-US', { hour12: false });
-
-                return {
-                    date: dateString,
-                    status: appointment.status,
-                    patient_id: appointment.patient_id,
-                    id: appointment.id,
-                    time: timeString,
-                };
-            });
-
-            setAppointments(appointmentsData);
-            setSelectedDoctorAppointments(appointmentsData);
+            console.log(data)
+            const parsedAppointments = parseDateTime(data);
+            setAppointments(parsedAppointments);
+            setSelectedDoctorAppointments(parsedAppointments);
         })
         .catch(error => {
             console.error("Error fetching appointments:", error);
@@ -57,9 +55,7 @@ const fetchAppointments = (url: string) => {
         });
 };
 
-
-
-// See App Details by patient id
+// View details of a patient by appointment
 const handleViewDetails = (patient_id: number | null) => {
     if (!patient_id){
     setSelectedPatientDetails(null);
@@ -80,6 +76,8 @@ const handleViewDetails = (patient_id: number | null) => {
         });
 };
 
+
+// sort appointments by date
 const filteredAppointments = appointments
     .filter(appointment => {
         const [day, month, year] = appointment.date.split('/');

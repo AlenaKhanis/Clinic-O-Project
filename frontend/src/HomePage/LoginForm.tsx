@@ -3,7 +3,7 @@ import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit
 import { Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Patient, Doctor , Owner } from '../UserTypes.tsx';
+import { Patient, Doctor , Owner } from '../Types.tsx';
 import '../css/LoginForm.css';
 
 //TODO: handle when login faild becuse username or password not correct - give to the userftendly message
@@ -100,11 +100,8 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
   return <>
     
     <MDBContainer className='login-popup' fluid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'  }}>
-      <MDBCard className='text-black' style={{ borderRadius: '25px' , backgroundColor: '#A1d6e2'}}>
+      <MDBCard className='text-black' style={{ borderRadius: '25px' , backgroundColor: 'white'}}>
       <MDBRow>
-        <MDBCol col={12} md={6} className="text-center mb-4 mb-md-0">
-          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" className="img-fluid" alt="Phone image" />
-        </MDBCol>
         <MDBCol col={12} md={6} className="mb-4 mb-md-0" ref={formRef}>
        
           <form className='login-form' onSubmit={handleLoginFormSubmit}>

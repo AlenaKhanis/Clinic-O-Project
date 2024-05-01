@@ -74,11 +74,11 @@ def check_appointment():
 def get_appointments():
     doctor_id = request.args.get("doctor_id")
     if doctor_id is None:
-        return jsonify({"error": "doctor_id parameter is required"}), 400
-
+        return jsonify({"error": "doctor_id is missing"}), 400
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
+
     return jsonify(appointments), 200
 
 @bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])

@@ -1,21 +1,19 @@
 import { Tabs, Tab } from 'react-bootstrap';
-import 'react-calendar/dist/Calendar.css'; // Import default styles
-import '../css/adminPage.css';
+// import 'react-calendar/dist/Calendar.css'; // Import default styles
+import '../css/Tabs.css';
 import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
 import { useEffect, useState } from 'react';
-import HistoryAppointments from './HistoryAppointments';
+import HistoryAppointments from './AddSummeryAppointment';
 
 
-
-//TODO: Add open / scedual app tab - and if the time past add button add sunnery app and add tab show all detaile app with description\diagnoses\summery that written
-//TODO: disable button if not chose time or date
 //TODO: sent data summery appointment
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
     const [doctorId, setDoctorId] = useState<string | null>(null);
-    const [appointmentsKey, setAppointmentsKey] = useState<string>("appointments"); 
+    const [, setAppointmentsKey] = useState<string>("app"); 
 
     useEffect(() => {
         if (userInfo) {
@@ -28,7 +26,7 @@ function DoctorHomePage() {
 
     // Function to force re-render DisplayAppointments component
     const refreshAppointments = () => {
-        setAppointmentsKey((prevKey) => prevKey === "appointments" ? "appointments-refresh" : "appointments");
+        setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };
 
     return (
@@ -40,17 +38,24 @@ function DoctorHomePage() {
                 </Tab>
                 <Tab eventKey="appointments" title="Appointments" className='tabs'>
                     <DisplayAppointments
-
+                        BACKEND_URL={BACKEND_URL}
                         doctorId={doctorId}
-                        onAppointmentAdded={refreshAppointments} // Pass the function as a prop
+                        onAppointmentAdded={refreshAppointments} 
                         
                     />
                 </Tab>
-                <Tab eventKey="history appointments" title="History appointments" className='tabs'>
+                <Tab eventKey="Addsummery" title="Add Summery Appointment" className='tabs'>
                     <HistoryAppointments
                         doctorId={doctorId}
                         onAppointmentAdded={refreshAppointments}
+                        BACKEND_URL={BACKEND_URL}
                     />
+                </Tab>
+                <Tab eventKey="history appointments" title="History appointments" className='tabs'>
+                    
+                </Tab>
+                <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
+
                 </Tab>
             </Tabs>
         </div>

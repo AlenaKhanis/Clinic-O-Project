@@ -20,8 +20,6 @@ class Patient(User):
             """, (user_id,))
         patient_data = cursor.fetchone() 
 
-        print("patient_data: ",patient_data)
-
         if patient_data:
             return patient_data
         else:

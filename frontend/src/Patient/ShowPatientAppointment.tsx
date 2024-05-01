@@ -1,26 +1,17 @@
-import { useEffect, useState } from "react";
-import { PatientProps, Appointment } from "../UserTypes";
+import { useEffect } from "react";
+import { PatientProps } from "../Types";
 import { Table } from "react-bootstrap";
+import { usePatient } from "./patientFunction";
 
-function ShowPatientAppointments({ BACKEND_URL, patientId }: PatientProps) {
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
+function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}: PatientProps) {
+    const { getPatientAppointments, appointments } = usePatient();
 
     useEffect(() => {
         if (patientId) {
-            getPatientAppointments();
+            const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
+            getPatientAppointments(url);
         }
-    }, [patientId]);
-
-    const getPatientAppointments = () => {
-        fetch(`${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`)
-            .then(response => response.json())
-            .then(data => {
-                setAppointments(data);
-            })
-            .catch(error => {
-                console.error("Error fetching appointments:", error);
-            });
-    };
+    }, [patientId ,refreshAppointments]);
 
     return (
         <>
@@ -52,8 +43,6 @@ function ShowPatientAppointments({ BACKEND_URL, patientId }: PatientProps) {
             )}
         </>
     );
-    
-    
 }
 
 export default ShowPatientAppointments;

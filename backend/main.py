@@ -47,6 +47,22 @@ def login():
        return {"error": "Invalid username or password"} , 401
 
 
+# @app.route('/login', methods=['POST'])
+# def login():
+#     data = request.json
+#     db = get_db()
+#     cursor = db.cursor(cursor_factory=RealDictCursor)  
+
+#     cursor.execute("SELECT * FROM users WHERE username = %s", (data["username"],))
+#     user = cursor.fetchone()
+    
+#     if user and bcrypt.checkpw(data["password"].encode('utf-8'), user["password"].encode('utf-8')):
+#         access_token = create_access_token(identity=user["id"])
+#         return {"access_token": access_token}, 200 
+#     else:
+#         return {"error": "Invalid username or password"}, 401
+
+
 @app.route('/get_user', methods=['GET'])
 @jwt_required()
 def get_user():

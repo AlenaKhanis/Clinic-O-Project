@@ -1,0 +1,12 @@
+.footer {
+    background-color: #1995ad; /* Background color */
+    color: #0c0c0c; /* Text color */
+    padding: 20px; /* Padding around the content */
+    text-align: center; /* Center-align the text */
+    width: 100vw; /* Full width of the viewport */
+    position: fixed; /* Fixed positioning */
+    bottom: 0; /* Stick to the bottom */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+  }
+  

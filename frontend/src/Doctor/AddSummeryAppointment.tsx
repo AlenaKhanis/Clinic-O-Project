@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import '../css/displayAppontments.css';
-import { useAppointments } from "./appointmentsFunction";
-import {DisplayAppointmentsProps} from '../UserTypes';
+import { useAppointments } from "./doctorAppointmentFunction";
+import {DisplayAppointmentsProps} from '../Types';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails } = useAppointments();
+
+function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
+    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails , setSelectedPatientDetails } = useAppointments();
 
     useEffect(() => {
         if (doctorId) {
@@ -21,7 +21,6 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
         const [day, month, year] = appointment.date.split('/');
         const [hours, minutes, seconds] = appointment.time.split(':');
 
-        // Construct a new Date object
         const appointmentDateTime = new Date(
             parseInt(year),
             parseInt(month) - 1,
@@ -72,20 +71,24 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                
                 {selectedPatientDetails && (
                      //TODO: more css 
-                    <div className="appointment-details">
-                        <h3>Appointment Details</h3>
-                        <p>Name: {selectedPatientDetails.full_name}</p>
-                        <p>Age: {selectedPatientDetails.age}</p>
-                        <p>Package: {selectedPatientDetails.package}</p>
-                        <p>Phone: {selectedPatientDetails.phone}</p>
-                        <p>Email: {selectedPatientDetails.email}</p>
-                        <p>Diagnoses: {selectedPatientDetails.diagnosis}</p>
-                        <p>Prescription: {selectedPatientDetails.prescription}</p>
-                        <div><p>Summary visit:</p><input/></div>
-                        <div><p>Add Diagnoses:</p><input/></div>
-                        <div><p>Add Prescription:</p><input /></div>
-                        <button>Save</button>
-                    </div>
+                     
+                     <div className="appointment-details">
+                     <button className="close-button" onClick={() => setSelectedPatientDetails(null)}>X</button>
+                     <h3>Appointment Details</h3>
+                     <p>Name: {selectedPatientDetails.full_name}</p>
+                     <p>Age: {selectedPatientDetails.age}</p>
+                     <p>Package: {selectedPatientDetails.package}</p>
+                     <p>Phone: {selectedPatientDetails.phone}</p>
+                     <p>Email: {selectedPatientDetails.email}</p>
+                     <p>Patient Diagnoses: {selectedPatientDetails.diagnosis}</p>
+                     <p>Patient Prescription: {selectedPatientDetails.prescription}</p>
+                     <br></br>
+                     <div><p>Summary visit:</p><input/></div>
+                     <div><p>Add Diagnoses:</p><input/></div>
+                     <div><p>Add Prescription:</p><input /></div>
+                     <button>Save</button>{/* TODO: Send data */}
+                 </div>
+                 
                 )}
             </div>
 
