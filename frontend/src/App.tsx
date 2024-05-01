@@ -9,6 +9,7 @@ import DoctorHomePage from "./Doctor/DoctorHomePage";
 import AdminPagePatient from "./Admin/AdminHomePage";
 import HomePage from "./HomePage/HomePage";
 import { MainBody } from "./HomePage/MainBody";
+import './css/homePage.css';
 
 
 function App() {
@@ -61,10 +62,17 @@ function App() {
           <Route
             path="/"
             element={
-              <div>
+                <>
+                <div>
                 <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} userName={userName} />
+                </div>
+                <div>
                 <BlogSection />
-              </div>
+                </div>
+                <div>
+                  <Footer/>
+                </div>
+                </>
             }
           />
           <Route path="/404" element={<NotFoundPage />} />
@@ -72,7 +80,7 @@ function App() {
         </Routes>
         {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
         {showRegisternPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
-        <Footer />
+        {/* <Footer /> */}
       </>
       
     </Router>

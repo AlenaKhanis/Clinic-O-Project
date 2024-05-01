@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "../css/homePage.css"
+import "../css/homePage.css";
 
 
 type MainBodyProps = {
@@ -12,7 +12,7 @@ type MainBodyProps = {
   export function MainBody({ userRole ,setShowRegisterPopup , userName }: MainBodyProps) {
 
     return (
-      <>
+      <div className="main-body">
         <div className='welcome-content' style={{marginTop: "-200px" }}>
           <h1>Hello {userName}</h1>
           <p>Welcome to clinic-O</p>
@@ -32,6 +32,6 @@ type MainBodyProps = {
             <Button onClick={() => setShowRegisterPopup(true)}>Register</Button>
           )}
         </div>
-      </>
+      </div>
     );
   }

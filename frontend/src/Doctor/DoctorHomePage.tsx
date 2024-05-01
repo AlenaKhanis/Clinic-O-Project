@@ -30,9 +30,10 @@ function DoctorHomePage() {
     };
 
     //TODO: add function cancel appointment 
-
+    
     return (
-        <div style={{ width: '900px', height: '700px' }}>
+        
+        // <div style={{ width: '900px', height: '700px' }}>
 
             <Tabs id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor: "#f1f1f2"}}>
                 <Tab eventKey="home" title="Open Appointments" className='tabs' >
@@ -63,7 +64,7 @@ function DoctorHomePage() {
                         see and update my profile
                 </Tab>
             </Tabs>
-        </div>
+        // </div>
     );
 }
 
