@@ -1,5 +1,5 @@
 import { Tabs, Tab } from 'react-bootstrap';
-// import 'react-calendar/dist/Calendar.css'; // Import default styles
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/Tabs.css';
 import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
@@ -14,7 +14,7 @@ function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
     const [doctorId, setDoctorId] = useState<string | null>(null);
     const [, setAppointmentsKey] = useState<string>("app"); 
-
+ 
     useEffect(() => {
         if (userInfo) {
             const userInfoObject = JSON.parse(userInfo);
@@ -30,42 +30,47 @@ function DoctorHomePage() {
     };
 
     //TODO: add function cancel appointment 
+   
     
     return (
-        
-        // <div style={{ width: '900px', height: '700px' }}>
-
-            <Tabs id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor: "#f1f1f2"}}>
-                <Tab eventKey="home" title="Open Appointments" className='tabs' >
-                    <AddApointment doctorId={doctorId} onSuccess={refreshAppointments} />
-                </Tab>
-                <Tab eventKey="appointments" title="Appointments" className='tabs'>
-                    <DisplayAppointments
-                        BACKEND_URL={BACKEND_URL}
-                        doctorId={doctorId}
-                        onAppointmentAdded={refreshAppointments} 
-                        
-                    />
-                </Tab>
-                <Tab eventKey="Addsummery" title="Add Summery Appointment" className='tabs'>
-                    <SummeryAppointments
-                        doctorId={doctorId}
-                        onAppointmentAdded={refreshAppointments}
-                        BACKEND_URL={BACKEND_URL}
-                    />
-                </Tab>
-                <Tab eventKey="history appointments" title="History appointments" className='tabs'>
-                    see all history appointments
-                </Tab>
-                <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
-                        see my patient list
-                </Tab>
-                <Tab eventKey="My profile" title="My profile" className='tabs' >
-                        see and update my profile
-                </Tab>
-            </Tabs>
-        // </div>
+        <>
+        <div className='welcomdiv'>
+            <h1>Here doctor panel</h1>
+            <p>Welcome here you can do oparators</p>
+        </div>
+        <div className="container">
+            <div className="row">
+                    <Tabs id="uncontrolled-tab-example" className="custom-tabs">
+                        <Tab eventKey="home" title="Open Appointments" className='tabs'>
+                            <AddApointment doctorId={doctorId} onSuccess={refreshAppointments} />
+                        </Tab>
+                        <Tab eventKey="appointments" title="Appointments" className='tabs'>
+                            <DisplayAppointments
+                                BACKEND_URL={BACKEND_URL}
+                                doctorId={doctorId}
+                                onAppointmentAdded={refreshAppointments}
+                            />
+                        </Tab>
+                        <Tab eventKey="Addsummery" title="Add Summery Appointment" className='tabs'>
+                            <SummeryAppointments
+                                doctorId={doctorId}
+                                onAppointmentAdded={refreshAppointments}
+                                BACKEND_URL={BACKEND_URL}
+                            />
+                        </Tab>
+                        <Tab eventKey="history appointments" title="History appointments" className='tabs'>
+                            see all history appointments
+                        </Tab>
+                        <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
+                            see my patient list
+                        </Tab>
+                        <Tab eventKey="My profile" title="My profile" className='tabs'>
+                            see and update my profile
+                        </Tab>
+                    </Tabs>
+                </div>
+                </div>
+                </>
     );
-}
-
+}    
 export default DoctorHomePage;

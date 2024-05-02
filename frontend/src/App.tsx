@@ -69,9 +69,6 @@ function App() {
                 <div>
                 <BlogSection />
                 </div>
-                <div>
-                  <Footer/>
-                </div>
                 </>
             }
           />
@@ -80,7 +77,7 @@ function App() {
         </Routes>
         {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
         {showRegisternPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
-        {/* <Footer /> */}
+        <Footer/>
       </>
       
     </Router>

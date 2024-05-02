@@ -12,7 +12,6 @@ type MainBodyProps = {
   export function MainBody({ userRole ,setShowRegisterPopup , userName }: MainBodyProps) {
 
     return (
-      <div className="main-body">
         <div className='welcome-content' style={{marginTop: "-200px" }}>
           <h1>Hello {userName}</h1>
           <p>Welcome to clinic-O</p>
@@ -32,6 +31,5 @@ type MainBodyProps = {
             <Button onClick={() => setShowRegisterPopup(true)}>Register</Button>
           )}
         </div>
-      </div>
     );
   }

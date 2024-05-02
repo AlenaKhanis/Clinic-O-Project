@@ -28,8 +28,14 @@ function HomePagePatient() {
 
 
     return (
-        <div style={{ width: '900px', height: '700px' }}>
-            <Tabs id="uncontrolled-tab-example" className="mb-3" style={{ backgroundColor: "#f1f1f2" }}>
+        <>
+        <div className='welcomdiv'>
+            <h1>Here User panel</h1>
+            <p>Welcome here you can do oparators</p>
+        </div>
+        <div className="container">
+            <div className="row">
+            <Tabs id="uncontrolled-tab-example" className="custom-tabs">
                 <Tab eventKey="searchDoctor" title="Search Doctor" className='tabs'>
                     <SearchDoctors 
                     BACKEND_URL={BACKEND_URL}
@@ -57,6 +63,8 @@ function HomePagePatient() {
                 </Tab>
             </Tabs>
         </div>
+        </div>
+         </>
     );
 }
 

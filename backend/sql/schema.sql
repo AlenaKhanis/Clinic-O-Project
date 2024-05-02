@@ -57,9 +57,8 @@ DROP  TABLE IF EXISTS appointments CASCADE;
 CREATE TABLE IF NOT EXISTS appointments (
     id SERIAL PRIMARY KEY,
     patient_id INTEGER,
-    date TIMESTAMP NOT NULL,
-    time TIMESTAMP NOT NULL,
-    status TEXT NOT NULL CHECK (status IN('scedual', 'cancelled' , 'open')),
+    date_time TIMESTAMP NOT NULL,
+    status TEXT NOT NULL CHECK (status IN('schedule', 'cancelled', 'open', 'completed')),
     doctor_id INTEGER NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES doctors (doctor_id),
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
@@ -126,7 +125,7 @@ CREATE TABLE IF NOT EXISTS owner (
 -- Insert data into the users table first
 INSERT INTO users (username, password, email, age, full_name, phone, role)
 VALUES ('Alona', '1234', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'owner'),
-    ('example user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient'),
+    ('user', '1234', 'user@mysite.com', 25, 'user', '456445', 'patient'),
     ('doctor', '5454', 'docrot@mysite.com', 45, 'doctor', '555', 'doctor');
 
 -- Now, insert data into the clinic table with a valid owner_id

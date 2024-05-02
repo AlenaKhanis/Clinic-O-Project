@@ -35,20 +35,18 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredAppointments
-                                
-                                .map((appointment, index) => (
-                                    <tr key={index}>
-                                        <td>{appointment.date}</td>
-                                        <td>{appointment.time}</td>
-                                        <td>{appointment.status}</td>
-                                        <td>
-                                            <button onClick={() => handleViewDetails(appointment.patient_id)}>
-                                                View Details
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                        {filteredAppointments.map((appointment, index) => (
+                            <tr key={index}>
+                                <td>{appointment.date}</td> 
+                                <td>{appointment.time}</td>
+                                <td>{appointment.status}</td>
+                                <td>
+                                    <button onClick={() => handleViewDetails(appointment.patient_id)}>
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 ) : (
