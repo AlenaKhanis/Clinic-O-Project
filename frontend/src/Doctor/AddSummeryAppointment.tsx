@@ -45,7 +45,7 @@ function SummeryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: Dis
                             <tr>
                                 <th>Date</th>
                                 <th>Time</th>
-
+                            
                                 <th></th>
                             </tr>
                         </thead>

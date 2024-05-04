@@ -2,12 +2,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -28,8 +25,24 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  overflow-x: hidden;
 }
+
+/* Adjust the height dynamically based on content */
+body {
+  height: auto; /* Set height to auto to accommodate content */
+}
+
+/* Enable vertical scrolling when content overflows */
+html, body {
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Optionally, set a minimum height for the body */
+body {
+  min-height: calc(100vh - 50px); /* Set a minimum height to fill the viewport */
+}
+
 
 h1 {
   font-size: 3.2em;
@@ -66,4 +79,26 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* @media (prefers-color-scheme: dark) {
+  body {
+    background-image: url('https://www.caller.com/gcdn/presto/2020/02/19/PLSJ/0076aa1f-3f45-42dd-aa1d-6bee61eef833-Doctor-stock-3.jpg?width=1200&disable=upscale&format=pjpg&auto=webp');
+  }
+} */
+
+/* Track */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar handle */
+  border-radius: 4px; /* Rounded corners for the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar handle on hover */
 }

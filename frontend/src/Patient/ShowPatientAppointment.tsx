@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { PatientProps } from "../Types";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { usePatient } from "./patientFunction";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}: PatientProps) {
-    const { getPatientAppointments, appointments } = usePatient();
+    const { getPatientAppointments, appointments , cancelAppointment } = usePatient();
 
     useEffect(() => {
         if (patientId) {
@@ -22,7 +23,6 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
                             <th>#</th>
                             <th>Date</th>
                             <th>Time</th>
-                            {/* Add more table headers if needed */}
                         </tr>
                     </thead>
                     <tbody>
@@ -31,7 +31,8 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
                                 <td>{index + 1}</td>
                                 <td>{appointment.date}</td>
                                 <td>{appointment.time}</td>
-                                {/* Add more table data cells for other appointment details */}
+                                {/* <td><Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {getDoctordetails()}}>View Details</Button></td> */}
+                                <td><Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {cancelAppointment(BACKEND_URL , appointment.id)}}>Cancle Appointment</Button></td>
                             </tr>
                         ))}
                     </tbody>

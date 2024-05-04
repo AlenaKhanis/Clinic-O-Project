@@ -1,5 +1,21 @@
-SELECT * FROM appointments 
-WHERE doctor_id = 3 
-AND (date < CURRENT_DATE 
-    OR (date = CURRENT_DATE AND EXTRACT(HOUR FROM time) * 3600 + EXTRACT(MINUTE FROM time) * 60 + EXTRACT(SECOND FROM time) <= EXTRACT(HOUR FROM CURRENT_TIME) * 3600 + EXTRACT(MINUTE FROM CURRENT_TIME) * 60 + EXTRACT(SECOND FROM CURRENT_TIME)))
-AND status = 'scedual';
+
+
+INSERT INTO users (username, password, email, age, full_name, phone, role)
+VALUES ('Doctor', '8989', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'doctor');
+
+
+SELECT * FROM users WHERE id = 3;
+
+-- Now, insert data into the patients table
+INSERT INTO doctors (
+    doctor_id,
+    specialty,
+    created_date,
+    updated_date
+)
+VALUES (
+    4,  -- Replace with the valid patient_id from the users table
+    'Family Doctor',
+    CURRENT_TIMESTAMP,  -- Set the created_date to the current timestamp
+    CURRENT_TIMESTAMP  -- Set the updated_date to the current timestamp
+);

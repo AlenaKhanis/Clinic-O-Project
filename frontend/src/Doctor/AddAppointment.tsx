@@ -36,14 +36,19 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
 
     const handleFormSubmit = () => {
         if (selectedDate && selectedTime) {
-            const formattedDate = formatDate(selectedDate); 
-            const url = `${BACKEND_URL}/check_appointment?doctor_id=${doctorId}&date=${formattedDate}&time=${selectedTime}:00`;
+            // Combine selectedDate and selectedTime into a single datetime string
+            const datetime = new Date(selectedDate);
+            const timeParts = selectedTime.split(':');
+            datetime.setHours(parseInt(timeParts[0]));
+            datetime.setMinutes(parseInt(timeParts[1]));
+    
+            const formattedDateTime = datetime.toISOString(); 
+            const url = `${BACKEND_URL}/check_appointment?doctor_id=${doctorId}&datetime=${formattedDateTime}`;
             const appointmentData = {
                 doctor_id: doctorId,
-                date: formattedDate,
-                time: selectedTime
+                datetime: formattedDateTime
             };
-
+    
             fetch(url, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
@@ -60,7 +65,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     })
                     .then(response => {
                         if (response.ok){
-                            setScheduledAppointments(`Schedule Appointment: Date:${formattedDate} Time:${selectedTime}`);
+                            setScheduledAppointments(`Schedule Appointment: Date:${selectedDate} Time:${selectedTime}`);
                             onSuccess(); 
                         } else {
                             setScheduledAppointments("Oops! There was a problem scheduling the appointment.");
@@ -78,6 +83,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
             console.error("Date or Time not selected");
         }
     };
+    
 
     const renderTimeOptions = (startHour: number, endHour: number, step: number) => {
         const options = [];

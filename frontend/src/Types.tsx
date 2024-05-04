@@ -46,12 +46,12 @@ export type Appointment =  {
   status: string;
   patient_id: number | null;
   id: number;
-  date: string;
-  time: string;
+  date_time: string;
   summery?: string;
   written_diagnosis?: string;
   written_prescriptions?: string;
-
+  date: string;
+  time: string;
 }
 
 export type DisplayAppointmentsProps = {

@@ -5,26 +5,24 @@ import { Appointment } from "../Types";
 export const usePatient = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
 
+    // TODO: this function is repet itsel and should be moved to a utils file
     function parseDateTime(data: Appointment[]): Appointment[] {
         return data.map(appointment => {
+            // Convert date and time strings into Date objects
+            const date = new Date(appointment.date_time);
+      
+            // Format date
             const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            const date = new Date(appointment.date);
-            const dateString = date.toLocaleDateString('en-GB', options);
+            const dateString = date.toLocaleDateString('en-GB', options).replace(/\//g, '.');
     
-            const year = parseInt(appointment.time.slice(12, 16));
-            const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(appointment.time.slice(8, 11));
-            const day = parseInt(appointment.time.slice(5, 7));
-            const hours = parseInt(appointment.time.slice(17, 19));
-            const minutes = parseInt(appointment.time.slice(20, 22));
-            const seconds = parseInt(appointment.time.slice(23, 25));
-    
-            const time = new Date(year, month, day, hours, minutes, seconds);
-            const timeString = time.toLocaleTimeString('en-US', { hour12: false });
+            const hours = date.getUTCHours();
+            const minutes = date.getUTCMinutes();
+            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
     
             return {
                 ...appointment,
                 date: dateString,
-                time: timeString
+                time: formattedTime
             };
         });
     }
@@ -42,5 +40,22 @@ export const usePatient = () => {
             });
     };
 
-    return { getPatientAppointments, appointments };
+    const cancelAppointment = (BACKEND_URL : string , appointmentId : number) => {
+        fetch(`${BACKEND_URL}/cancel_appointment/${appointmentId}`, { 
+            
+        })
+        .then(response => {
+            if (response.ok) {
+                setAppointments(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
+            } else {
+                console.error("Failed to cancel appointment:", response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error("Error cancelling appointment:", error);
+        }); 
+    };
+    
+
+    return { getPatientAppointments, appointments , cancelAppointment };
 };
