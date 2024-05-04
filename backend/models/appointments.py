@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 
+
 @dataclass
 class Appointment:
     date_time: datetime
@@ -16,7 +17,7 @@ class Appointment:
 
 
 
-    def add_open_appointment_for_doctor(self, cursor):
+    def add_open_appointment_for_doctor(self, cursor) -> bool:
         sql = """
             INSERT INTO appointments (date_time, doctor_id, status, created_date, updated_date)
             VALUES (%s, %s, %s, %s, %s)
@@ -29,7 +30,7 @@ class Appointment:
             return False
 
     @classmethod
-    def check_appointment_exists(cls, appointment_datetime, id, cursor):
+    def check_appointment_exists(cls, appointment_datetime, id, cursor) -> bool:
         try:
             cursor.execute(
                 """
@@ -49,10 +50,8 @@ class Appointment:
 
         
     @classmethod   
-    def get_appointment_by_doctor_id(cls, cursor, doctor_id):
+    def get_appointment_by_doctor_id(cls, cursor, doctor_id) -> dict :
         try:
-            today_date = datetime.now()
-            print(today_date)
             cursor.execute("""
                 SELECT * FROM appointments 
                 WHERE doctor_id = %s 
@@ -60,7 +59,6 @@ class Appointment:
                 (doctor_id,))
 
             all_appointments = cursor.fetchall()
-            print(all_appointments)
             if all_appointments:
                 return all_appointments
             else:
@@ -70,7 +68,7 @@ class Appointment:
 
 
     @classmethod
-    def scedual_appointment_for_patient(cls , cursor , appointment_id , patient_id):
+    def scedual_appointment_for_patient(cls , cursor , appointment_id , patient_id) -> dict:
         try:
             cursor.execute(
             """
@@ -79,14 +77,13 @@ class Appointment:
             (appointment_id,)
             )
             appointment_status = cursor.fetchone()
-            
-            if appointment_status and appointment_status['status'] == 'scedual':
-
+        
+            if appointment_status and appointment_status['status'] == 'schedule':
                 return False
 
             cursor.execute(
                 """
-                UPDATE appointments SET patient_id = %s, status = 'scedual' WHERE id = %s
+                UPDATE appointments SET patient_id = %s, status = 'schedule' , updated_date = CURRENT_TIMESTAMP  WHERE id = %s
                 """,
                 (patient_id, appointment_id,)
             )
@@ -97,18 +94,30 @@ class Appointment:
             return False
 
     @classmethod
-    def get_appointments_by_patient_id(cls, cursor, patient_id):
+    def get_appointments_by_patient_id(cls, cursor, patient_id) -> dict:
         try:
-            print("Patient ID:", patient_id)
             cursor.execute("""
                 SELECT * FROM appointments WHERE patient_id = %s
             """, (patient_id,))
             appointments = cursor.fetchall()
-        
             return appointments
         except Exception as e:
             print("Error getting appointments:", e)
             return None
+        
+    @classmethod
+    def cancel_appointment(cls, cursor, appointment_id) -> bool:
+        try:
+            cursor.execute("""
+                UPDATE appointments 
+                SET status = 'open', patient_id = NULL , updated_date = CURRENT_TIMESTAMP
+                WHERE id = %s
+            """, (appointment_id,))
+            return True
+        except Exception as e:
+            print("Error cancelling appointment:", e)
+            return False
+
 
     # @classmethod
     # def get_appointments_history(cursor , doctor_id):

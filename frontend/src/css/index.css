@@ -40,7 +40,7 @@ html, body {
 
 /* Optionally, set a minimum height for the body */
 body {
-  min-height: 100vh; /* Set a minimum height to fill the viewport */
+  min-height: calc(100vh - 50px); /* Set a minimum height to fill the viewport */
 }
 
 

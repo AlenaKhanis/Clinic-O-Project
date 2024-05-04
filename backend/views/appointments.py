@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 from models.appointments import Appointment
 from db import get_db
 from psycopg2.extras import RealDictCursor
@@ -7,8 +7,8 @@ from datetime import datetime
 
 bp = Blueprint("appointments", __name__)
 
-@bp.route("/add_appointment", methods=["POST"])
-def add_appointment():
+@bp.route("/add_appointment", methods=["POST"]) 
+def add_appointment()-> Response:
     db = get_db()
     cursor = db.cursor()
     if request.method == "POST":
@@ -18,9 +18,9 @@ def add_appointment():
             datetime_str = data.get("datetime")
             status = "open" 
 
-            datetime_obj = datetime.fromisoformat(datetime_str)
+            datetime_object = datetime.fromisoformat(datetime_str)
    
-            appointment = Appointment(date_time=datetime_obj,  # Adjusted here
+            appointment = Appointment(date_time=datetime_object,  
                                       doctor_id=doctor_id,
                                       status=status)
         
@@ -28,7 +28,6 @@ def add_appointment():
                 db.commit()
                 return jsonify({'message': 'Added successful'}), 200
             else:
-                print("failed")
                 db.rollback()
                 return jsonify({'message': 'Failed to Add appointment'}), 500
 
@@ -39,7 +38,7 @@ def add_appointment():
         return "Method not allowed", 405
 
 @bp.route("/check_appointment", methods=['GET'])
-def check_appointment():
+def check_appointment()-> Response:
     appointment_datetime_str = request.args.get('datetime')
     doctor_id = request.args.get('doctor_id')
 
@@ -60,7 +59,7 @@ def check_appointment():
 
 
 @bp.route("/get_appointments", methods=['GET'])
-def get_appointments():
+def get_appointments() -> dict[Appointment]:
     doctor_id = request.args.get("doctor_id")
     if doctor_id is None:
         return jsonify({"error": "doctor_id is missing"}), 400
@@ -71,7 +70,7 @@ def get_appointments():
     return jsonify(appointments), 200
 
 @bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])
-def scedual_appointment(appointment_id, patient_id):
+def scedual_appointment(appointment_id, patient_id) -> Response:
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
    
@@ -81,14 +80,27 @@ def scedual_appointment(appointment_id, patient_id):
     else:
         db.rollback()
         return jsonify({'error': "Appointment is already scheduled."}), 400
+    
 
 @bp.route("/get_appointments_by_patient_id/<patient_id>", methods=['GET'])
-def get_appointments_by_patient_id(patient_id):
+def get_appointments_by_patient_id(patient_id) -> dict[Appointment]:
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointments_by_patient_id(cursor, patient_id)
 
     return jsonify(appointments), 200
+
+@bp.route("/cancel_appointment/<appointment_id>")
+def cancel_appointment(appointment_id) -> Response:
+    db = get_db()
+    cursor = db.cursor()
+    if (Appointment.cancel_appointment(cursor, appointment_id)):
+        db.commit()
+        return jsonify({'message': "Appointment cancelled successfully."}), 200
+    else:
+        db.rollback()
+        return jsonify({'error': "Appointment is already cancelled."}), 400
+
 
 # @bp.route("/get_appointments_history/<doctor_id>")
 # def get_appointments_history(doctor_id):

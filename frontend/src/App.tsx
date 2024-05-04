@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Routes, Route, BrowserRouter as Router, Navigate } from "react-router-dom";
 import BlogSection from "./HomePage/BlogSection";
 import LoginForm from "./HomePage/LoginForm";

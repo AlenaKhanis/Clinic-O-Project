@@ -47,7 +47,6 @@ const fetchAppointments = (url: string) => {
             const parsedAppointments = parseDateTime(data); 
             setAppointments(parsedAppointments);
             setSelectedDoctorAppointments(parsedAppointments);
-            console.log(parsedAppointments)
         })
         .catch(error => {
             console.error("Error fetching appointments:", error);
@@ -110,6 +109,9 @@ const filteredAppointments = appointments
         return dateA - dateB;
     });
 
+    const getDoctordetails = () => {
+        //return doctor details
+    }
 
 
 return { appointments,
@@ -120,6 +122,7 @@ return { appointments,
        filteredAppointments,
        selectedDoctorAppointments,
        setSelectedDoctorAppointments,
+       getDoctordetails,
        };
 };
 

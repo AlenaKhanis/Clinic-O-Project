@@ -50,7 +50,7 @@ function HomePagePatient() {
                     patientId={patientId}
                     refreshAppointments={refreshAppointments}
                     />
-                    add bottun cancel appointment button
+                    
                 </Tab>
                 <Tab eventKey="Histort Appointments" title="Histort Appointments" className='tabs'>
                     See history Appointment +  button view details -  written summery\prescriprions\ diagnosis

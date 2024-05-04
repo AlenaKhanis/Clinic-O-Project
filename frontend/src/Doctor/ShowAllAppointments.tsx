@@ -2,6 +2,7 @@ import{ useEffect } from "react";
 import "../css/displayAppontments.css";
 import { useAppointments } from "./doctorAppointmentFunction";
 import {DisplayAppointmentsProps} from '../Types';
+import { Button } from "react-bootstrap";
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -32,6 +33,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                 <th>Time</th>
                                 <th>Status</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,9 +43,15 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                 <td>{appointment.time}</td>
                                 <td>{appointment.status}</td>
                                 <td>
-                                    <button onClick={() => handleViewDetails(appointment.patient_id)}>
+                                    <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => handleViewDetails(appointment.patient_id)}>
                                         View Details
-                                    </button>
+                                    </Button>
+                                </td>
+                                <td>
+                                   { /*<Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {strartAppointment()}}></Button>// do to page summery appointment , only can start if no appointment scedual for this time in zone of 15 min + or -*/}
+                                </td>
+                                <td>
+                                    {/* <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {cancelAppointment()}}></Button> */}
                                 </td>
                             </tr>
                         ))}
@@ -54,15 +62,24 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                 )}
             </div>
             <div>
-                //TODO: check why not close when clicking on button with patient iSd null
-            {selectedPatientDetails && (
-                <div>
-                    <h3>Appointment Details</h3>
-                    <p>Name: {selectedPatientDetails.full_name}</p>
-                    <p>Diagnoses: {selectedPatientDetails.diagnosis}</p>
-                    <p>Prescription: {selectedPatientDetails.prescription}</p>
-                </div>
-            )}
+                {selectedPatientDetails && (
+                        <div className="table-container">
+                            <h3>Appointment Details</h3>
+                            <p>Patient Name: {selectedPatientDetails.full_name}</p>
+                            <p>Patient Pacage: {selectedPatientDetails.package}</p>
+                            <p>Age: {selectedPatientDetails.age}</p>
+                            {selectedPatientDetails.diagnosis ? (
+                                <p>Diagnoses: {selectedPatientDetails.diagnosis}</p>
+                            ) : (<p>Diagnoses: No Diagnosis Available</p>)}
+                            {selectedPatientDetails.prescription ? (
+                                <p>Prescription: {selectedPatientDetails.prescription}</p>
+                            ) : (<p>Prescription: No Prescription Available</p>)}
+                            {/* <Button variant="outline-dark" onClick={() => setSelectPatientHistoryApp(null)}>
+                                Close
+                            </Button> */}
+
+                        </div>
+                )}
 
             </div>
         </>
