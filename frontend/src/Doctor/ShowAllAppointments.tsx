@@ -3,6 +3,8 @@ import "../css/displayAppontments.css";
 import { useAppointments } from "./doctorAppointmentFunction";
 import {DisplayAppointmentsProps} from '../Types';
 import { Button } from "react-bootstrap";
+import { usePatient } from "../Patient/patientFunction";
+import { useNavigate } from "react-router-dom";
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -10,7 +12,16 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails  , filteredAppointments} = useAppointments();
+    const { appointments,
+            fetchAppointments,
+            handleViewDetails,
+            selectedPatientDetails,
+            filteredAppointments,
+            startAppointment,} = useAppointments();
+
+        const {getPatientAppointments} =  usePatient();
+        const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -19,6 +30,17 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
             fetchAppointments(url);
         }
     }, [doctorId, onAppointmentAdded]);
+
+
+    const viewPatientAppointments = (patinetID : number) => {
+
+        const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patinetID}`;
+
+                                    getPatientAppointments(url, (parsedAppointments) => {
+                                        navigate('/patient-appointment', { state: { parsedAppointments } });
+                                    });
+
+    }
 
 
     return (
@@ -33,7 +55,6 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                 <th>Time</th>
                                 <th>Status</th>
                                 <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,12 +67,6 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                     <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => handleViewDetails(appointment.patient_id)}>
                                         View Details
                                     </Button>
-                                </td>
-                                <td>
-                                   { /*<Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {strartAppointment()}}></Button>// do to page summery appointment , only can start if no appointment scedual for this time in zone of 15 min + or -*/}
-                                </td>
-                                <td>
-                                    {/* <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {cancelAppointment()}}></Button> */}
                                 </td>
                             </tr>
                         ))}
@@ -74,9 +89,19 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                             {selectedPatientDetails.prescription ? (
                                 <p>Prescription: {selectedPatientDetails.prescription}</p>
                             ) : (<p>Prescription: No Prescription Available</p>)}
-                            {/* <Button variant="outline-dark" onClick={() => setSelectPatientHistoryApp(null)}>
-                                Close
-                            </Button> */}
+                            <div>
+                            <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => startAppointment()}>
+                                Start Appointment
+                            </Button>
+                            </div>
+                            <br></br>
+                            <Button 
+                                style={{width: 'fit-content'}} 
+                                variant="outline-dark" 
+                                onClick={() => {viewPatientAppointments(selectedPatientDetails.patient_id)}}
+                            >
+                                View Previous Appointments
+                            </Button>
 
                         </div>
                 )}

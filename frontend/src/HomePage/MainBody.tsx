@@ -10,6 +10,7 @@ type MainBodyProps = {
   }
   
   export function MainBody({ userRole ,setShowRegisterPopup , userName }: MainBodyProps) {
+    
 
     return (
         <div className='welcome-content' style={{marginTop: "-200px" }}>

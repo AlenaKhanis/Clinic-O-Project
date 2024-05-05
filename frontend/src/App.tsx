@@ -10,6 +10,8 @@ import AdminPagePatient from "./Admin/AdminHomePage";
 import HomePage from "./HomePage/HomePage";
 import { MainBody } from "./HomePage/MainBody";
 import './css/homePage.css';
+import Appointment from "./Doctor/Appointment";
+import PatientAppointment from "./Doctor/PatientAppointment";
 
 
 function App() {
@@ -59,6 +61,8 @@ function App() {
           <Route path="/patient" element={userRole === "patient" ? <HomePagePatient /> : <Navigate to="/404" />} />
           <Route path="/doctor" element={userRole === "doctor" ? <DoctorHomePage /> : <Navigate to="/404" />} />
           <Route path="/admin" element={userRole === "owner" ? <AdminPagePatient /> : <Navigate to="/404" />} />
+          <Route path="/appointment-details" element={userRole === "doctor" ? <Appointment /> : <Navigate to="/404" />} />
+          <Route path="/patient-appointment" element={<PatientAppointment />} />
           <Route
             path="/"
             element={

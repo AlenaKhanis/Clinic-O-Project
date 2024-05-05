@@ -13,14 +13,15 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
     const [MessageScedual, setMessageScedual] = useState<string>('');
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
-    const { appointments, getPatientAppointments,cancelAppointment } = usePatient();
+    const { appointments, getPatientAppointments, setCancelAppointmentCalled } = usePatient();
 
     useEffect(() => {
-      if (patientId) {
-          const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
-          getPatientAppointments(url);
-      }
-  }, [patientId ,refreshAppointments , cancelAppointment]);
+        if (patientId) {
+            const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
+            getPatientAppointments(url);
+            setCancelAppointmentCalled(false)
+        }
+    }, [patientId, refreshAppointments, setCancelAppointmentCalled]);
 
 
     useEffect(() => {
@@ -29,7 +30,6 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
             .then((data: { specialtys: string[] }) => {
                 setSelectedDoctorId(null); // Reset selected doctor when searching by specialty
                 setSelectedDoctorAppointments([]); // Reset appointments
-                // Filter out duplicates
                 const uniqueSpecialties = [...new Set(data.specialtys)];
                 setSpecialties(uniqueSpecialties);
             })

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState   } from "react";
 import { Appointment, Doctor, Patient } from "../Types";
+import { useNavigate } from "react-router-dom"; 
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -11,6 +13,10 @@ export const useAppointments = () => {
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
     const [selectedDoctorDetails , setSelectedDoctorDetails] = useState<Doctor | null>(null);
+
+
+
+    const navigate = useNavigate();
 
     //Pars the date time to string view
     function parseDateTime(data: Appointment[]): Appointment[] {
@@ -71,6 +77,7 @@ const handleViewDetails = (patient_id: number | null) => {
             return response.json();
         })
         .then((patientDetails: Patient) => {
+            console.log(patient_id)
             setSelectedPatientDetails(patientDetails);
         })
         .catch(error => {
@@ -130,6 +137,35 @@ const filteredAppointments = appointments
     }
 
 
+    
+    const startAppointment = () => {
+        // Get the current date and time
+        const currentDate = new Date();
+
+        // Calculate the end time of the appointment (15 minutes later)
+        const endTime = new Date(currentDate.getTime() + 15 * 60000); // 15 minutes in milliseconds
+
+        // Check if there are any conflicting appointments within 15 minutes
+        const conflictingAppointment = appointments.find(appointment => {
+            // Convert the appointment date and time string to a Date object
+            const appointmentDateTime = new Date(appointment.date_time);
+            console.log("appointment date", appointmentDateTime)
+            console.log("now date time" ,currentDate)
+            // Check if the appointment time is within the next 15 minutes
+            return appointmentDateTime > currentDate && appointmentDateTime < endTime;
+        });
+
+        if (conflictingAppointment) {
+            // Show a message or prevent starting the appointment if there's a conflict
+            // Example: alert("You have another appointment scheduled within the next 15 minutes.");
+            return;
+        }
+
+        // Navigate to the appointment details page
+        navigate("/appointment-details");
+    };
+
+
 return { appointments,
        selectedPatientDetails,
        fetchAppointments,
@@ -141,6 +177,7 @@ return { appointments,
        getDoctordetails,
        selectedDoctorDetails,
        setSelectedDoctorDetails,
+       startAppointment,
        };
 };
 

@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAppointments } from "../Doctor/doctorAppointmentFunction";
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}: PatientProps) {
-    const { getPatientAppointments, appointments , cancelAppointment } = usePatient();
+    const { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled } = usePatient();
     const { getDoctordetails , selectedDoctorDetails , setSelectedDoctorDetails } = useAppointments()
 
     
@@ -14,8 +14,9 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
         if (patientId) {
             const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
             getPatientAppointments(url);
+            setCancelAppointmentCalled(false)
         }
-    }, [patientId ,refreshAppointments ,cancelAppointment]);
+    }, [patientId ,refreshAppointments , setCancelAppointmentCalled]);
 
     
     return (

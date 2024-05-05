@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Appointment } from "../Types";
+import { useNavigate } from "react-router-dom";
 
 
 export const usePatient = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [cancelAppointmentCalled, setCancelAppointmentCalled] = useState(false);
+
 
 
     // TODO: this function is repet itsel and should be moved to a utils file
@@ -29,18 +32,22 @@ export const usePatient = () => {
     }
     
 
-    const getPatientAppointments = (url: string) => {
+    const getPatientAppointments = (url: string, navigateCallback?: (parsedAppointments: Appointment[]) => void) => {
         fetch(url)
             .then(response => response.json())
             .then((data: Appointment[]) => {
                 const parsedAppointments = parseDateTime(data);
                 setAppointments(parsedAppointments);
+                if (navigateCallback) {
+                    navigateCallback(parsedAppointments); // Pass parsedAppointments to the navigate callback function if provided
+                }
             })
             .catch(error => {
                 console.error("Error fetching appointments:", error);
             });
     };
-
+    
+    
     const cancelAppointment = (BACKEND_URL : string , appointmentId : number) => {
         fetch(`${BACKEND_URL}/cancel_appointment/${appointmentId}`, { 
             
@@ -48,6 +55,8 @@ export const usePatient = () => {
         .then(response => {
             if (response.ok) {
                 setAppointments(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
+                setCancelAppointmentCalled(true);
+                
             } else {
                 console.error("Failed to cancel appointment:", response.statusText);
             }
@@ -58,5 +67,5 @@ export const usePatient = () => {
     };
     
 
-    return { getPatientAppointments, appointments , cancelAppointment };
+    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled };
 };
