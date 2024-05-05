@@ -1,6 +1,6 @@
 
 import { Tab, Tabs } from "react-bootstrap";
-import SearchDoctors from "./SerchDoctor";
+import SearchDoctors from "./ScedualAppointment";
 import { useEffect, useState } from "react";
 import ShowPatientAppointments from "./ShowPatientAppointment";
 import '../css/Tabs.css';

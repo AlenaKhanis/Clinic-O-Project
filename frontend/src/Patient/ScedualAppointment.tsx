@@ -13,14 +13,14 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
     const [MessageScedual, setMessageScedual] = useState<string>('');
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
-    const { appointments, getPatientAppointments } = usePatient();
+    const { appointments, getPatientAppointments,cancelAppointment } = usePatient();
 
     useEffect(() => {
       if (patientId) {
           const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
           getPatientAppointments(url);
       }
-  }, [patientId ,refreshAppointments]);
+  }, [patientId ,refreshAppointments , cancelAppointment]);
 
 
     useEffect(() => {
@@ -36,6 +36,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
             .catch(error => console.error('Error fetching specialties:', error));
     }, [BACKEND_URL]);
 
+    
 
     const handleSearch = () => {
         if (selectedSpecialty) {

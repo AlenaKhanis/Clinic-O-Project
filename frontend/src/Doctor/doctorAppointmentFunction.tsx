@@ -121,7 +121,6 @@ const filteredAppointments = appointments
                 return response.json();    
         })
         .then((data: Doctor) => {
-            console.log("data ",data)
             setSelectedDoctorDetails(data);
 
         })
@@ -141,6 +140,7 @@ return { appointments,
        setSelectedDoctorAppointments,
        getDoctordetails,
        selectedDoctorDetails,
+       setSelectedDoctorDetails,
        };
 };
 

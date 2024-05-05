@@ -5,6 +5,7 @@ import { Appointment } from "../Types";
 export const usePatient = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
 
+
     // TODO: this function is repet itsel and should be moved to a utils file
     function parseDateTime(data: Appointment[]): Appointment[] {
         return data.map(appointment => {

@@ -7,15 +7,17 @@ import { useAppointments } from "../Doctor/doctorAppointmentFunction";
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}: PatientProps) {
     const { getPatientAppointments, appointments , cancelAppointment } = usePatient();
-    const { getDoctordetails , selectedDoctorDetails } = useAppointments()
+    const { getDoctordetails , selectedDoctorDetails , setSelectedDoctorDetails } = useAppointments()
 
+    
     useEffect(() => {
         if (patientId) {
             const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
             getPatientAppointments(url);
         }
-    }, [patientId ,refreshAppointments]);
+    }, [patientId ,refreshAppointments ,cancelAppointment]);
 
+    
     return (
         <>
             {appointments.length > 0 ? (
@@ -45,7 +47,13 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
                 </div>
             )}
             <div>
-                <p>Doctor Name:  {selectedDoctorDetails?.full_name}</p>
+            {selectedDoctorDetails && (
+                <div>
+                    <div style={{textAlign: 'right' , cursor: 'pointer'}} onClick={() => setSelectedDoctorDetails(null)}>X</div>
+                    <p>Doctor Name: {selectedDoctorDetails.full_name}</p>
+                </div>
+            )}
+
 
             </div>
         </>

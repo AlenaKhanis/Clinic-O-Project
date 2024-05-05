@@ -35,5 +35,5 @@ def get_doctors_by_Id(doctor_id):
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     doctor = Doctor.get_doctor(cursor, doctor_id)
-    return jsonify({"doctor": doctor})
+    return jsonify(doctor)
 
