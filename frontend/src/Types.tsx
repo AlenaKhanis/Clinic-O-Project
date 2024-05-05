@@ -52,6 +52,7 @@ export type Appointment =  {
   written_prescriptions?: string;
   date: string;
   time: string;
+  doctor_id: number;
 }
 
 export type DisplayAppointmentsProps = {

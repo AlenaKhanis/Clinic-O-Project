@@ -3,9 +3,11 @@ import { PatientProps } from "../Types";
 import { Button, Table } from "react-bootstrap";
 import { usePatient } from "./patientFunction";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAppointments } from "../Doctor/doctorAppointmentFunction";
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}: PatientProps) {
     const { getPatientAppointments, appointments , cancelAppointment } = usePatient();
+    const { getDoctordetails , selectedDoctorDetails } = useAppointments()
 
     useEffect(() => {
         if (patientId) {
@@ -31,7 +33,7 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
                                 <td>{index + 1}</td>
                                 <td>{appointment.date}</td>
                                 <td>{appointment.time}</td>
-                                {/* <td><Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {getDoctordetails()}}>View Details</Button></td> */}
+                                <td><Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {getDoctordetails(BACKEND_URL , appointment.doctor_id)}}>View Details</Button></td>
                                 <td><Button style={{width: 'fit-content'}} variant="outline-dark" onClick={() => {cancelAppointment(BACKEND_URL , appointment.id)}}>Cancle Appointment</Button></td>
                             </tr>
                         ))}
@@ -42,6 +44,10 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments}:
                     <h1>No future appointments</h1>
                 </div>
             )}
+            <div>
+                <p>Doctor Name:  {selectedDoctorDetails?.full_name}</p>
+
+            </div>
         </>
     );
 }

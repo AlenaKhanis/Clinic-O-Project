@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Appointment, Patient } from "../Types";
+import { Appointment, Doctor, Patient } from "../Types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
+
+//TODO: separate doctor and appointment
 
 export const useAppointments = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
+    const [selectedDoctorDetails , setSelectedDoctorDetails] = useState<Doctor | null>(null);
 
     //Pars the date time to string view
     function parseDateTime(data: Appointment[]): Appointment[] {
@@ -109,8 +112,22 @@ const filteredAppointments = appointments
         return dateA - dateB;
     });
 
-    const getDoctordetails = () => {
-        //return doctor details
+    const getDoctordetails = (BACKEND_URL: string , doctorID: number) => {
+        fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error("Failed to fetch doctor");
+                }
+                return response.json();    
+        })
+        .then((data: Doctor) => {
+            console.log("data ",data)
+            setSelectedDoctorDetails(data);
+
+        })
+        .catch(error => {
+            console.error("Error fetching patient details:", error);
+        });
     }
 
 
@@ -123,6 +140,7 @@ return { appointments,
        selectedDoctorAppointments,
        setSelectedDoctorAppointments,
        getDoctordetails,
+       selectedDoctorDetails,
        };
 };
 
