@@ -29,3 +29,11 @@ def get_doctors_by_specialty(specialty):
     cursor = db.cursor(cursor_factory=RealDictCursor)
     doctors = Doctor.get_doctors_by_specialty(cursor, specialty)
     return jsonify({"doctors": doctors})
+
+@bp.route('/get_doctors_by_Id/<doctor_id>')
+def get_doctors_by_Id(doctor_id):
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    doctor = Doctor.get_doctor(cursor, doctor_id)
+    return jsonify({"doctor": doctor})
+
