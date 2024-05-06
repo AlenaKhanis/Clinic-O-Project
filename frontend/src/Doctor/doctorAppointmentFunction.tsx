@@ -150,7 +150,8 @@ const filteredAppointments = appointments
             // Convert the appointment date and time string to a Date object
             const appointmentDateTime = new Date(appointment.date_time);
             console.log("appointment date", appointmentDateTime)
-            console.log("now date time" ,currentDate)
+       
+            
             // Check if the appointment time is within the next 15 minutes
             return appointmentDateTime > currentDate && appointmentDateTime < endTime;
         });
@@ -158,7 +159,7 @@ const filteredAppointments = appointments
         if (conflictingAppointment) {
             // Show a message or prevent starting the appointment if there's a conflict
             // Example: alert("You have another appointment scheduled within the next 15 minutes.");
-            return;
+            return <span>You have another appointment scheduled within the next 15 minutes.</span>
         }
 
         // Navigate to the appointment details page

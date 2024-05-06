@@ -20,12 +20,12 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
             startAppointment,
         } = useAppointments();
 
-    const {getPatientAppointments , historyPatientAppointment} =  usePatient();
+    const {historyPatientAppointment} =  usePatient();
     const navigate = useNavigate();
 
 
 
-    useEffect(() => {
+    useEffect(() => { 
         if (doctorId) {
             const url = `${BACKEND_URL}/get_appointments?doctor_id=${doctorId}`;
             fetchAppointments(url);

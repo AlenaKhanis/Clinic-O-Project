@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { Appointment } from "../Types"; // Import the Appointment type
@@ -32,7 +32,6 @@ function PatientAppointment() {
                                 }
                                 
                             }));
-                          console.log(appointments)
                         }
                     })
                     .catch(error => {

@@ -69,8 +69,7 @@ export const usePatient = () => {
             .then(response => response.json())
             .then((data: Appointment[]) => {
                 // Parse date and time of appointments
-                const parsedAppointments = parseDateTime(data);
-                console.log("parse",parsedAppointments)    
+                const parsedAppointments = parseDateTime(data);  
                 // Invoke navigateCallback if provided
                 if (navigateCallback) {
                     navigateCallback(parsedAppointments); 
