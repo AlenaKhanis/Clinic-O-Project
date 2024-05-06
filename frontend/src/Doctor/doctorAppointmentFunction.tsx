@@ -77,7 +77,6 @@ const handleViewDetails = (patient_id: number | null) => {
             return response.json();
         })
         .then((patientDetails: Patient) => {
-            console.log(patient_id)
             setSelectedPatientDetails(patientDetails);
         })
         .catch(error => {
@@ -119,24 +118,25 @@ const filteredAppointments = appointments
         return dateA - dateB;
     });
 
-    const getDoctordetails = (BACKEND_URL: string , doctorID: number) => {
-        fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
+    const getDoctordetails = (BACKEND_URL: string, doctorID: number) => {
+        return fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
             .then(response => {
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error("Failed to fetch doctor");
                 }
-                return response.json();    
-        })
-        .then((data: Doctor) => {
-            setSelectedDoctorDetails(data);
+                return response.json();
+            })
+            .then((data: Doctor) => {
+                setSelectedDoctorDetails(data);
+                return data;
+            })
+            .catch(error => {
+                console.error("Error fetching doctor details:", error);
+                throw error; // Re-throw the error to propagate it to the caller
+            });
+    };
 
-        })
-        .catch(error => {
-            console.error("Error fetching patient details:", error);
-        });
-    }
-
-
+   
     
     const startAppointment = () => {
         // Get the current date and time

@@ -32,19 +32,29 @@
   padding: 20px; /* Add padding to the container */
 }
 .table-container {
-  overflow: auto;
-  max-height: calc(100vh - 200px); /* Adjust based on your layout */
-  margin-bottom: 20px;
-  width: 100%; /* Ensure the table container takes up the full width */
+  overflow-x: auto; /* Enable horizontal scroll if table overflows */
+  max-width: 100%; /* Ensure the table container takes up the available width */
 }
 
 .table {
   width: 100%; /* Ensure the table takes up the full width of its container */
+  border-collapse: collapse; /* Collapse table borders */
 }
 
 .table th,
 .table td {
-  white-space: nowrap; /* Prevent text wrapping within table cells */
-  overflow: hidden; /* Hide any overflowing content */
-  text-overflow: ellipsis; /* Display an ellipsis (...) for overflowing text */
+  padding: 8px; /* Add padding to table cells */
+  border: 1px solid #ccc; /* Add border to table cells */
+  text-align: left; /* Align text to the left */
+  word-break: break-word; /* Allow long words to break */
+}
+
+/* Apply styles when the window is smaller */
+@media (max-width: 500px) {
+  .table th,
+  .table td {
+    white-space: nowrap; /* Prevent text wrapping within table cells */
+    overflow: hidden; /* Hide any overflowing content */
+    text-overflow: ellipsis; /* Display an ellipsis (...) for overflowing text */
+  }
 }

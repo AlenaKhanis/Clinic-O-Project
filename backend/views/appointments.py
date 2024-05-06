@@ -100,6 +100,14 @@ def cancel_appointment(appointment_id) -> Response:
     else:
         db.rollback()
         return jsonify({'error': "Appointment is already cancelled."}), 400
+    
+@bp.route("/history_patient_appointments/<patient_id>")   
+def get_history_patient_appointments(patient_id): 
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    appointments = Appointment.get_history_patient_appointment(cursor, patient_id)
+
+    return jsonify(appointments), 200
 
 
 # @bp.route("/get_appointments_history/<doctor_id>")

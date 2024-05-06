@@ -118,6 +118,22 @@ class Appointment:
             print("Error cancelling appointment:", e)
             return False
 
+    @classmethod
+    def get_history_patient_appointment(cls, cursor, patient_id):
+        try:
+            cursor.execute(
+                """
+                SELECT * FROM appointments WHERE patient_id = %s AND date_time < NOW();
+                """,
+                (patient_id,)
+            )
+            appointments = cursor.fetchall()
+            return appointments
+        except Exception as e:
+            print("Error fetching history patient appointments:", e)
+            return None
+
+
 
     # @classmethod
     # def get_appointments_history(cursor , doctor_id):

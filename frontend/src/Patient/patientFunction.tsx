@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 export const usePatient = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [cancelAppointmentCalled, setCancelAppointmentCalled] = useState(false);
+    const [, setCancelAppointmentCalled] = useState(false);
+    const [selectHistoryAppointment, setSelectHistoryAppointmentr] = useState<Appointment[]>([]);
 
 
 
@@ -28,19 +29,16 @@ export const usePatient = () => {
                 date: dateString,
                 time: formattedTime
             };
-        });
+        }); 
     }
     
 
-    const getPatientAppointments = (url: string, navigateCallback?: (parsedAppointments: Appointment[]) => void) => {
+    const getPatientAppointments = (url: string) => {
         fetch(url)
             .then(response => response.json())
             .then((data: Appointment[]) => {
                 const parsedAppointments = parseDateTime(data);
                 setAppointments(parsedAppointments);
-                if (navigateCallback) {
-                    navigateCallback(parsedAppointments); // Pass parsedAppointments to the navigate callback function if provided
-                }
             })
             .catch(error => {
                 console.error("Error fetching appointments:", error);
@@ -65,7 +63,25 @@ export const usePatient = () => {
             console.error("Error cancelling appointment:", error);
         }); 
     };
+
+    const historyPatientAppointment = (BACKEND_URL: string, patientId: number , navigateCallback?: (parsedAppointments: Appointment[]) => void) => {
+        fetch(`${BACKEND_URL}/history_patient_appointments/${patientId}`)
+            .then(response => response.json())
+            .then((data: Appointment[]) => {
+                // Parse date and time of appointments
+                const parsedAppointments = parseDateTime(data);
+                console.log("parse",parsedAppointments)    
+                // Invoke navigateCallback if provided
+                if (navigateCallback) {
+                    navigateCallback(parsedAppointments); 
+                }
+                
+                // Set the parsed appointments
+                setSelectHistoryAppointmentr(parsedAppointments);
+            });
+    };
+    
     
 
-    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled };
+    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled ,historyPatientAppointment };
 };

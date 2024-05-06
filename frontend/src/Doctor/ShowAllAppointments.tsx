@@ -17,10 +17,11 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
             handleViewDetails,
             selectedPatientDetails,
             filteredAppointments,
-            startAppointment,} = useAppointments();
+            startAppointment,
+        } = useAppointments();
 
-        const {getPatientAppointments} =  usePatient();
-        const navigate = useNavigate();
+    const {getPatientAppointments , historyPatientAppointment} =  usePatient();
+    const navigate = useNavigate();
 
 
 
@@ -32,16 +33,11 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
     }, [doctorId, onAppointmentAdded]);
 
 
-    const viewPatientAppointments = (patinetID : number) => {
-
-        const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patinetID}`;
-
-                                    getPatientAppointments(url, (parsedAppointments) => {
-                                        navigate('/patient-appointment', { state: { parsedAppointments } });
-                                    });
-
-    }
-
+    const viewPatientHistoryAppointments = (patientID: number) => {
+        historyPatientAppointment(BACKEND_URL, patientID, (parsedAppointments) => {
+            navigate('/patient-appointment', { state: { parsedAppointments } });
+        });
+    };
 
     return (
         <>
@@ -98,7 +94,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                             <Button 
                                 style={{width: 'fit-content'}} 
                                 variant="outline-dark" 
-                                onClick={() => {viewPatientAppointments(selectedPatientDetails.patient_id)}}
+                                onClick={() => {viewPatientHistoryAppointments(selectedPatientDetails.patient_id)}}
                             >
                                 View Previous Appointments
                             </Button>

@@ -28,8 +28,6 @@ function DoctorHomePage() {
     const refreshAppointments = () => {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };
-
-    //TODO: add function cancel appointment 
    
     
     return (

@@ -15,6 +15,8 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
     const { appointments, getPatientAppointments, setCancelAppointmentCalled } = usePatient();
 
+
+    //TODO: check why work whit setCancelAppointmentCalled but not cancelAppointment!
     useEffect(() => {
         if (patientId) {
             const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
