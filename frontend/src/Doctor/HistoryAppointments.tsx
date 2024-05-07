@@ -5,8 +5,8 @@ import {DisplayAppointmentsProps} from '../Types';
 
 
 
-function SummeryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, selectedPatientDetails , setSelectedPatientDetails } = useAppointments();
+function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
+    const { appointments, fetchAppointments, handleViewDetails} = useAppointments();
 
     useEffect(() => {
         if (doctorId) {
@@ -68,32 +68,10 @@ function SummeryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: Dis
                 )}
             </div>
             <div>
-               
-                {selectedPatientDetails && (
-                     //TODO: more css 
-                     
-                     <div className="appointment-details">
-                     <button className="close-button" onClick={() => setSelectedPatientDetails(null)}>X</button>
-                     <h3>Appointment Details</h3>
-                     <p>Name: {selectedPatientDetails.full_name}</p>
-                     <p>Age: {selectedPatientDetails.age}</p>
-                     <p>Package: {selectedPatientDetails.package}</p>
-                     <p>Phone: {selectedPatientDetails.phone}</p>
-                     <p>Email: {selectedPatientDetails.email}</p>
-                     <p>Patient Diagnoses: {selectedPatientDetails.diagnosis}</p>
-                     <p>Patient Prescription: {selectedPatientDetails.prescription}</p>
-                     <br></br>
-                     <div><p>Summary visit:</p><input/></div>
-                     <div><p>Add Diagnoses:</p><input/></div>
-                     <div><p>Add Prescription:</p><input /></div>
-                     <button>Save</button>{/* TODO: Send data */}
-                 </div>
-                 
-                )}
             </div>
 
         </>
     );
 }
 
-export default SummeryAppointments;
+export default HistoryAppointments;

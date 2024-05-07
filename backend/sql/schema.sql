@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS patients (
     package TEXT NOT NULL CHECK (package IN('Premium', 'Gold', 'Silver')) DEFAULT 'Silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    prescription TEXT,
+    deagnosis TEXT,
     FOREIGN KEY (patient_id) REFERENCES users (id)
 );
 

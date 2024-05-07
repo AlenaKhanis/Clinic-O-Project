@@ -9,7 +9,6 @@ export const usePatient = () => {
     const [selectHistoryAppointment, setSelectHistoryAppointmentr] = useState<Appointment[]>([]);
 
 
-
     // TODO: this function is repet itsel and should be moved to a utils file
     function parseDateTime(data: Appointment[]): Appointment[] {
         return data.map(appointment => {
@@ -64,23 +63,49 @@ export const usePatient = () => {
         }); 
     };
 
-    const historyPatientAppointment = (BACKEND_URL: string, patientId: number , navigateCallback?: (parsedAppointments: Appointment[]) => void) => {
-        fetch(`${BACKEND_URL}/history_patient_appointments/${patientId}`)
-            .then(response => response.json())
-            .then((data: Appointment[]) => {
-                // Parse date and time of appointments
-                const parsedAppointments = parseDateTime(data);  
-                // Invoke navigateCallback if provided
-                if (navigateCallback) {
-                    navigateCallback(parsedAppointments); 
-                }
-                
-                // Set the parsed appointments
-                setSelectHistoryAppointmentr(parsedAppointments);
-            });
-    };
+    const filteredAppointments = appointments
+    .filter((appointment: Appointment)=> {
+        const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
+        if (match) {
+            const [, day, month, year, time] = match;
+            const [hours, minutes, seconds] = time.split(':');
+
+            // Convert month to numeric value
+            const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
+
+            // Construct a new Date object
+            const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
+
+            // Check if the constructed date object is valid
+            if (!isNaN(appointmentDateTime.getTime())) {
+                const currentDateTime = new Date();
+                return appointmentDateTime > currentDateTime;
+            } else {
+                console.error('Invalid date:', appointment.date_time);
+                return false; // or handle this case differently
+            }
+        } else {
+            console.error('Invalid date format:', appointment.date_time);
+            return false; // or handle this case differently
+        }
+    })
+    .sort((a: Appointment, b: Appointment) => {
+        const dateA = new Date(a.date_time).getTime();
+        const dateB = new Date(b.date_time).getTime();
+        
+        return dateA - dateB;
+    });
+
+    // const historyPatientAppointment = (BACKEND_URL: string, patientId: number) => {
+    //     fetch(`${BACKEND_URL}/history_patient_appointments/${patientId}`)
+    //         .then(response => response.json())
+    //         .then((data: Appointment[]) => {
+    //             const parsedAppointments = parseDateTime(data);  
+    //             setSelectHistoryAppointmentr(parsedAppointments);
+    //         });
+    // };
     
     
 
-    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled ,historyPatientAppointment };
+    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled  , selectHistoryAppointment , filteredAppointments };
 };

@@ -19,6 +19,7 @@ class Patient(User):
             WHERE u.id = %s;
             """, (user_id,))
         patient_data = cursor.fetchone() 
+        print("patient detail: " , patient_data)
 
         if patient_data:
             return patient_data

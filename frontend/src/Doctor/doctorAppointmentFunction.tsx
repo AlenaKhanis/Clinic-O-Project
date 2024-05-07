@@ -56,6 +56,7 @@ const fetchAppointments = (url: string) => {
             const parsedAppointments = parseDateTime(data); 
             setAppointments(parsedAppointments);
             setSelectedDoctorAppointments(parsedAppointments);
+            
         })
         .catch(error => {
             console.error("Error fetching appointments:", error);
@@ -63,12 +64,13 @@ const fetchAppointments = (url: string) => {
         });
 };
 
-// View details of a patient by appointment
+
 const handleViewDetails = (patient_id: number | null) => {
-    if (!patient_id){
-    setSelectedPatientDetails(null);
-    return;
+    if (!patient_id) {
+        navigate('/patient-appointment');
+        return;
     }
+
     fetch(`${BACKEND_URL}/get_petient_by_id/${patient_id}`)
         .then(response => {
             if (!response.ok) {
@@ -78,11 +80,28 @@ const handleViewDetails = (patient_id: number | null) => {
         })
         .then((patientDetails: Patient) => {
             setSelectedPatientDetails(patientDetails);
+
+            fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
+                .then(response => response.json())
+                .then((data: Appointment[]) => {
+                    const parsedAppointments = parseDateTime(data);
+
+                    const stateData = {
+                        patientDetails: patientDetails,
+                        parsedAppointments: parsedAppointments
+                    };
+                    console.log(stateData)
+                    navigate('/patient-appointment', { state: stateData });
+                })
+                .catch(error => {
+                    console.error("Error fetching history appointments:", error);
+                });
         })
         .catch(error => {
             console.error("Error fetching patient details:", error);
         });
 };
+
 
 // sort appointments by date
 const filteredAppointments = appointments
@@ -149,8 +168,8 @@ const filteredAppointments = appointments
         const conflictingAppointment = appointments.find(appointment => {
             // Convert the appointment date and time string to a Date object
             const appointmentDateTime = new Date(appointment.date_time);
-            console.log("appointment date", appointmentDateTime)
-       
+
+ 
             
             // Check if the appointment time is within the next 15 minutes
             return appointmentDateTime > currentDate && appointmentDateTime < endTime;
@@ -161,9 +180,6 @@ const filteredAppointments = appointments
             // Example: alert("You have another appointment scheduled within the next 15 minutes.");
             return <span>You have another appointment scheduled within the next 15 minutes.</span>
         }
-
-        // Navigate to the appointment details page
-        navigate("/appointment-details");
     };
 
 

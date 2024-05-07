@@ -1,26 +1,21 @@
-import  { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { Appointment } from "../Types"; // Import the Appointment type
+import { Appointment } from "../Types"; // Import the Appointment type/interface
 import { useAppointments } from "./doctorAppointmentFunction";
-import { Button } from "react-bootstrap";
-import '../css/Tabs.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function PatientAppointment() {
     const { state } = useLocation();
     const { getDoctordetails , startAppointment } = useAppointments();
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
-    //TODO: check how it work -> useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
+    const patientDetails = state.patientDetails;
+    const patientAppointments = state.parsedAppointments;
     const [doctorDetailsMap, setDoctorDetailsMap] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
 
     useEffect(() => {
-        if (state?.parsedAppointments) {
-            setAppointments(state.parsedAppointments);
-            
-
-            state.parsedAppointments.forEach((appointment: Appointment) => {
+        if (patientAppointments) {
+            patientAppointments.forEach((appointment: Appointment) => {
                 getDoctordetails(BACKEND_URL, appointment.doctor_id)
                     .then(doctor => {
                         if (doctor) {
@@ -30,7 +25,6 @@ function PatientAppointment() {
                                     doctorName: doctor.full_name,
                                     doctorSpecialty: doctor.specialty
                                 }
-                                
                             }));
                         }
                     })
@@ -39,12 +33,29 @@ function PatientAppointment() {
                     });
             });
         }
-    }, [state?.parsedAppointments]);
+    }, [patientAppointments]);
+
+
+
 
     return (
         <>
-        <div><h1>Patient Appointment</h1></div>
             <div style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px', borderRadius: '8px' }}>
+                {patientDetails && (
+                    <div>
+                        <h2>Patient Details</h2>
+                        <p>Patient Name: {patientDetails.full_name}</p>
+                        <p>Age: {patientDetails.age}</p>
+                        <p>Packeg: {patientDetails.package}</p>
+                        <p>Phone: {patientDetails.phone}</p>
+                        <p>email: {patientDetails.email}</p>
+                        <p>Deagnosis: {patientDetails.deagnosis || 'NONE'}</p>
+                        <p>Prescriptions: {patientDetails.prescription}</p>
+                    </div>
+                )}
+            </div>
+            <div style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px', borderRadius: '8px' }}>
+                <h2>History Appointments</h2>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -59,7 +70,7 @@ function PatientAppointment() {
                         </tr>
                     </thead>
                     <tbody>
-                        {appointments.map((appointment, index) => (
+                        {patientAppointments && patientAppointments.map((appointment: Appointment, index: number) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{appointment.date}</td>
@@ -73,7 +84,7 @@ function PatientAppointment() {
                         ))}
                     </tbody>
                 </Table>
-                <div>
+                <div style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px', borderRadius: '8px' }}>
                     <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={()=>{startAppointment()}}>Start Appointment</Button>
                 </div>
             </div>
