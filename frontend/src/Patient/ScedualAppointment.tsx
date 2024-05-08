@@ -13,25 +13,22 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
     const [MessageScedual, setMessageScedual] = useState<string>('');
     const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
-    const { appointments, getPatientAppointments, setCancelAppointmentCalled } = usePatient();
+    const { appointments, getPatientAppointments } = usePatient();
 
-
-    //TODO: check why work whit setCancelAppointmentCalled but not cancelAppointment!
     useEffect(() => {
         if (patientId) {
             const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
             getPatientAppointments(url);
-            setCancelAppointmentCalled(false)
         }
-    }, [patientId, refreshAppointments, setCancelAppointmentCalled]);
+    }, [patientId, refreshAppointments , selectedDoctorAppointments]);
 
 
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_specialties`)
             .then(response => response.json())
             .then((data: { specialtys: string[] }) => {
-                setSelectedDoctorId(null); // Reset selected doctor when searching by specialty
-                setSelectedDoctorAppointments([]); // Reset appointments
+                setSelectedDoctorId(null); 
+                setSelectedDoctorAppointments([]); 
                 const uniqueSpecialties = [...new Set(data.specialtys)];
                 setSpecialties(uniqueSpecialties);
             })
@@ -90,7 +87,9 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
 
     const isAppointmentExists = (date: string, time: string) => {
         return appointments.some(appointment => {
-            // Convert appointment date and time to appropriate format
+
+            console.log()
+
             const appointmentDateTime = new Date(appointment.date_time);
             const appointmentDate = appointmentDateTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
             const hours = appointmentDateTime.getUTCHours();

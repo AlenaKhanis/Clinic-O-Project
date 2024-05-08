@@ -6,27 +6,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAppointments } from "../Doctor/doctorAppointmentFunction";
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
-    const { getPatientAppointments, cancelAppointment, setCancelAppointmentCalled, filteredAppointments } = usePatient();
+    const { filteredAppointments, getPatientAppointments, cancelAppointment } = usePatient();
     const { getDoctordetails, selectedDoctorDetails, setSelectedDoctorDetails } = useAppointments();
     const [confirmCancel, setConfirmCancel] = useState(false);
-    const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null); // Update state type
+    const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
 
     useEffect(() => {
         if (patientId) {
             const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
             getPatientAppointments(url);
-            setCancelAppointmentCalled(false);
         }
-    }, [patientId, refreshAppointments, setCancelAppointmentCalled]);
+    }, [patientId, refreshAppointments]);
+    
 
     const handleCancelAppointment = (appointmentId: number) => {
-        setConfirmCancel(true); 
-        setSelectedAppointmentId(appointmentId);
+        cancelAppointment(BACKEND_URL, appointmentId);
+        setConfirmCancel(false);
     }
 
     const confirmCancelAppointment = () => {
-        cancelAppointment(BACKEND_URL, selectedAppointmentId!);
-        setConfirmCancel(false); // Close the confirmation modal after cancellation
+        if (selectedAppointmentId) {
+            handleCancelAppointment(selectedAppointmentId);
+        }
+    }
+
+    const handleAppointmentCancellation = (appointmentId: number) => {
+        setConfirmCancel(true);
+        setSelectedAppointmentId(appointmentId);
     }
 
     return (
@@ -58,17 +64,7 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }
                                     </Button>
                                 </td>
                                 <td>
-                                <Button
-                                    style={{ width: 'fit-content' }}
-                                    variant="outline-danger"
-                                    onClick={() => {
-                                        handleCancelAppointment(appointment.id);
-                                        setConfirmCancel(true);
-                                        setSelectedAppointmentId(appointment.id);
-                                    }}
-                                >
-                                    Cancel Appointment
-                                </Button>
+                                    <Button variant="outline-danger" onClick={() => handleAppointmentCancellation(appointment.id)}>Cancel Appointment</Button>
                                 </td>
                             </tr>
                         ))}

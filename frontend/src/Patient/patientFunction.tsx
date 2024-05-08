@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const usePatient = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [, setCancelAppointmentCalled] = useState(false);
+
     const [selectHistoryAppointment, setSelectHistoryAppointmentr] = useState<Appointment[]>([]);
 
 
@@ -44,24 +44,25 @@ export const usePatient = () => {
             });
     };
     
-    
-    const cancelAppointment = (BACKEND_URL : string , appointmentId : number) => {
-        fetch(`${BACKEND_URL}/cancel_appointment/${appointmentId}`, { 
-            
-        })
-        .then(response => {
-            if (response.ok) {
-                setAppointments(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
-                setCancelAppointmentCalled(true);
-                
-            } else {
-                console.error("Failed to cancel appointment:", response.statusText);
-            }
-        })
-        .catch(error => {
-            console.error("Error cancelling appointment:", error);
-        }); 
+    const cancelAppointment = (BACKEND_URL: string, appointmentId: number) => {
+        fetch(`${BACKEND_URL}/cancel_appointment/${appointmentId}`, {})
+            .then(response => {
+                if (response.ok) {
+                    // Remove the canceled appointment from the local state
+                    setAppointments(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
+                } else {
+                    console.error("Failed to cancel appointment:", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Error cancelling appointment:", error);
+            });
     };
+    
+    
+
+    
+    
 
     const filteredAppointments = appointments
     .filter((appointment: Appointment)=> {
@@ -107,5 +108,5 @@ export const usePatient = () => {
     
     
 
-    return { getPatientAppointments, appointments , cancelAppointment , setCancelAppointmentCalled  , selectHistoryAppointment , filteredAppointments };
+    return { getPatientAppointments, appointments , cancelAppointment , selectHistoryAppointment , filteredAppointments };
 };

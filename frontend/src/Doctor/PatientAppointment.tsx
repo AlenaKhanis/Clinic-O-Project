@@ -1,17 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { Appointment } from "../Types"; // Import the Appointment type/interface
+import { Appointment } from "../Types";
 import { useAppointments } from "./doctorAppointmentFunction";
+import '../css/AppointmentSummeryForm.css';
+import '../css/Tabs.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function PatientAppointment() {
     const { state } = useLocation();
-    const { getDoctordetails , startAppointment } = useAppointments();
-    const patientDetails = state.patientDetails;
-    const patientAppointments = state.parsedAppointments;
+    const { getDoctordetails, startAppointment, handleSubmit } = useAppointments();
+    const patientDetails = state?.patientDetails;
+    const patientAppointments = state?.parsedAppointments;
     const [doctorDetailsMap, setDoctorDetailsMap] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
+    const [showForm, setShowForm] = useState(false);
+    const summaryRef = useRef<HTMLTextAreaElement>(null);
+    const diagnosisRef = useRef<HTMLInputElement>(null);
+    const prescriptionRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (patientAppointments) {
@@ -35,8 +41,10 @@ function PatientAppointment() {
         }
     }, [patientAppointments]);
 
-
-
+    const handleStartAppointment = () => {
+        startAppointment();
+        setShowForm(true);
+    };
 
     return (
         <>
@@ -84,9 +92,48 @@ function PatientAppointment() {
                         ))}
                     </tbody>
                 </Table>
-                <div style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px', borderRadius: '8px' }}>
-                    <Button style={{width: 'fit-content'}} variant="outline-dark" onClick={()=>{startAppointment()}}>Start Appointment</Button>
-                </div>
+                {!showForm && (
+                    <div style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px', borderRadius: '8px' }}>
+                        <Button style={{ width: 'fit-content' }} variant="outline-dark" onClick={handleStartAppointment}>Start Appointment</Button>
+                    </div>
+                )}
+                {showForm && (
+                    <div className="containerSummery">
+                        <form>
+                            <div className="row">
+                                <div className="col-25">
+                                    <label className="lableSummery">Diagnosis</label>
+                                </div>
+                                <div className="col-75">
+                                    <input type="text" id="summary" name="summary" placeholder="Diagnosis.." ref={diagnosisRef} />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-25">
+                                    <label className="lableSummery">Prescription</label>
+                                </div>
+                                <div className="col-75">
+                                    <input type="text" id="lname" name="lastname" placeholder="Prescription.." ref={prescriptionRef} />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-25">
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-25">
+                                    <label className="lableSummery">Summary</label>
+                                </div>
+                                <div className="col-75">
+                                    <textarea id="subject" name="subject" placeholder="Write summary.." ref={summaryRef}></textarea>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <Button className="sendButton" variant="outline-dark" type="button" onClick={() => handleSubmit(summaryRef, diagnosisRef, prescriptionRef)}>End Appointment</Button>
+                            </div>
+                        </form>
+                    </div>
+                )}
             </div>
         </>
     );

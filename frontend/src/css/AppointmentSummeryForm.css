@@ -11,15 +11,14 @@ textarea {
   color: #333;
 }
 
-label {
+.lableSummery {
   padding: 12px 12px 12px 0;
-  display: inline-block;
 }
 
 
 .containerSummery {
   border-radius: 5px;
-  background-color: #f2f2f2;
+  background-color: #e6e4e4;
   padding: 20px;
 }
 
@@ -27,13 +26,12 @@ label {
   float: left;
   width: 25%;
   margin-top: 6px;
+  text-align: left;
 }
 
 .sendButton {
-  width: 100px; 
+  width: 150px; 
   margin: 20px auto;
   display: block;
   text-align: center; 
 }
-
- 

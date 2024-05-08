@@ -21,6 +21,7 @@ function HomePagePatient() {
             }
         }
     }, [userInfo]);
+  
 
     const refreshAppointments = () => {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");

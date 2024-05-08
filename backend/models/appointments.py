@@ -133,6 +133,23 @@ class Appointment:
             print("Error fetching history patient appointments:", e)
             return None
 
+    # @classmethod
+    # def add_summary(cls, cursor, summary, diagnosis, prescription):
+    #     query = """
+    #             INSERT INTO appointments (summery, writen_diagnosis, writen_prescription) 
+    #             VALUES (%s, %s, %s)
+    #             """
+    #     cursor.execute(query, (summary, diagnosis, prescription))
+    #     # Update the status from 'scheduled' to 'complete'
+    #     # You need to execute an update query to achieve this
+    #     update_query = """
+    #                 UPDATE appointments
+    #                 SET status = 'complete'
+    #                 WHERE status = 'scheduled'
+    #                 """
+    #     cursor.execute(update_query)
+
+
 
 
     # @classmethod

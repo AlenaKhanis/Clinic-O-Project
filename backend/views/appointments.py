@@ -109,6 +109,24 @@ def get_history_patient_appointments(patient_id):
 
     return jsonify(appointments), 200
 
+@bp.route("/add_summary", methods=["POST"])
+def add_summary():
+    # Get form data from the request
+    data = request.json  # Assuming JSON data is sent from the frontend
+
+    # Extract data from the JSON object
+    summary = data.get('summary')
+    diagnosis = data.get('diagnosis')
+    prescription = data.get('prescription')
+
+    print("data",data)
+
+    # Perform database operations or other backend processing
+    db = get_db()  # Assuming you have a function to get the database connection
+    cursor = db.cursor()
+    Appointment.add_summary(cursor , summary , diagnosis , prescription)
+    db.commit() 
+    return jsonify({"message": "Form data received and processed successfully"}), 200
 
 # @bp.route("/get_appointments_history/<doctor_id>")
 # def get_appointments_history(doctor_id):
