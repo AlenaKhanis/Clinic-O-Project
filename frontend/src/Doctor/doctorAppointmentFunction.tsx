@@ -158,29 +158,58 @@ const filteredAppointments = appointments
    
     
     const startAppointment = () => {
-        // Get the current date and time
         const currentDate = new Date();
-
-        // Calculate the end time of the appointment (15 minutes later)
-        const endTime = new Date(currentDate.getTime() + 15 * 60000); // 15 minutes in milliseconds
-
-        // Check if there are any conflicting appointments within 15 minutes
+        const endTime = new Date(currentDate.getTime() + 15 * 60000);
+    
         const conflictingAppointment = appointments.find(appointment => {
-            // Convert the appointment date and time string to a Date object
             const appointmentDateTime = new Date(appointment.date_time);
-
- 
-            
-            // Check if the appointment time is within the next 15 minutes
             return appointmentDateTime > currentDate && appointmentDateTime < endTime;
         });
-
-        if (conflictingAppointment) {
-            // Show a message or prevent starting the appointment if there's a conflict
-            // Example: alert("You have another appointment scheduled within the next 15 minutes.");
-            return <span>You have another appointment scheduled within the next 15 minutes.</span>
-        }
+    
+        return conflictingAppointment ? "You have another appointment scheduled within the next 15 minutes." : null;
     };
+    
+    // Inside your component's JSX:
+    {startAppointment() && <span>{startAppointment()}</span>}
+
+
+    function sendAppointmentData(formData: any) {
+        return fetch(`${BACKEND_URL}/add_summary`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response from server:', data);
+            alert("Appointment has ended successfully.");
+        })
+        .catch(error => {
+            console.error('Error sending data to server:', error);
+        });
+    }
+
+    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement>) => {
+        const summary = summaryRef.current?.value;
+        const diagnosis = diagnosisRef.current?.value;
+        const prescription = prescriptionRef.current?.value;
+    
+        const formData = {
+            summary: summary,
+            diagnosis: diagnosis,
+            prescription: prescription
+        };
+    
+        sendAppointmentData(formData);
+    }
+    
 
 
 return { appointments,
@@ -195,6 +224,7 @@ return { appointments,
        selectedDoctorDetails,
        setSelectedDoctorDetails,
        startAppointment,
+       handleSubmit
        };
 };
 
