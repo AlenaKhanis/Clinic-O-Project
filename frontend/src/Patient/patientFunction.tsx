@@ -65,7 +65,7 @@ export const usePatient = () => {
     
 
     const filteredAppointments = appointments
-    .filter((appointment: Appointment)=> {
+    .filter((appointment) => {
         const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
         if (match) {
             const [, day, month, year, time] = match;
@@ -80,7 +80,9 @@ export const usePatient = () => {
             // Check if the constructed date object is valid
             if (!isNaN(appointmentDateTime.getTime())) {
                 const currentDateTime = new Date();
-                return appointmentDateTime > currentDateTime;
+                const isFuture = appointmentDateTime > currentDateTime;
+                const isNotCompleted = appointment.status !== 'completed';
+                return isFuture && isNotCompleted;
             } else {
                 console.error('Invalid date:', appointment.date_time);
                 return false; // or handle this case differently
@@ -90,12 +92,13 @@ export const usePatient = () => {
             return false; // or handle this case differently
         }
     })
-    .sort((a: Appointment, b: Appointment) => {
+    .sort((a, b) => {
         const dateA = new Date(a.date_time).getTime();
         const dateB = new Date(b.date_time).getTime();
         
         return dateA - dateB;
     });
+
 
     // const historyPatientAppointment = (BACKEND_URL: string, patientId: number) => {
     //     fetch(`${BACKEND_URL}/history_patient_appointments/${patientId}`)

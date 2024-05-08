@@ -38,7 +38,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                     <td>{appointment.status}</td>
                                     <td>
                                         {appointment.status === 'schedule' && (
-                                            <Button style={{ width: 'fit-content' }} variant="outline-dark" onClick={() => handleViewDetails(appointment.patient_id)}>
+                                            <Button style={{ width: 'fit-content' }} variant="outline-dark" onClick={() => handleViewDetails(appointment.patient_id, appointment.id)}>
                                                 View Details
                                             </Button>
                                         )}

@@ -50,19 +50,22 @@ class Appointment:
 
         
     @classmethod   
-    def get_appointment_by_doctor_id(cls, cursor, doctor_id) -> dict :
+    def get_appointment_by_doctor_id(cls, cursor, doctor_id) -> dict:
         try:
+  
+
             cursor.execute("""
                 SELECT * FROM appointments 
                 WHERE doctor_id = %s 
+                AND status IN ('schedule', 'open')
+                AND date_time > NOW()
                 """,
-                (doctor_id,))
+                (doctor_id))
 
             all_appointments = cursor.fetchall()
-            if all_appointments:
-                return all_appointments
-            else:
-                return False
+
+            return all_appointments
+
         except Exception as e:
             print("Error getting appointments:", e)
 
@@ -133,21 +136,20 @@ class Appointment:
             print("Error fetching history patient appointments:", e)
             return None
 
-    # @classmethod
-    # def add_summary(cls, cursor, summary, diagnosis, prescription):
-    #     query = """
-    #             INSERT INTO appointments (summery, writen_diagnosis, writen_prescription) 
-    #             VALUES (%s, %s, %s)
-    #             """
-    #     cursor.execute(query, (summary, diagnosis, prescription))
-    #     # Update the status from 'scheduled' to 'complete'
-    #     # You need to execute an update query to achieve this
-    #     update_query = """
-    #                 UPDATE appointments
-    #                 SET status = 'complete'
-    #                 WHERE status = 'scheduled'
-    #                 """
-    #     cursor.execute(update_query)
+    
+    @classmethod
+    def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id):
+        # Update the appointment with the summary, diagnosis, prescription, and change status to 'complete'
+        query = """
+                UPDATE appointments
+                SET summery = %s,
+                    writen_diagnosis = %s,
+                    writen_prescription = %s,
+                    status = 'completed'
+                WHERE id = %s
+                """
+        cursor.execute(query, (summary, diagnosis, prescription, appointment_id))
+
 
 
 

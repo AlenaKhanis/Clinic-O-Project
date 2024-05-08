@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { Appointment } from "../Types";
+import { Appointment, Doctor } from "../Types";
 import { useAppointments } from "./doctorAppointmentFunction";
 import '../css/AppointmentSummeryForm.css';
 import '../css/Tabs.css';
@@ -13,17 +13,19 @@ function PatientAppointment() {
     const { getDoctordetails, startAppointment, handleSubmit } = useAppointments();
     const patientDetails = state?.patientDetails;
     const patientAppointments = state?.parsedAppointments;
+    const appointmentID  = state?.appointmentId;
     const [doctorDetailsMap, setDoctorDetailsMap] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
     const [showForm, setShowForm] = useState(false);
     const summaryRef = useRef<HTMLTextAreaElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
     const prescriptionRef = useRef<HTMLInputElement>(null);
 
+    console.log(patientAppointments)
     useEffect(() => {
         if (patientAppointments) {
             patientAppointments.forEach((appointment: Appointment) => {
                 getDoctordetails(BACKEND_URL, appointment.doctor_id)
-                    .then(doctor => {
+                    .then((doctor: Doctor) => {
                         if (doctor) {
                             setDoctorDetailsMap(prevMap => ({
                                 ...prevMap,
@@ -84,8 +86,8 @@ function PatientAppointment() {
                                 <td>{appointment.date}</td>
                                 <td>{appointment.time}</td>
                                 <td>{appointment.summery || "None"}</td>
-                                <td>{appointment.written_diagnosis || "None"}</td>
-                                <td>{appointment.written_prescriptions || "None"}</td>
+                                <td>{appointment.writen_diagnosis || "None"}</td>
+                                <td>{appointment.writen_prescription || "None"}</td>
                                 <td>{doctorDetailsMap[appointment.doctor_id]?.doctorName || "Unknown"}</td>
                                 <td>{doctorDetailsMap[appointment.doctor_id]?.doctorSpecialty || "Unknown"}</td>
                             </tr>
@@ -129,7 +131,7 @@ function PatientAppointment() {
                                 </div>
                             </div>
                             <div className="row">
-                                <Button className="sendButton" variant="outline-dark" type="button" onClick={() => handleSubmit(summaryRef, diagnosisRef, prescriptionRef)}>End Appointment</Button>
+                                <Button className="sendButton" variant="outline-dark" type="button" onClick={() => handleSubmit(summaryRef, diagnosisRef, prescriptionRef, appointmentID)}>End Appointment</Button>
                             </div>
                         </form>
                     </div>

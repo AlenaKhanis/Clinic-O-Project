@@ -1,0 +1,6 @@
+1. When patient cancel - get back the appointment to open. DONE!
+
+
+2. When appointment is completed - remove this appointment from patient view DONE! 
+
+3.added to history appointment! 

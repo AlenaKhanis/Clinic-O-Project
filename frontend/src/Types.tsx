@@ -48,8 +48,8 @@ export type Appointment =  {
   id: number;
   date_time: string;
   summery?: string;
-  written_diagnosis?: string;
-  written_prescriptions?: string;
+  writen_diagnosis?: string;
+  writen_prescription?: string;
   date: string;
   time: string;
   doctor_id: number;

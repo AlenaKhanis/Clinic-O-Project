@@ -41,9 +41,6 @@ export const useAppointments = () => {
     }
     
     
-    
-
-// Fetch appointments by doctorID
 const fetchAppointments = (url: string) => {
     fetch(url)
         .then(response => {
@@ -54,6 +51,7 @@ const fetchAppointments = (url: string) => {
         })
         .then((data: Appointment[]) => {
             const parsedAppointments = parseDateTime(data); 
+            console.log("data: " ,parsedAppointments)
             setAppointments(parsedAppointments);
             setSelectedDoctorAppointments(parsedAppointments);
             
@@ -65,9 +63,8 @@ const fetchAppointments = (url: string) => {
 };
 
 
-const handleViewDetails = (patient_id: number | null) => {
+const handleViewDetails = (patient_id: number | null , appointmentId: number) => {
     if (!patient_id) {
-        navigate('/patient-appointment');
         return;
     }
 
@@ -81,14 +78,15 @@ const handleViewDetails = (patient_id: number | null) => {
         .then((patientDetails: Patient) => {
             setSelectedPatientDetails(patientDetails);
 
-            fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
+            fetch(`${BACKEND_URL}/get_appointments_by_patient_id/${patient_id}`)
                 .then(response => response.json())
                 .then((data: Appointment[]) => {
                     const parsedAppointments = parseDateTime(data);
 
                     const stateData = {
                         patientDetails: patientDetails,
-                        parsedAppointments: parsedAppointments
+                        parsedAppointments: parsedAppointments,
+                        appointmentId: appointmentId
                     };
                     console.log(stateData)
                     navigate('/patient-appointment', { state: stateData });
@@ -173,8 +171,20 @@ const filteredAppointments = appointments
     {startAppointment() && <span>{startAppointment()}</span>}
 
 
-    function sendAppointmentData(formData: any) {
-        return fetch(`${BACKEND_URL}/add_summary`, {
+
+
+    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement> , appointmentID: number) => {
+        const summary = summaryRef.current?.value;
+        const diagnosis = diagnosisRef.current?.value;
+        const prescription = prescriptionRef.current?.value;
+    
+        const formData = {
+            summary: summary,
+            diagnosis: diagnosis,
+            prescription: prescription
+        };
+    
+        fetch(`${BACKEND_URL}/add_summary/${appointmentID}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -194,20 +204,6 @@ const filteredAppointments = appointments
         .catch(error => {
             console.error('Error sending data to server:', error);
         });
-    }
-
-    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement>) => {
-        const summary = summaryRef.current?.value;
-        const diagnosis = diagnosisRef.current?.value;
-        const prescription = prescriptionRef.current?.value;
-    
-        const formData = {
-            summary: summary,
-            diagnosis: diagnosis,
-            prescription: prescription
-        };
-    
-        sendAppointmentData(formData);
     }
     
 
