@@ -138,8 +138,8 @@ class Appointment:
 
     
     @classmethod
-    def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id):
-        # Update the appointment with the summary, diagnosis, prescription, and change status to 'complete'
+    def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id , patient_id):
+        
         query = """
                 UPDATE appointments
                 SET summery = %s,

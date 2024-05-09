@@ -78,7 +78,7 @@ const handleViewDetails = (patient_id: number | null , appointmentId: number) =>
         .then((patientDetails: Patient) => {
             setSelectedPatientDetails(patientDetails);
 
-            fetch(`${BACKEND_URL}/get_appointments_by_patient_id/${patient_id}`)
+            fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
                 .then(response => response.json())
                 .then((data: Appointment[]) => {
                     const parsedAppointments = parseDateTime(data);
@@ -157,9 +157,20 @@ const filteredAppointments = appointments
     
     const startAppointment = () => {
         const currentDate = new Date();
-        const endTime = new Date(currentDate.getTime() + 15 * 60000);
+        const endTime = new Date(currentDate.getTime() + 15 * 60000); // 15 minutes from current time
     
-        const conflictingAppointment = appointments.find(appointment => {
+        // Filter appointments for today
+        const todayAppointments = appointments.filter(appointment => {
+            const appointmentDateTime = new Date(appointment.date_time);
+            return (
+                appointmentDateTime.getDate() === currentDate.getDate() &&
+                appointmentDateTime.getMonth() === currentDate.getMonth() &&
+                appointmentDateTime.getFullYear() === currentDate.getFullYear()
+            );
+        });
+    
+        // Check if there is any appointment within the next 15 minutes
+        const conflictingAppointment = todayAppointments.find(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
             return appointmentDateTime > currentDate && appointmentDateTime < endTime;
         });
@@ -167,8 +178,6 @@ const filteredAppointments = appointments
         return conflictingAppointment ? "You have another appointment scheduled within the next 15 minutes." : null;
     };
     
-    // Inside your component's JSX:
-    {startAppointment() && <span>{startAppointment()}</span>}
 
 
 

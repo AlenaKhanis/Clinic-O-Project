@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  /* color: rgba(255, 255, 255, 0.87); */
   background-color: #242424;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -68,10 +68,9 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
   a:hover {
     color: #747bff;
@@ -101,4 +100,14 @@ button:focus-visible {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the scrollbar handle on hover */
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    /* Apply background image for dark mode */
+   
+    /* Adjust background properties as needed */
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-position: center center; /* Center the image */
+  }
 }

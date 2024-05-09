@@ -4,3 +4,5 @@
 2. When appointment is completed - remove this appointment from patient view DONE! 
 
 3.added to history appointment! 
+
+4. In show appointment history to doctor show only history or the same day! 

@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS patients (
     package TEXT NOT NULL CHECK (package IN('Premium', 'Gold', 'Silver')) DEFAULT 'Silver',
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    prescription TEXT,
-    deagnosis TEXT,
+    prescription TEXT[],
+    deagnosis TEXT[],
     FOREIGN KEY (patient_id) REFERENCES users (id)
 );
 
@@ -72,18 +72,18 @@ CREATE TABLE IF NOT EXISTS appointments (
 );
 
 
-DROP  TABLE  IF EXISTS medical_records CASCADE;
-CREATE TABLE IF NOT EXISTS medical_records (
-    id SERIAL PRIMARY KEY,
-    patient_id INTEGER NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients (id),
-    doctor_id INTEGER NOT NULL,
-    FOREIGN KEY (doctor_id) REFERENCES doctors (id),
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   
-    diagnosis TEXT NOT NULL,
-    prescription TEXT NOT NULL
-);
+-- DROP  TABLE  IF EXISTS medical_records CASCADE;
+-- CREATE TABLE IF NOT EXISTS medical_records (
+--     id SERIAL PRIMARY KEY,
+--     patient_id INTEGER NOT NULL,
+--     FOREIGN KEY (patient_id) REFERENCES patients (id),
+--     doctor_id INTEGER NOT NULL,
+--     FOREIGN KEY (doctor_id) REFERENCES doctors (id),
+--     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   
+--     diagnosis TEXT NOT NULL,
+--     prescription TEXT NOT NULL
+-- );
 
 DROP TABLE IF EXISTS owner CASCADE;
 CREATE TABLE IF NOT EXISTS owner (

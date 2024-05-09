@@ -1,4 +1,5 @@
 from pathlib import Path
+import bcrypt
 from flask import Flask, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt, get_jwt_identity, jwt_required
 from psycopg2.extras import RealDictCursor
@@ -39,6 +40,7 @@ def login():
 
     cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
     user = cursor.fetchone()
+    print(user)
     
     if user:
         access_token = create_access_token(identity=user["id"])

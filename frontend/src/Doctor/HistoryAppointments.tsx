@@ -55,7 +55,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: Dis
                                     <td>{appointment.date}</td>
                                     <td>{appointment.time}</td>
                                     <td>
-                                        <button onClick={() => handleViewDetails(appointment.patient_id)}>
+                                        <button onClick={() => handleViewDetails(appointment.patient_id, appointment.id)}>
                                             View Details
                                         </button>
                                     </td>
