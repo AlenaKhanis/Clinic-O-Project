@@ -13,6 +13,7 @@ export const useAppointments = () => {
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
     const [selectedDoctorDetails , setSelectedDoctorDetails] = useState<Doctor | null>(null);
+    const [selectHistoryAppointments , setSelectHistoryAppointments] = useState<Appointment[]>([]);
 
 
 
@@ -41,148 +42,119 @@ export const useAppointments = () => {
     }
     
     
-const fetchAppointments = (url: string) => {
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch appointments");
-            }
-            return response.json();
-        })
-        .then((data: Appointment[]) => {
-            const parsedAppointments = parseDateTime(data); 
-            console.log("data: " ,parsedAppointments)
-            setAppointments(parsedAppointments);
-            setSelectedDoctorAppointments(parsedAppointments);
-            
-        })
-        .catch(error => {
-            console.error("Error fetching appointments:", error);
-           
-        });
-};
-
-
-const handleViewDetails = (patient_id: number | null , appointmentId: number) => {
-    if (!patient_id) {
-        return;
-    }
-
-    fetch(`${BACKEND_URL}/get_petient_by_id/${patient_id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch patient details");
-            }
-            return response.json();
-        })
-        .then((patientDetails: Patient) => {
-            setSelectedPatientDetails(patientDetails);
-
-            fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
-                .then(response => response.json())
-                .then((data: Appointment[]) => {
-                    const parsedAppointments = parseDateTime(data);
-
-                    const stateData = {
-                        patientDetails: patientDetails,
-                        parsedAppointments: parsedAppointments,
-                        appointmentId: appointmentId
-                    };
-                    console.log(stateData)
-                    navigate('/patient-appointment', { state: stateData });
-                })
-                .catch(error => {
-                    console.error("Error fetching history appointments:", error);
-                });
-        })
-        .catch(error => {
-            console.error("Error fetching patient details:", error);
-        });
-};
-
-
-// sort appointments by date
-const filteredAppointments = appointments
-    .filter((appointment: Appointment)=> {
-        const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
-        if (match) {
-            const [, day, month, year, time] = match;
-            const [hours, minutes, seconds] = time.split(':');
-
-            // Convert month to numeric value
-            const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
-
-            // Construct a new Date object
-            const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
-
-            // Check if the constructed date object is valid
-            if (!isNaN(appointmentDateTime.getTime())) {
-                const currentDateTime = new Date();
-                return appointmentDateTime > currentDateTime;
-            } else {
-                console.error('Invalid date:', appointment.date_time);
-                return false; // or handle this case differently
-            }
-        } else {
-            console.error('Invalid date format:', appointment.date_time);
-            return false; // or handle this case differently
-        }
-    })
-    .sort((a: Appointment, b: Appointment) => {
-        const dateA = new Date(a.date_time).getTime();
-        const dateB = new Date(b.date_time).getTime();
-        
-        return dateA - dateB;
-    });
-
-    const getDoctordetails = (BACKEND_URL: string, doctorID: number) => {
-        return fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
+    const fetchDoctorAppointments = (doctorID: number) => {
+        fetch(`${BACKEND_URL}/get_appointments/${doctorID}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Failed to fetch doctor");
+                    throw new Error('Failed to fetch doctor appointments');
                 }
                 return response.json();
             })
-            .then((data: Doctor) => {
-                setSelectedDoctorDetails(data);
-                return data;
+            .then((data: Appointment[]) => {
+                const partsAppointments = parseDateTime(data)
+                setAppointments(partsAppointments);
+                setSelectedDoctorAppointments(partsAppointments);
+                
             })
             .catch(error => {
-                console.error("Error fetching doctor details:", error);
-                throw error; // Re-throw the error to propagate it to the caller
+                console.error('Error fetching doctor appointments:', error);
             });
     };
 
-   
-    
-    const startAppointment = () => {
-        const currentDate = new Date();
-        const endTime = new Date(currentDate.getTime() + 15 * 60000); // 15 minutes from current time
-    
-        // Filter appointments for today
-        const todayAppointments = appointments.filter(appointment => {
-            const appointmentDateTime = new Date(appointment.date_time);
-            return (
-                appointmentDateTime.getDate() === currentDate.getDate() &&
-                appointmentDateTime.getMonth() === currentDate.getMonth() &&
-                appointmentDateTime.getFullYear() === currentDate.getFullYear()
-            );
-        });
-    
-        // Check if there is any appointment within the next 15 minutes
-        const conflictingAppointment = todayAppointments.find(appointment => {
-            const appointmentDateTime = new Date(appointment.date_time);
-            return appointmentDateTime > currentDate && appointmentDateTime < endTime;
-        });
-    
-        return conflictingAppointment ? "You have another appointment scheduled within the next 15 minutes." : null;
+
+    const getPatientById = (patient_id: number | null) => {
+        return fetch(`${BACKEND_URL}/get_petient_by_id/${patient_id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch patient details");
+                }
+                return response.json();
+            });
+    };    
+
+    const handleViewDetails = (patient_id: number | null , appointmentId: number) => {
+        if (!patient_id) {
+            return;
+        }
+        getPatientById(patient_id)
+            .then((patientDetails: Patient) => {
+                setSelectedPatientDetails(patientDetails);
+
+                fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
+                    .then(response => response.json())
+                    .then((data: Appointment[]) => {
+                        const parsedAppointments = parseDateTime(data);
+                        const stateData = {
+                            patientDetails: patientDetails,
+                            parsedAppointments: parsedAppointments,
+                            appointmentId: appointmentId
+                        };
+                        navigate('/patient-appointment', { state: stateData });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching history appointments:", error);
+                    });
+            })
+            .catch(error => {
+                console.error("Error fetching patient details:", error);
+            });
     };
-    
 
 
+    // sort appointments by date
+    const filteredAppointments = appointments
+        .filter((appointment: Appointment)=> {
+            const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
+            if (match) {
+                const [, day, month, year, time] = match;
+                const [hours, minutes, seconds] = time.split(':');
+
+                // Convert month to numeric value
+                const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
+
+                // Construct a new Date object
+                const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
+
+                // Check if the constructed date object is valid
+                if (!isNaN(appointmentDateTime.getTime())) {
+                    const currentDateTime = new Date();
+                    return appointmentDateTime >= currentDateTime;
+                } else {
+                    console.error('Invalid date:', appointment.date_time);
+                    return false; // or handle this case differently
+                }
+            } else {
+                console.error('Invalid date format:', appointment.date_time);
+                return false; // or handle this case differently
+            }
+        })
+        .sort((a: Appointment, b: Appointment) => {
+            const dateA = new Date(a.date_time).getTime();
+            const dateB = new Date(b.date_time).getTime();
+            
+            return dateA - dateB;
+        });
+
+        const getDoctordetails = (doctorID: number | null) => {
+            return fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch doctor");
+                    }
+                    return response.json();
+                })
+                .then((data: Doctor) => {
+                    setSelectedDoctorDetails(data);
+                    return data;
+                })
+                .catch(error => {
+                    console.error("Error fetching doctor details:", error);
+                    throw error; // Re-throw the error to propagate it to the caller
+                });
+        };
 
 
-    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement> , appointmentID: number) => {
+    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement> , appointmentID: number, patient_id: number) => {
         const summary = summaryRef.current?.value;
         const diagnosis = diagnosisRef.current?.value;
         const prescription = prescriptionRef.current?.value;
@@ -193,7 +165,7 @@ const filteredAppointments = appointments
             prescription: prescription
         };
     
-        fetch(`${BACKEND_URL}/add_summary/${appointmentID}`, {
+        fetch(`${BACKEND_URL}/add_summary/${appointmentID}/${patient_id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -206,20 +178,34 @@ const filteredAppointments = appointments
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Response from server:', data);
-            alert("Appointment has ended successfully.");
-        })
         .catch(error => {
             console.error('Error sending data to server:', error);
         });
     }
+
+    const get_history_doctor_appointments = (doctor_id: number) => {
+        fetch(`${BACKEND_URL}/get_appointments_history/${doctor_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data: Appointment[]) => {
+            const parsData = parseDateTime(data)
+            setSelectHistoryAppointments(parsData);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+    
     
 
 
 return { appointments,
        selectedPatientDetails,
-       fetchAppointments,
+       fetchDoctorAppointments,
        handleViewDetails,
        setSelectedPatientDetails,
        filteredAppointments,
@@ -228,8 +214,11 @@ return { appointments,
        getDoctordetails,
        selectedDoctorDetails,
        setSelectedDoctorDetails,
-       startAppointment,
-       handleSubmit
+       handleSubmit,
+       get_history_doctor_appointments,
+       selectHistoryAppointments,
+       getPatientById
+       
        };
 };
 

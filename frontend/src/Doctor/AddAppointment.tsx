@@ -3,9 +3,10 @@ import Calendar from "react-calendar";
 import '../css/Tabs.css';
 import 'react-calendar/dist/Calendar.css'; 
 import '../css/calendar.css';
+import { Button } from "react-bootstrap";
 
 type AddAppointmentProps = {
-    doctorId: string | null;
+    doctorId: number | null;
     onSuccess: () => void; // Function to trigger when a new appointment is successfully added
 }
 
@@ -15,13 +16,6 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [selectedTime, setSelectedTime] = useState<string>(''); 
     const [scheduledAppointments, setScheduledAppointments] = useState<string>('');
-
-    const formatDate = (date: Date): string => {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
 
     const handleDateChange = (date: Date) => {
         setSelectedDate(date);// Set the selected date state to the received date if it's a valid Date object,otherwise set it to null
@@ -149,7 +143,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     {renderTimeOptions(8, 21, 30)}
                 </select>
             </div>
-            <button onClick={handleFormSubmit} disabled={isDisabled()}>Submit</button>
+            <Button style={{ width: 'fit-content' , margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>
         </>
     );
 }

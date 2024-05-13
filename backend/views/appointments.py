@@ -58,11 +58,8 @@ def check_appointment()-> Response:
 
 
 
-@bp.route("/get_appointments", methods=['GET'])
-def get_appointments() -> dict[Appointment]:
-    doctor_id = request.args.get("doctor_id")
-    if doctor_id is None:
-        return jsonify({"error": "doctor_id is missing"}), 400
+@bp.route("/get_appointments/<doctor_id>", methods=['GET'])
+def get_appointments(doctor_id) -> dict[Appointment]:
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
     appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
@@ -109,8 +106,8 @@ def get_history_patient_appointments(patient_id):
 
     return jsonify(appointments), 200
 
-@bp.route("/add_summary/<appointment_id>", methods=["POST"])
-def add_summary(appointment_id):
+@bp.route("/add_summary/<appointment_id>/<patietn_id>", methods=["POST"])
+def add_summary(appointment_id , patietn_id):
 
     data = request.json 
     summary = data.get('summary')
@@ -122,15 +119,13 @@ def add_summary(appointment_id):
     # Perform database operations or other backend processing
     db = get_db()  # Assuming you have a function to get the database connection
     cursor = db.cursor()
-    Appointment.add_summary(cursor , summary , diagnosis , prescription, appointment_id)
+    Appointment.add_summary(cursor , summary , diagnosis , prescription, appointment_id , patietn_id)
     db.commit() 
     return jsonify({"message": "Form data received and processed successfully"}), 200
 
-# @bp.route("/get_appointments_history/<doctor_id>")
-# def get_appointments_history(doctor_id):
-#     db = get_db()
-#     cursor = db.cursor(cursor_factory=RealDictCursor)
-#     print("doctor id: ",doctor_id)
-#     appointments = Appointment.get_appointments_history(cursor, doctor_id)
-
-#     return jsonify(appointments), 200
+@bp.route("/get_appointments_history/<doctor_id>")
+def get_appointments_history(doctor_id):
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+    appointments = Appointment.get_appointments_history(cursor, doctor_id)
+    return jsonify(appointments), 200

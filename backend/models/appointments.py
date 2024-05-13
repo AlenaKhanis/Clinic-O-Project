@@ -34,7 +34,7 @@ class Appointment:
         try:
             cursor.execute(
                 """
-                SELECT id FROM appointments WHERE date_time = %s AND doctor_id = %s
+                SELECT id FROM appointments WHERE date_time = %s AND doctor_id = %s AND status IN ('schedule', 'open')
                 """,
                 (appointment_datetime, id)
             )
@@ -58,7 +58,6 @@ class Appointment:
                 SELECT * FROM appointments 
                 WHERE doctor_id = %s 
                 AND status IN ('schedule', 'open')
-                AND date_time > NOW()
                 """,
                 (doctor_id))
 
@@ -126,7 +125,7 @@ class Appointment:
         try:
             cursor.execute(
                 """
-                SELECT * FROM appointments WHERE patient_id = %s AND date_time < NOW();
+                SELECT * FROM appointments WHERE patient_id = %s AND status = 'completed';
                 """,
                 (patient_id,)
             )
@@ -138,34 +137,49 @@ class Appointment:
 
     
     @classmethod
-    def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id , patient_id):
-        
-        query = """
+    def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id, patient_id):
+        try:
+            # Update the appointments table
+            appointment_query = """
                 UPDATE appointments
                 SET summery = %s,
                     writen_diagnosis = %s,
                     writen_prescription = %s,
                     status = 'completed'
                 WHERE id = %s
-                """
-        cursor.execute(query, (summary, diagnosis, prescription, appointment_id))
+            """
+            cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
+
+            # Update the patients table with prescription and diagnosis
+            patient_query = """
+                UPDATE patients
+                SET deagnosis = deagnosis || %s,
+                prescription = prescription || %s
+                WHERE patient_id = %s
+            """
+            cursor.execute(patient_query, ([diagnosis], [prescription], patient_id))
+
+            # Commit the changes
+            cursor.connection.commit()
+
+            return True  # Operation succeeded
+        except Exception as e:
+            # Rollback changes if an error occurs
+            cursor.connection.rollback()
+            print("Error:", e)
+            return False  # Operation failed
 
 
-
-
-
-    # @classmethod
-    # def get_appointments_history(cursor , doctor_id):
-    #     try:
-    #         cursor.execute("""
-    #             SELECT * FROM appointments 
-    #                 WHERE doctor_id = 3 
-    #                 AND (date < CURRENT_DATE 
-    #                     OR (date = CURRENT_DATE AND EXTRACT(HOUR FROM time) * 3600 + EXTRACT(MINUTE FROM time) * 60 + EXTRACT(SECOND FROM time) <= EXTRACT(HOUR FROM CURRENT_TIME) * 3600 + EXTRACT(MINUTE FROM CURRENT_TIME) * 60 + EXTRACT(SECOND FROM CURRENT_TIME)))
-    #                 AND status = 'scedual';
-    #         """, (doctor_id,))
-    #         appointments = cursor.fetchall()
-    #         return appointments
-    #     except Exception as e:
-    #         print("Error getting appointment history:", e)
+    @classmethod
+    def get_appointments_history(cls ,cursor , doctor_id):
+        try:
+            cursor.execute("""
+                SELECT * FROM appointments 
+                    WHERE doctor_id = %s
+                    AND status = 'completed';
+            """, (doctor_id,))
+            appointments = cursor.fetchall()
+            return appointments
+        except Exception as e:
+            print("Error getting appointment history:", e)
 

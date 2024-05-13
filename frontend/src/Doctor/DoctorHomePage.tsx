@@ -5,6 +5,7 @@ import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
 import { useEffect, useState } from 'react';
 import SummeryAppointments from './HistoryAppointments';
+import DoctorProfile from './DocotrProfile';
 
 
 //TODO: sent data summery appointment
@@ -12,7 +13,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
-    const [doctorId, setDoctorId] = useState<string | null>(null);
+    const [doctorId, setDoctorId] = useState<number | null>(null);
     const [, setAppointmentsKey] = useState<string>("app"); 
  
     useEffect(() => {
@@ -60,7 +61,11 @@ function DoctorHomePage() {
                             see my patient list
                         </Tab>
                         <Tab eventKey="My profile" title="My profile" className='tabs'>
-                            see and update my profile
+                            <DoctorProfile
+                                doctorId={doctorId}
+                                onAppointmentAdded={refreshAppointments}
+                                BACKEND_URL={BACKEND_URL}
+                            />
                         </Tab>
                     </Tabs>
                 </div>

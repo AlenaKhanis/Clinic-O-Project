@@ -1,63 +1,65 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../css/displayAppontments.css';
 import { useAppointments } from "./doctorAppointmentFunction";
-import {DisplayAppointmentsProps} from '../Types';
+import { DisplayAppointmentsProps, Patient } from '../Types';
+import { Button } from 'react-bootstrap';
 
-
-
-function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails} = useAppointments();
+function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
+    const { get_history_doctor_appointments, selectHistoryAppointments, getPatientById , handleViewDetails } = useAppointments();
+    const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({});
+    const [patient, setPatient] = useState<Patient | null>(null);
 
     useEffect(() => {
         if (doctorId) {
-            const url = `${BACKEND_URL}/get_appointments?doctor_id=${doctorId}`;
-            fetchAppointments(url);
+            get_history_doctor_appointments(doctorId);
         }
     }, [doctorId, onAppointmentAdded]);
 
-    // Filter appointments that have already passed
-    const filteredAppointments = appointments
-        .filter(appointment => {
-        const [day, month, year] = appointment.date.split('/');
-        const [hours, minutes, seconds] = appointment.time.split(':');
+    useEffect(() => {
+        // Fetch patient details for each appointment
+        selectHistoryAppointments.forEach(appointment => {
+            getPatientById(appointment.patient_id)
+                .then((patient: Patient) => {
+                    setPatient(patient);
+                })
+                .catch(error => console.error("Error fetching patient details:", error));
+        });
+    }, [selectHistoryAppointments]);
 
-        const appointmentDateTime = new Date(
-            parseInt(year),
-            parseInt(month) - 1,
-            parseInt(day),
-            parseInt(hours),
-            parseInt(minutes),
-            parseInt(seconds)
-        );
-        const currentDateTime = new Date();
-        return appointmentDateTime < currentDateTime;
-    })
-    .filter(appointment => appointment.status === 'scedual');
-    ;
+    const toggleAppointmentDetails = (appointmentId: number) => {
+        setOpenAppointments(prevState => ({
+            ...prevState,
+            [appointmentId]: !prevState[appointmentId]
+        }));
+    };
 
     return (
         <>
-            <div className={`tab-content ${filteredAppointments.length > 0 ? "with-scrollbar" : ""}`}>
+            <div className={`tab-content ${selectHistoryAppointments.length > 0 ? "with-scrollbar" : ""}`}>
                 <h2>History Appointments</h2>
-                {filteredAppointments.length > 0 ? (
+                {selectHistoryAppointments.length > 0 ? (
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Time</th>
-                            
-                                <th></th>
-                            </tr>
-                        </thead>
                         <tbody>
-                            {filteredAppointments.map((appointment, index) => (
+                            {selectHistoryAppointments.map((appointment, index) => (
                                 <tr key={index}>
-                                    <td>{appointment.date}</td>
-                                    <td>{appointment.time}</td>
+                                    <td>Date: {appointment.date}</td>
+                                    <td>Time: {appointment.time}</td>
                                     <td>
-                                        <button onClick={() => handleViewDetails(appointment.patient_id, appointment.id)}>
-                                            View Details
-                                        </button>
+                                    <Button onClick={() => handleViewDetails(appointment.patient_id , appointment.id)} style={{cursor: 'pointer' }}>
+                                        Patient: {patient ? patient.full_name : 'Loading...'}
+                                    </Button>
+                                    </td>
+                                    <td>
+                                        <Button
+                                            onClick={() => toggleAppointmentDetails(appointment.id)}
+                                            aria-controls={`appointment-details-${appointment.id}`}
+                                            aria-expanded={openAppointments[appointment.id]}
+                                        >
+                                            {openAppointments[appointment.id] ? 'Hide Details' : 'Show Appointment Details'}
+                                        </Button>
+                                    </td>
+                                    <td>
+    
                                     </td>
                                 </tr>
                             ))}
@@ -67,11 +69,17 @@ function HistoryAppointments({ doctorId, onAppointmentAdded , BACKEND_URL }: Dis
                     <p>No history appointments</p>
                 )}
             </div>
-            <div>
+            {selectHistoryAppointments.map((appointment, index) => (
+            <div key={`details-${index}`} style={{ display: openAppointments[appointment.id] ? 'block' : 'none' }}>
+                <p>
+                    <span style={{ fontWeight: 'bold' }}>Summary:</span> {appointment.summery}
+                </p>
+                <p>Writen_diagnosis: {appointment.writen_diagnosis}</p>
+                <p>Writen_prescription: {appointment.writen_prescription}</p>
             </div>
-
+        ))}
         </>
     );
-}
+}    
 
 export default HistoryAppointments;

@@ -12,7 +12,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const [selectedSpecialty, setSelectedSpecialty] = useState('');
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
     const [MessageScedual, setMessageScedual] = useState<string>('');
-    const { fetchAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
+    const { fetchDoctorAppointments, selectedDoctorAppointments, setSelectedDoctorAppointments } = useAppointments();
     const { appointments, getPatientAppointments } = usePatient();
 
     useEffect(() => {
@@ -55,8 +55,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const handleDoctorClick = (doctorId: number) => {
         setSelectedDoctorId(doctorId);
         if (doctorId) {
-            const appointmentsURL = `${BACKEND_URL}/get_appointments?doctor_id=${doctorId}`;
-            fetchAppointments(appointmentsURL);
+            fetchDoctorAppointments(doctorId);
             setMessageScedual('');
         }
     };
@@ -87,8 +86,6 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
 
     const isAppointmentExists = (date: string, time: string) => {
         return appointments.some(appointment => {
-
-            console.log()
 
             const appointmentDateTime = new Date(appointment.date_time);
             const appointmentDate = appointmentDateTime.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');

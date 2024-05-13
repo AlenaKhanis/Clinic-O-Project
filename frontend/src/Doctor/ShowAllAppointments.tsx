@@ -1,18 +1,16 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import "../css/displayAppontments.css";
 import { useAppointments } from "./doctorAppointmentFunction";
 import { DisplayAppointmentsProps, Appointment } from '../Types';
 import { Button } from "react-bootstrap";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchAppointments, handleViewDetails, filteredAppointments } = useAppointments();
+    const { appointments, fetchDoctorAppointments, handleViewDetails, filteredAppointments } = useAppointments();
 
     useEffect(() => {
         if (doctorId) {
-            const url = `${BACKEND_URL}/get_appointments?doctor_id=${doctorId}`;
-            fetchAppointments(url);
+            fetchDoctorAppointments(doctorId);
         }
     }, [doctorId, onAppointmentAdded]);
 
