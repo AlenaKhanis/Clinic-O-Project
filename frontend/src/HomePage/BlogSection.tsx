@@ -1,6 +1,8 @@
 import { Button, Card } from 'react-bootstrap';
 import '../css/BlogSection.css'
 
+//TODO: add content
+
 function BlogSection() {
     // Sample articles data
     const articles = [

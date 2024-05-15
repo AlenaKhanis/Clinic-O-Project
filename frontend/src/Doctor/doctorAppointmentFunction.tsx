@@ -118,7 +118,7 @@ export const useAppointments = () => {
                 // Check if the constructed date object is valid
                 if (!isNaN(appointmentDateTime.getTime())) {
                     const currentDateTime = new Date();
-                    return appointmentDateTime >= currentDateTime;
+                    return appointmentDateTime > currentDateTime;
                 } else {
                     console.error('Invalid date:', appointment.date_time);
                     return false; // or handle this case differently

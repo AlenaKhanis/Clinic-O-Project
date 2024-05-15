@@ -1,5 +1,6 @@
 import '../css/fotter.css';
 
+//TODO: add content
 
 function Footer() {
     return <div style={{marginTop: "50px"}}>

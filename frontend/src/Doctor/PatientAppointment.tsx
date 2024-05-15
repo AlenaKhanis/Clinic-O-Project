@@ -7,15 +7,13 @@ import '../css/AppointmentSummeryForm.css';
 import '../css/Tabs.css';
 import Collapse from 'react-bootstrap/Collapse';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
-
 function PatientAppointment() {
     const { state } = useLocation();
     const { getDoctordetails, handleSubmit , fetchDoctorAppointments , appointments} = useAppointments();
     const patientDetails = state?.patientDetails;
     const patientAppointments = state?.parsedAppointments;
     const appointmentID = state?.appointmentId;
-    const [doctorDetailsMap, setDoctorDetailsMap] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
+    const [doctorDetailsMap, setDoctorDetailsMap] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({}); //TODO: -------
     const [showForm, setShowForm] = useState(false);
     const summaryRef = useRef<HTMLTextAreaElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
@@ -38,7 +36,7 @@ function PatientAppointment() {
     
             // Iterate through unique doctor IDs and fetch their details
             uniqueDoctorIds.forEach((doctorId: number) => {
-                getDoctordetails(BACKEND_URL, doctorId)
+                getDoctordetails(doctorId)
                     .then((doctor: Doctor) => {
                         if (doctor) {
                             setDoctorDetailsMap(prevMap => ({

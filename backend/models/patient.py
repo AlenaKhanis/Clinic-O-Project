@@ -3,6 +3,11 @@ from datetime import datetime
 from models.users import User 
 
 
+#TODO: Add more error hadaling for psycopg2
+
+#TODO: When add or update - change the update time.
+
+
 @dataclass
 class Patient(User):
     patient_id: int = None
@@ -10,7 +15,10 @@ class Patient(User):
     created_date: datetime = datetime.now()
     updated_date: datetime = datetime.now()
 
+    
+
     @classmethod
+    #TODO: change to get patient by id
     def get_patient(cls, cursor, user_id):
         cursor.execute("""
             SELECT DISTINCT p.*, u.username, u.full_name, u.age, u.email, u.phone, u.role 

@@ -1,8 +1,35 @@
-1. When patient cancel - get back the appointment to open. DONE!
+
+BACKEND:
+
+1. Add error handeling postgras.
+2. rename function to be more specific.
+3. add more tests.
+4. add documntation.
+5. change db insted full name to firs name and lask name.
+6.correct written mistakes.
 
 
-2. When appointment is completed - remove this appointment from patient view DONE! 
+FRONTEND:
 
-3.added to history appointment! 
+1. change the main page add image in div welcome
+2. fix written mistakes.
+3. rename function more logical.
+4. saparet finctions - ones that used in some file put in one file other whit useEffect set in component.
+5. Manage types - sasparet to type function \ patien \ doctor td.... 
 
-4. In show appointment history to doctor show only history or the same day! 
+
+
+MECANICS
+1. All the owner page - add\update doctor\patient , update clinic , profile\edit profile....
+2. DOCTOR - add see appointment by today - this week - this mounth. 
+            same history.
+            appointment today see the all hours.
+            see al my patient.
+            edit profile.
+
+3. PATIENT -  see and edit profile.
+              view appointment history.
+              prescriprion and diagnosis view and when.
+              see all visited doctors.
+
+              

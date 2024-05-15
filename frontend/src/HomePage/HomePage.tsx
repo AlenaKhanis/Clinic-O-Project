@@ -34,9 +34,10 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userRole , 
   }
   
   return (
+    //TODO: add side bar - for profile view + sign out + maybe settings.
     <>
   <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
-    <Container fluid> {/* Use fluid container for full width */}
+    <Container fluid> 
       <Link to="/" style={{ textDecoration: 'none' }}>
         <Navbar.Brand>Clinic-O</Navbar.Brand>
       </Link>
@@ -46,9 +47,9 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userRole , 
           <Nav.Link onClick={() => logOut()}>
             {userToken ? "Logout" : "Login"}
           </Nav.Link>
-          <Nav.Link href="link">Link</Nav.Link>
+          <Nav.Link href="link">Link</Nav.Link> //TODO: change to somthing usfull
         </Nav>
-        <Nav.Item>{userToken ? userRole : "Role"}</Nav.Item>
+        <Nav.Item>{userToken ? userRole : "Role"}</Nav.Item> //TODO: only in developer mode display
       </Navbar.Collapse>
     </Container>
   </Navbar>

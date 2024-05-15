@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from db import get_db
 
+
+#TODO: Add more error hadaling for psycopg2
+
 @dataclass
 class User:
     username: str

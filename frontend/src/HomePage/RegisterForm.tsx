@@ -1,4 +1,4 @@
-import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBCardImage, MDBInput } from 'mdb-react-ui-kit';
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput } from 'mdb-react-ui-kit';
 import { faEnvelope, faKey, faLock, faUser, faTimes, faIdCard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
@@ -8,6 +8,8 @@ import '../css/Register.css'
 
 
 //TODO: Sapared the form validation logic and submissin logic in diffrent files!
+//TODO: Add password validation.
+//TODO: change from full name to first and last name.
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;

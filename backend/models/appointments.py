@@ -1,7 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
+import logging
+
+import psycopg2
 
 
+
+#TODO: Add Documentation
 
 @dataclass
 class Appointment:
@@ -15,6 +20,7 @@ class Appointment:
     written_diagnosis: str = None
     written_prescriptions: str = None
 
+#TODO: Add more error hadaling for psycopg2
 
 
     def add_open_appointment_for_doctor(self, cursor) -> bool:
@@ -24,11 +30,18 @@ class Appointment:
         """
         try:
             cursor.execute(sql, (self.date_time, self.doctor_id, self.status, self.created_date, self.updated_date))
-            return True 
+            return True
+        except psycopg2.IntegrityError as e:
+            logging.error(f"IntegrityError occurred while adding appointment: {e}")
+            return False
+        except psycopg2.Error as e:
+            logging.error(f"Database error occurred while adding appointment: {e}")
+            return False
         except Exception as e:
-            print(f"Error occurred while adding appointment: {e}")
+            logging.error(f"Unexpected error occurred while adding appointment: {e}")
             return False
 
+    #TODO: change to check_appointment_exists in doctor
     @classmethod
     def check_appointment_exists(cls, appointment_datetime, id, cursor) -> bool:
         try:
@@ -53,7 +66,6 @@ class Appointment:
     def get_appointment_by_doctor_id(cls, cursor, doctor_id) -> dict:
         try:
   
-
             cursor.execute("""
                 SELECT * FROM appointments 
                 WHERE doctor_id = %s 
@@ -106,7 +118,7 @@ class Appointment:
         except Exception as e:
             print("Error getting appointments:", e)
             return None
-        
+#TODO: change to cansel appointment by patient
     @classmethod
     def cancel_appointment(cls, cursor, appointment_id) -> bool:
         try:
@@ -135,7 +147,7 @@ class Appointment:
             print("Error fetching history patient appointments:", e)
             return None
 
-    
+    #TODO: add summery by doctor
     @classmethod
     def add_summary(cls, cursor, summary, diagnosis, prescription, appointment_id, patient_id):
         try:
@@ -169,7 +181,7 @@ class Appointment:
             print("Error:", e)
             return False  # Operation failed
 
-
+#TODO: change to get_appointments_history by doctor
     @classmethod
     def get_appointments_history(cls ,cursor , doctor_id):
         try:

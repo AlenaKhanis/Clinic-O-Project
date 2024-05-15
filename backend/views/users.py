@@ -34,7 +34,6 @@ def register():
 
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    # Create a User object
     user = User(username=username,
                 password=hashed_password,
                 email=email,
@@ -52,7 +51,7 @@ def register():
 
         if patient.add_patient(cursor): 
             db.commit()
-            return jsonify({'message': 'Registration successful', 'user_id': user_id}), 200
+            return jsonify({'message': 'Registration successful'}), 200
         else:
             db.rollback()
             return jsonify({'message': 'Failed to register user'}), 500

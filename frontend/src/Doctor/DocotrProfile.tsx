@@ -4,6 +4,7 @@ import { DisplayAppointmentsProps } from "../Types";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
+import '../css/doctorProfile.css';
 
 function DoctorProfile({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
     const { getDoctordetails, selectedDoctorDetails } = useAppointments();
@@ -21,6 +22,9 @@ function DoctorProfile({ doctorId, onAppointmentAdded }: DisplayAppointmentsProp
         }
     }, [doctorId, onAppointmentAdded]); 
 
+    //TODO: Add saparate lable for firs name and lasn name 
+    //TODO: add ref 
+  
 
     return (
         <div>
@@ -45,18 +49,34 @@ function DoctorProfile({ doctorId, onAppointmentAdded }: DisplayAppointmentsProp
                 </Button>
                 <Collapse in={open}>
                     <div id="example-collapse-text">
-                    <div>
+                    <div  className="container-profile">
                         <h2>Edit Profile</h2>
                         <form onSubmit={handleSubmit}>
                             <label>Full Name:</label>
                             <input
-                            type="text"
-                            name="firstName"
-                            required
+                                type="text"
+                                name="firstName"
+                                required
                             />
+                            <br />
+                            <label>Email:</label>
+                            <input
+                                type="email"
+                                name="email"
+                                required
+                            />
+                            <br />
+                            <label>Phone Number:</label>
+                            <input
+                                type="tel"
+                                name="phoneNumber"
+                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                required
+                            />
+                            <br />
                             <button type="submit">Save Changes</button>
                         </form>
-                        </div>
+                    </div>
                     </div>
                 </Collapse>
                 </>
