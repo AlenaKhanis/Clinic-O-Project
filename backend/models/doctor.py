@@ -39,3 +39,5 @@ class Doctor(User):
             return doctors_data 
         except Exception as e:
             print(e)
+
+

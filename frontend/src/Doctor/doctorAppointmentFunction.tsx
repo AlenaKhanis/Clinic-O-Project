@@ -63,7 +63,7 @@ export const useAppointments = () => {
 
 
     const getPatientById = (patient_id: number | null) => {
-        return fetch(`${BACKEND_URL}/get_petient_by_id/${patient_id}`)
+        return fetch(`${BACKEND_URL}/get_patient_by_id/${patient_id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch patient details");

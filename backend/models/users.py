@@ -53,5 +53,17 @@ class User:
             print("Error inserting user:", e)
             return None
 
+    @classmethod
+    def edit_doctor_user_profile(cls, cursor, doctor_id, field, value):
+        try:
+            cursor.execute(f"""
+                UPDATE users
+                SET {field} = %s
+                WHERE id = %s;
+            """, (value, doctor_id))
+
+            return "Doctor profile updated successfully"
+        except Exception as e:
+            return f"Error updating doctor profile: {e}"
 
 

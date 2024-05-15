@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
+from models.users import User
 from db import get_db
 from models.doctor import Doctor
 from psycopg2.extras import RealDictCursor
@@ -45,4 +46,25 @@ def get_doctors_by_Id(doctor_id):
     except Exception as e:
 
         return jsonify({"error": "An error occurred while retrieving the doctor."}), 500
+
+
+@bp.route('/edit_doctor_profile/<doctor_id>', methods=['POST'])
+def edit_doctor_user_profile(doctor_id):
+    try:
+        value = request.json.get('value')
+        field = request.json.get('field')
+        db = get_db()
+        cursor = db.cursor()
+        
+        if field in ['full_name', 'email', 'phone']:
+            result = User.edit_doctor_user_profile(cursor, doctor_id, field, value)
+            db.commit()  
+            return jsonify(result), 200
+        else:
+            return jsonify({"error": "Invalid field."}), 400
+    except Exception as e:
+
+        return jsonify({"error": f"An error occurred while editing the doctor's profile: {e}"}), 500
+
+
 

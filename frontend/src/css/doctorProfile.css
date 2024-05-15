@@ -1,17 +1,17 @@
 /* Style for the container */
 .container-profile {
-    max-width: 400px;
-    margin:auto;
+    max-width: 600px;
+    margin: auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 10px;
+    display: flex; /* Use flexbox to arrange items horizontally */
+    flex-direction: column; /* Stack items vertically */
 }
 
-/* Style for the form */
-form {
-    display: flex;
-    flex-direction: column;
+.container-profile input {
+    margin-right: 10px; /* Add some spacing between input fields */
 }
 
 /* Style for labels */
@@ -22,24 +22,13 @@ label {
 /* Style for inputs */
 input {
     padding: 8px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
     background-color: white; 
     color: black;
-    
 }
 
-/* Style for the submit button */
-button[type="submit"] {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
+/* Style for buttons */
+button {
+    margin-top: 10px;
 }

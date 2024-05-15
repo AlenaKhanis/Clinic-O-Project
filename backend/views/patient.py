@@ -7,6 +7,7 @@ bp = Blueprint("patient", __name__)
 
 @bp.route("/get_patient_by_id/<int:patient_id>", methods=['GET'])
 def get_patient_by_id(patient_id):
+    print(patient_id)
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
