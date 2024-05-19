@@ -6,9 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import '../css/doctorProfile.css';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
-
-function DoctorProfile({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
+function DoctorProfile({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
     const { getDoctordetails, selectedDoctorDetails } = useAppointments();
     const [open, setOpen] = useState(false);
 

@@ -68,3 +68,12 @@ def edit_doctor_user_profile(doctor_id):
 
 
 
+@bp.route('/get_doctor_patients/<doctor_id>')
+def get_doctor_patients(doctor_id):
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        patients = Doctor.get_doctor_patient(cursor, doctor_id)
+        return jsonify(patients), 200
+    except Exception as e:
+        return jsonify({"error": "An error occurred while retrieving patients."}), 500

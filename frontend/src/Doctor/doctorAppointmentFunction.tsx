@@ -1,7 +1,7 @@
 import { useState   } from "react";
 import { Appointment, Doctor, Patient } from "../Types";
 import { useNavigate } from "react-router-dom"; 
-
+import moment from 'moment-timezone';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -14,25 +14,14 @@ export const useAppointments = () => {
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
     const [selectedDoctorDetails , setSelectedDoctorDetails] = useState<Doctor | null>(null);
     const [selectHistoryAppointments , setSelectHistoryAppointments] = useState<Appointment[]>([]);
-
-
-
     const navigate = useNavigate();
 
-    //Pars the date time to string view
     function parseDateTime(data: Appointment[]): Appointment[] {
         return data.map(appointment => {
-            // Convert date and time strings into Date objects
-            const date = new Date(appointment.date_time);
-      
-            // Format date
-            const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            const dateString = date.toLocaleDateString('en-GB', options).replace(/\//g, '.');
-    
-            const hours = date.getUTCHours();
-            const minutes = date.getUTCMinutes();
-            const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-    
+            const date = moment.utc(appointment.date_time);
+            const dateString = date.format('DD.MM.YYYY');
+            const formattedTime = date.format('HH:mm');
+
             return {
                 ...appointment,
                 date: dateString,
@@ -40,7 +29,7 @@ export const useAppointments = () => {
             };
         });
     }
-    
+        
     
     const fetchDoctorAppointments = (doctorID: number) => {
         fetch(`${BACKEND_URL}/get_appointments/${doctorID}`)
@@ -72,7 +61,7 @@ export const useAppointments = () => {
             });
     };    
 
-    const handleViewDetails = (patient_id: number | null , appointmentId: number) => {
+    const handleViewDetails = (patient_id: number | null , appointmentId?: number) => {
         if (!patient_id) {
             return;
         }
@@ -89,6 +78,7 @@ export const useAppointments = () => {
                             parsedAppointments: parsedAppointments,
                             appointmentId: appointmentId
                         };
+                        
                         navigate('/patient-appointment', { state: stateData });
                     })
                     .catch(error => {
@@ -100,41 +90,22 @@ export const useAppointments = () => {
             });
     };
 
-
     // sort appointments by date
     const filteredAppointments = appointments
-        .filter((appointment: Appointment)=> {
-            const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
-            if (match) {
-                const [, day, month, year, time] = match;
-                const [hours, minutes, seconds] = time.split(':');
-
-                // Convert month to numeric value
-                const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
-
-                // Construct a new Date object
-                const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
-
-                // Check if the constructed date object is valid
-                if (!isNaN(appointmentDateTime.getTime())) {
-                    const currentDateTime = new Date();
-                    return appointmentDateTime > currentDateTime;
-                } else {
-                    console.error('Invalid date:', appointment.date_time);
-                    return false; // or handle this case differently
-                }
-            } else {
-                console.error('Invalid date format:', appointment.date_time);
-                return false; // or handle this case differently
-            }
+        .filter((appointment: Appointment) => {
+            const appointmentDate = moment(appointment.date_time, 'DD MMM YYYY HH:mm:ss');
+            const currentDate = moment().startOf('day');
+            return appointmentDate.isSameOrAfter(currentDate);
+         
         })
         .sort((a: Appointment, b: Appointment) => {
-            const dateA = new Date(a.date_time).getTime();
-            const dateB = new Date(b.date_time).getTime();
-            
-            return dateA - dateB;
+            const dateA = moment(a.date_time, 'DD MMM YYYY HH:mm:ss');
+            const dateB = moment(b.date_time, 'DD MMM YYYY HH:mm:ss');
+            return dateA.diff(dateB);
         });
 
+
+        
         const getDoctordetails = (doctorID: number | null) => {
             return fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`)
                 .then(response => {
@@ -149,39 +120,41 @@ export const useAppointments = () => {
                 })
                 .catch(error => {
                     console.error("Error fetching doctor details:", error);
-                    throw error; // Re-throw the error to propagate it to the caller
+                    throw error; 
                 });
         };
-
-
-    const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement> , appointmentID: number, patient_id: number) => {
-        const summary = summaryRef.current?.value;
-        const diagnosis = diagnosisRef.current?.value;
-        const prescription = prescriptionRef.current?.value;
-    
-        const formData = {
-            summary: summary,
-            diagnosis: diagnosis,
-            prescription: prescription
-        };
-    
-        fetch(`${BACKEND_URL}/add_summary/${appointmentID}/${patient_id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+        
+        const handleSubmit = (summaryRef: React.RefObject<HTMLTextAreaElement>, diagnosisRef: React.RefObject<HTMLInputElement>, prescriptionRef: React.RefObject<HTMLInputElement> , appointmentID: number, patient_id: number) => {
+            const summary = summaryRef.current?.value;
+            const diagnosis = diagnosisRef.current?.value;
+            const prescription = prescriptionRef.current?.value;
+        
+            if (summary && diagnosis && prescription) {
+                const formData = {
+                    summary: summary,
+                    diagnosis: diagnosis,
+                    prescription: prescription
+                };
+        
+                fetch(`${BACKEND_URL}/add_summary/${appointmentID}/${patient_id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error in handleSubmit:", error);
+                });
+            } else {
+                console.error("One or more inputs are undefined");
             }
-            return response.json();
-        })
-        .catch(error => {
-            console.error('Error sending data to server:', error);
-        });
-    }
+        };
 
     const get_history_doctor_appointments = (doctor_id: number) => {
         fetch(`${BACKEND_URL}/get_appointments_history/${doctor_id}`)

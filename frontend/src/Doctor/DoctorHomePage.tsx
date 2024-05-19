@@ -6,6 +6,7 @@ import DisplayAppointments from './ShowAllAppointments';
 import { useEffect, useState } from 'react';
 import SummeryAppointments from './HistoryAppointments';
 import DoctorProfile from './DocotrProfile';
+import AllPatientView from './AllPAtientView';
 
 
 //TODO: sent data summery appointment
@@ -58,7 +59,11 @@ function DoctorHomePage() {
                             />
                         </Tab>
                         <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
-                            see my patient list
+                            <AllPatientView
+                                doctorId={doctorId}
+                                onAppointmentAdded={refreshAppointments}
+                                BACKEND_URL={BACKEND_URL}
+                            />
                         </Tab>
                         <Tab eventKey="My profile" title="My profile" className='tabs'>
                             <DoctorProfile

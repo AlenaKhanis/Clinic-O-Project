@@ -22,19 +22,17 @@ function PatientAppointment() {
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccsses, setShowSuccsses] = useState(false);
     const [open, setOpen] = useState(false);
-    const doctorID = patientAppointments[0].doctor_id;
+    const doctorID = patientAppointments && patientAppointments[0]?.doctor_id;
     const [colusion , setColusion] = useState(false)
 
+
     useEffect(() => {
-        if (patientAppointments) {
-            // Create a set to store unique doctor IDs
+        if (patientAppointments) {         
             const uniqueDoctorIds = new Set<number>();
             patientAppointments.forEach((appointment: Appointment) => {
-                // Add the doctor ID to the set
                 uniqueDoctorIds.add(appointment.doctor_id);
             });
     
-            // Iterate through unique doctor IDs and fetch their details
             uniqueDoctorIds.forEach((doctorId: number) => {
                 getDoctordetails(doctorId)
                     .then((doctor: Doctor) => {
@@ -236,4 +234,3 @@ function PatientAppointment() {
 }
 
 export default PatientAppointment;
-

@@ -39,5 +39,20 @@ class Doctor(User):
             return doctors_data 
         except Exception as e:
             print(e)
+    @classmethod
+    def get_doctor_patient(cls, cursor, doctor_id):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT p.*, u.full_name, u.age, u.email, u.phone
+                FROM patients p
+                INNER JOIN users u ON u.id = p.patient_id
+                INNER JOIN appointments a ON a.patient_id = p.patient_id
+                WHERE a.doctor_id = %s;
+                """, (doctor_id,))
+            patients_data = cursor.fetchall() 
+            return patients_data
+        except Exception as e:
+            print(e)
+            return None
 
 

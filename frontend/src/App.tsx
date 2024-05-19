@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, BrowserRouter as Router, Navigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import BlogSection from "./HomePage/BlogSection";
 import LoginForm from "./HomePage/LoginForm";
 import Register from "./HomePage/RegisterForm";
@@ -52,7 +52,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <BrowserRouter>
       <>
         <HomePage setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userRole={userRole} userToken={userToken} setRole={setRole} />
         <Routes>
@@ -81,7 +81,7 @@ function App() {
         <Footer/>
       </>
       
-    </Router>
+    </BrowserRouter>
   );
 }
 

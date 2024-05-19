@@ -16,6 +16,7 @@ FRONTEND:
 3. rename function more logical.
 4. saparet finctions - ones that used in some file put in one file other whit useEffect set in component.
 5. Manage types - sasparet to type function \ patien \ doctor td.... 
+6. insted navigate use Link
 
 
 
