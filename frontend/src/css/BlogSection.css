@@ -1,16 +1,19 @@
 .blog-section {
   display: flex;
   flex-wrap: wrap; /* Allow articles to wrap to the next row */
-  justify-content: flex-start; /* Align articles to the left */
-  margin-top: 500px;
+  justify-content: center; /* Align articles to the left */
+  margin-top: 150px; /* Reduced from 500px to 300px */
+  align-items: center; /* Center items vertically */
+  padding: 50px;
+
 }
 
 .article {
-  flex: 1 30px; /* Set the width of each article to 50% minus margin */
-  margin: 10px; /* Add margin between articles */
+  flex: 1 1 30px; /* Grow and shrink is allowed, base width is 30px */
+  max-width: 500px; /* Maximum width of each article */
   background-color: #1995ad;
-  padding: 10px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 0.5px 1px;
+  margin: 10px; /* Add margin around each article */
 }
-

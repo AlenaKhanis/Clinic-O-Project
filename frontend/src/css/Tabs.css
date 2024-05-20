@@ -4,28 +4,21 @@
   padding: 10px;
   margin-top: 30px;
   overflow: auto;
+  height:fit-content;
 
-}
-.row{
-  width: 1200x;
-  flex-wrap: wrap;
 }
 
 .container{
 
-  height: 600px;
+  height: 100%;
 }
 .custom-tabs .nav-link {
-  /* Add styles for each tab link/button */
-  padding: 10px 20px; /* Adjust the padding as needed */
+  padding: 10px 20px;
   color: #333;
-  border: none; /* Remove border from individual tab links */
+  border: none; 
   border-radius: 10px;
 }
 
-.welcomdiv {
-  margin-bottom: 50px ;
-}
 .content-container {
   
   overflow-y: auto; /* Enable vertical scroll if content overflows */
@@ -34,11 +27,13 @@
 .table-container {
   overflow-x: auto; /* Enable horizontal scroll if table overflows */
   max-width: 100%; /* Ensure the table container takes up the available width */
+  height: fit-content;
 }
 
 .table {
   width: 100%; /* Ensure the table takes up the full width of its container */
-  border-collapse: collapse; /* Collapse table borders */
+  border-collapse: collapse; 
+  height: fit-content;/* Collapse table borders */
 }
 
 .table th,
@@ -56,5 +51,6 @@
     white-space: nowrap; /* Prevent text wrapping within table cells */
     overflow: hidden; /* Hide any overflowing content */
     text-overflow: ellipsis; /* Display an ellipsis (...) for overflowing text */
+    
   }
 }

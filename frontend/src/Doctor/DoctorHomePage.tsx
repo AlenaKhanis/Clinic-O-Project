@@ -39,7 +39,7 @@ function DoctorHomePage() {
             <p>Welcome here you can do oparators</p>
         </div>
         <div className="container">
-            <div className="row">
+            
                     <Tabs id="uncontrolled-tab-example" className="custom-tabs">
                         <Tab eventKey="home" title="Open Appointments" className='tabs'>
                             <AddApointment doctorId={doctorId} onSuccess={refreshAppointments} />
@@ -74,7 +74,7 @@ function DoctorHomePage() {
                         </Tab>
                     </Tabs>
                 </div>
-                </div>
+                
                 </>
     );
 }    

@@ -13,7 +13,6 @@ from models.owner import Owner
 
 from views.users import bp as users_bp
 from views.appointments import bp as appointments_bp
-# from views.owner import bp as products_bp
 from views.patient import bp as patient
 from views.doctor import bp as doctors_bp
 
@@ -40,7 +39,6 @@ def login():
 
     cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
     user = cursor.fetchone()
-    print(user)
     
     if user:
         access_token = create_access_token(identity=user["id"])

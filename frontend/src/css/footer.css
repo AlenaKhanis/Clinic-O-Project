@@ -1,0 +1,21 @@
+.footer {
+  background-color: #205a66;
+  color: #0c0c0c;
+  text-align: center;
+  width: 100%;
+  height: 100px;
+  margin-top: 50px;
+}
+
+body .bg-secondary {
+  background-color: #205a66 !important;
+}
+
+body .text-white {
+  color: white !important;
+}
+
+.Footer, .element-above {
+  margin: 0;
+  padding: 0;
+}
