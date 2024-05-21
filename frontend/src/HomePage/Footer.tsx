@@ -1,33 +1,32 @@
-import { MDBCol, MDBContainer, MDBFooter, MDBRow } from 'mdb-react-ui-kit';
+
+import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 import '../css/footer.css';
 
-//TODO: add content
-
-function Footer() {
-    return (
-        <MDBFooter className='bg-secondary text-white text-center text-md-start'>
-      <MDBContainer className='p-4'>
-        <MDBRow>
-          <MDBCol lg="6" md="12" className='mb-4 mb-md-0'>
-            <h5 className='text-uppercase'>About Us</h5>
-
-            <p>
-            At Clinic-O , we are dedicated to providing compassionate,
-            personalized healthcare to our community, ensuring each patient receives exceptional care and support on their journey to better health.
-            </p>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-
-      <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-        © 2024 Clinic-O: 
-        <a className='text-white' href='/'>
-           Clinic-O.com
-        </a>
+const Footer = () => {
+  return (
+    <footer className="footer">
+      <div className="footer-content">
+        <div className="footer-section about">
+          <h1 className="logo-text">CompanyName</h1>
+          <p>
+            CompanyName is a fictional company that provides top-notch services
+            and products to its customers worldwide.
+          </p>
+        </div>
+        <div className="footer-section social">
+          <h2>Follow Us</h2>
+          <div className="social-icons">
+            <a href="https://www.facebook.com" className="social-icon"><FaFacebook /></a>
+            <a href="https://www.twitter.com" className="social-icon"><FaTwitter /></a>
+            <a href="https://www.instagram.com" className="social-icon"><FaInstagram /></a>
+          </div>
+        </div>
       </div>
-    </MDBFooter>
-    ); 
-    
-}
+      <div className="footer-bottom">
+        &copy; {new Date().getFullYear()} CompanyName. All rights reserved.
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

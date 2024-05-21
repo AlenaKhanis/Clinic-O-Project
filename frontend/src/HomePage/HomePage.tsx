@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { OffCanvasExample } from './OffCanvas';
+
 
 type HomePageProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,6 +48,7 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userToken ,
       clearInterval(timer);
     };
   }, []);
+
   
   return (
     //TODO: add side bar - for profile view + sign out + maybe settings.
@@ -64,6 +67,7 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userToken ,
           <Nav.Link style={{color: 'white'}} href="link">Link</Nav.Link> 
         </Nav>
         <Nav.Item>{greeting}, {userToken ? userName : "Guest"}.<br></br> {formattedDate}.</Nav.Item> 
+        <OffCanvasExample placement="end" />
       </Navbar.Collapse>
     </Container>
   </Navbar>

@@ -1,19 +1,61 @@
 .blog-section {
   display: flex;
-  flex-wrap: wrap; /* Allow articles to wrap to the next row */
-  justify-content: center; /* Align articles to the left */
-  margin-top: 150px; /* Reduced from 500px to 300px */
-  align-items: center; /* Center items vertically */
-  padding: 50px;
+  flex-wrap: nowrap;
+  justify-content: center;
+
 
 }
 
-.article {
-  flex: 1 1 30px; /* Grow and shrink is allowed, base width is 30px */
-  max-width: 500px; /* Maximum width of each article */
-  background-color: #1995ad;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 0.5px 1px;
-  margin: 10px; /* Add margin around each article */
+.custom-card {
+  width: 400px; /* Adjust as needed */
+  height: 300px; /* Adjust as needed */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-image {
+  width: 100px; /* Adjust as needed */
+  height: 150px; /* Maintain aspect ratio */
+}
+
+.description {
+  width: 100%; /* Adjust as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.description:hover {
+  white-space: normal;
+  overflow: visible;
+}
+.custom-card.card {
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  width: 500px;
+
+}
+
+.load-more-icon {
+  font-size: 2em;
+  cursor: pointer;
+  color: #000;
+  transform: rotate(270deg); /* Rotate the icon 90 degrees */
+  position: fixed;
+  right: 20px;
+  bottom: 350px;
+
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Vertically center the icon */
+  margin-top: 20px;
+}
+
+
+.load-more-icon:hover {
+  color: #007bff; /* Change to a color you prefer */
 }

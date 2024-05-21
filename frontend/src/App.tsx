@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate, useLocation } from "react-router-dom";
 import BlogSection from "./HomePage/BlogSection";
 import LoginForm from "./HomePage/LoginForm";
 import Register from "./HomePage/RegisterForm";
@@ -12,24 +12,36 @@ import { MainBody } from "./HomePage/MainBody";
 import PatientAppointment from "./Doctor/PatientAppointment";
 import {ProtectedRoute} from "./ProtectedRoute";
 import { NotFoundPage } from "./NotFoundPage";
-
+import "./css/App.css";
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showRegisterPopup, setShowRegisterPopup] = useState(false);
 
+  function Cover({ children }: { children: React.ReactNode }) {
+    const location = useLocation();
+
+    return (
+      <div className="main-container">
+        <div className="content">
+          {children}
+        </div>
+        {location.pathname !== '/404' && <Footer />}
+      </div>
+    );
+  }
 
   const [userToken, setUserToken] = useState<string | null>(() => {
     const token = localStorage.getItem('access_token');
     return token;
   });
-  
+
   const [userName, setUserName] = useState<string>(() => {
     const usernameInfo = localStorage.getItem('userinfo');
 
     if (usernameInfo !== null) {
       const userinfo = JSON.parse(usernameInfo);
-    
+
       return userinfo.full_name;
     }
     return "Guest";
@@ -45,11 +57,10 @@ function App() {
     }
   });
 
-
   return (
     <BrowserRouter>
-      <>
-        <HomePage setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole}  userName={userName} />
+      <Cover>
+        <HomePage setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
         <Routes>
           <Route path="/patient" element={<ProtectedRoute role="patient" userRole={userRole}><HomePagePatient /></ProtectedRoute>} />
           <Route path="/doctor" element={<ProtectedRoute role="doctor" userRole={userRole}><DoctorHomePage /></ProtectedRoute>} />
@@ -62,7 +73,7 @@ function App() {
                 <div className="mainbody">
                   <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} userName={userName} />
                   <BlogSection />
-                  </div>
+                </div>
               </>
             }
           />
@@ -71,11 +82,9 @@ function App() {
         </Routes>
         {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
         {showRegisterPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
-        <Footer/>
-      </>
+      </Cover>
     </BrowserRouter>
   );
 }
 
 export default App;
-

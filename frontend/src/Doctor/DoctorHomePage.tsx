@@ -34,7 +34,7 @@ function DoctorHomePage() {
     
     return (
         <>
-        <div className='welcomdiv'>
+        <div className='welcome-div'>
             <h1>Here doctor panel</h1>
             <p>Welcome here you can do oparators</p>
         </div>
