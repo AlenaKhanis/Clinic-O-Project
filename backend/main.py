@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt, get_jwt
 from psycopg2.extras import RealDictCursor
 from db import get_db, close_db
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 from models.users import User
 from models.patient import Patient
@@ -19,10 +20,10 @@ from views.doctor import bp as doctors_bp
 
 
 app = Flask(__name__)
+# load_dotenv()
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
-print(FRONTEND_URL)
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
 app.register_blueprint(users_bp)

@@ -20,3 +20,13 @@ def get_patient_by_id(patient_id):
     except Exception as e:
         print(f"Error in get_patient_by_id: {e}")
         return jsonify({"error": "An error occurred while retrieving the patient."}), 500
+
+@bp.route('/get_patient_doctors/<patient_id>')
+def get_patient_doctors(patient_id):
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        patients = Patient.get_patient_doctors(cursor, patient_id)
+        return jsonify(patients), 200
+    except Exception as e:
+        return jsonify({"error": "An error occurred while retrieving patients."}), 500

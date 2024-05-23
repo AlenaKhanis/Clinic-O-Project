@@ -1,0 +1,115 @@
+.patient-profile-container {
+    margin: 20px;
+  }
+  
+  .container-profile {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; 
+    margin: 20px auto;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .content {
+    flex: 1;
+  }
+  
+  footer {
+    background: #205a66;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-section {
+    flex: 1;
+    padding: 10px 20px;
+  }
+  
+  .logo-text {
+    font-size: 1.5em;
+    color: #fff;
+  }
+  
+  .footer-section h2 {
+    margin-bottom: 10px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-section ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-section ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .social-icon {
+    color: #fff;
+    font-size: 1.5em;
+    margin: 0 10px;
+  }
+  
+  .footer-bottom {
+    margin-top: 20px;
+    font-size: 0.8em;
+  }
+  
+  .bg-body-tertiary {
+    background-color: #205a66 !important;
+  }
+  
+  .mainbody {
+    background-image: url('../img/test.png');
+    background-size: cover;
+  }
+  
+  .mainbody h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    padding-left: 200px;
+    padding-top: 250px;
+    color: #205a66;
+  }
+  
+  .main-button {
+    width: fit-content;
+    margin-left: 250px;
+  }
+  
+  .bg-body-tertiary {
+    color: white;
+  }
+  

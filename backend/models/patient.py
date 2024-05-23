@@ -47,6 +47,19 @@ class Patient(User):
             print("Error inserting patient:", e)
             return False  
         
-
-
+    @classmethod
+    def get_patient_doctors(cls, cursor, patient_id):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
+                FROM doctors d
+                INNER JOIN users u ON u.id = d.doctor_id
+                INNER JOIN appointments a ON  d.doctor_id =  d.doctor_id
+                WHERE a.patient_id = %s;
+                """, (patient_id,))
+            docotr_data = cursor.fetchall() 
+            return docotr_data
+        except Exception as e:
+            print(e)
+            return None
 

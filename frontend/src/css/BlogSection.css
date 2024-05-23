@@ -2,23 +2,12 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-
-
+  margin-top: 100px;
 }
 
-.custom-card {
-  width: 400px; /* Adjust as needed */
-  height: 300px; /* Adjust as needed */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.card-image {
-  width: 100px; /* Adjust as needed */
-  height: 150px; /* Maintain aspect ratio */
-}
 
 .description {
-  width: 100%; /* Adjust as needed */
+  width: 100%; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -41,7 +30,7 @@
   font-size: 2em;
   cursor: pointer;
   color: #000;
-  transform: rotate(270deg); /* Rotate the icon 90 degrees */
+  transform: rotate(270deg); 
   position: fixed;
   right: 20px;
   bottom: 350px;
@@ -51,11 +40,11 @@
 .load-more-container {
   display: flex;
   justify-content: center;
-  align-items: center; /* Vertically center the icon */
+  align-items: center; 
   margin-top: 20px;
 }
 
 
 .load-more-icon:hover {
-  color: #007bff; /* Change to a color you prefer */
+  color: #007bff; 
 }

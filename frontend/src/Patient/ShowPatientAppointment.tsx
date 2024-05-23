@@ -58,7 +58,7 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }
                                     <Button
                                         style={{ width: 'fit-content' }}
                                         variant="outline-dark"
-                                        onClick={() => { getDoctordetails(BACKEND_URL, appointment.doctor_id) }}
+                                        onClick={() => { getDoctordetails(appointment.doctor_id) }}
                                     >
                                         View Details
                                     </Button>

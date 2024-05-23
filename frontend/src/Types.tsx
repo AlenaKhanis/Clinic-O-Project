@@ -10,7 +10,7 @@ export type Patient = {
   email: string;
   phone: string;
   role: string;
-  diagnosis: string | null;
+  deagnosis: string | null;
   prescription: string | null;
 };
 
@@ -63,6 +63,6 @@ export type DisplayAppointmentsProps = {
 
 export type PatientProps = {
   BACKEND_URL: string;
-  patientId : string | null;
+  patientId : number | null;
   refreshAppointments: () => void;
 };

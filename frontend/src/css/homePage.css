@@ -17,12 +17,12 @@
 }
 
 
-.main-button { /* This is the register\panel buttom */
+.main-button { 
   width: fit-content;
   margin-left: 250px;
 }
  
-.bg-body-tertiary { /* This is change the color of the time in the navbar */
+.bg-body-tertiary {
   color: white;
 }
 

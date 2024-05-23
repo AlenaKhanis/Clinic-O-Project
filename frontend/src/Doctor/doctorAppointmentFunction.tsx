@@ -52,43 +52,52 @@ export const useAppointments = () => {
 
 
     const getPatientById = (patient_id: number | null) => {
-        return fetch(`${BACKEND_URL}/get_patient_by_id/${patient_id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch patient details");
-                }
-                return response.json();
-            });
-    };    
+    return fetch(`${BACKEND_URL}/get_patient_by_id/${patient_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch patient details");
+            }
+            return response.json();
+        });
+};
 
-    const handleViewDetails = (patient_id: number | null , appointmentId?: number) => {
-        if (!patient_id) {
-            return;
-        }
-        getPatientById(patient_id)
-            .then((patientDetails: Patient) => {
-                setSelectedPatientDetails(patientDetails);
+const getPatientHistoryAppointments = (patient_id: number | null) => {
+    return fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch patient history appointments");
+            }
+            return response.json();
+        });
+};
 
-                fetch(`${BACKEND_URL}/history_patient_appointments/${patient_id}`)
-                    .then(response => response.json())
-                    .then((data: Appointment[]) => {
-                        const parsedAppointments = parseDateTime(data);
-                        const stateData = {
-                            patientDetails: patientDetails,
-                            parsedAppointments: parsedAppointments,
-                            appointmentId: appointmentId
-                        };
-                        
-                        navigate('/patient-appointment', { state: stateData });
-                    })
-                    .catch(error => {
-                        console.error("Error fetching history appointments:", error);
-                    });
-            })
-            .catch(error => {
-                console.error("Error fetching patient details:", error);
-            });
-    };
+const handleViewDetails = (patient_id: number | null , appointmentId?: number) => {
+    if (!patient_id) {
+        return;
+    }
+    getPatientById(patient_id)
+        .then((patientDetails: Patient) => {
+            setSelectedPatientDetails(patientDetails);
+
+            getPatientHistoryAppointments(patient_id)
+                .then((data: Appointment[]) => {
+                    const parsedAppointments = parseDateTime(data);
+                    const stateData = {
+                        patientDetails: patientDetails,
+                        parsedAppointments: parsedAppointments,
+                        appointmentId: appointmentId
+                    };
+                    
+                    navigate('/patient-appointment', { state: stateData });
+                })
+                .catch(error => {
+                    console.error("Error fetching history appointments:", error);
+                });
+        })
+        .catch(error => {
+            console.error("Error fetching patient details:", error);
+        });
+};
 
     // sort appointments by date
     const filteredAppointments = appointments
@@ -190,7 +199,8 @@ return { appointments,
        handleSubmit,
        get_history_doctor_appointments,
        selectHistoryAppointments,
-       getPatientById
+       getPatientById,
+       getPatientHistoryAppointments
        
        };
 };

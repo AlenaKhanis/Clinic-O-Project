@@ -1,4 +1,4 @@
-/* CSS for DisplayAppointments component */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -21,16 +21,16 @@ table {
   }
 
   .tab-content {
-    max-height: 400px; /* Set the maximum height of the tab content container */
+    max-height: 400px; 
   }
   
   .with-scrollbar {
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto;
   }
   
   .appointment-details {
-    max-height: 400px; /* Add maximum height for scrolling */
-    overflow-y: auto; /* Add vertical scrolling */
+    max-height: 400px; 
+    overflow-y: auto; 
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -78,4 +78,4 @@ table {
     margin-top: 10px;
     font-size: 14px;
     width: 100px;
-}
+} 

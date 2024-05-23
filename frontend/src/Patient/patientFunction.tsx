@@ -61,9 +61,6 @@ export const usePatient = () => {
     
     
 
-    
-    
-
     const filteredAppointments = appointments
     .filter((appointment) => {
         const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
@@ -99,16 +96,6 @@ export const usePatient = () => {
         return dateA - dateB;
     });
 
-
-    // const historyPatientAppointment = (BACKEND_URL: string, patientId: number) => {
-    //     fetch(`${BACKEND_URL}/history_patient_appointments/${patientId}`)
-    //         .then(response => response.json())
-    //         .then((data: Appointment[]) => {
-    //             const parsedAppointments = parseDateTime(data);  
-    //             setSelectHistoryAppointmentr(parsedAppointments);
-    //         });
-    // };
-    
     
 
     return { getPatientAppointments, appointments , cancelAppointment , selectHistoryAppointment , filteredAppointments };

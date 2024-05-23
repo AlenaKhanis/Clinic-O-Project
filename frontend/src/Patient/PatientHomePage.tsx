@@ -4,13 +4,18 @@ import SearchDoctors from "./ScedualAppointment";
 import { useEffect, useState } from "react";
 import ShowPatientAppointments from "./ShowPatientAppointment";
 import '../css/Tabs.css';
+import PatientHistoryAppointments from "./PatientHistoryAppointments";
+import MyDoctors from "./MyDoctors";
+import PatientProfile from "./PatientProfile";
+import Footer from "../HomePage/Footer";
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 
 function HomePagePatient() {
     const userInfo = localStorage.getItem('userinfo');
-    const [patientId, setpatientId] = useState<string | null>(null);
+    const [patientId, setpatientId] = useState<number | null>(null);
     const [, setAppointmentsKey] = useState<string>("app"); 
 
     useEffect(() => {
@@ -54,17 +59,31 @@ function HomePagePatient() {
                     
                 </Tab>
                 <Tab eventKey="Histort Appointments" title="Histort Appointments" className='tabs'>
-                    See history Appointment +  button view details -  written summery\prescriprions\ diagnosis
+                    <PatientHistoryAppointments
+                        BACKEND_URL={BACKEND_URL}
+                        patientId={patientId}
+                        refreshAppointments={refreshAppointments}
+                    />
                 </Tab>
                 <Tab eventKey="My profile" title="My profile" className='tabs'>
-                    Update profile \ see profile
+                   <PatientProfile
+                    BACKEND_URL={BACKEND_URL}
+                    patientId={patientId}
+                    refreshAppointments={refreshAppointments}
+                   />
                 </Tab>
                 <Tab eventKey="see my doctors" title="My Doctors" className='tabs'>
-                    see all the visited doctors
+                    <MyDoctors
+                        BACKEND_URL={BACKEND_URL}
+                        patientId={patientId}
+                        refreshAppointments={refreshAppointments}
+                    />
                 </Tab>
             </Tabs>
+           
         </div>
         </div>
+
          </>
     );
 }
