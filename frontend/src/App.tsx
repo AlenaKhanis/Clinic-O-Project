@@ -4,14 +4,13 @@ import BlogSection from "./HomePage/BlogSection";
 import LoginForm from "./HomePage/LoginForm";
 import Register from "./HomePage/RegisterForm";
 import Footer from "./HomePage/Footer";
-import HomePagePatient from "./Patient/PatientHomePage";
-import DoctorHomePage from "./Doctor/DoctorHomePage";
-import AdminPagePatient from "./Admin/AdminHomePage";
-import HomePage from "./HomePage/HomePage";
-import { MainBody } from "./HomePage/MainBody";
-import PatientAppointment from "./Doctor/PatientAppointment";
-import {ProtectedRoute} from "./ProtectedRoute";
-import { NotFoundPage } from "./NotFoundPage";
+import HomeNavBar from "./HomePage/Navbar";
+import  MainBody  from "./HomePage/MainBody";
+import  NotFoundPage  from "./NotFoundPage";
+import PatientRoutes from "./Patient/PatientRoutes";
+import DoctorRoutes from "./Doctor/DoctorRoutes";
+import AdminRoutes from "./Admin/AdminRoutes";
+
 import "./css/App.css";
 
 function App() {
@@ -26,7 +25,7 @@ function App() {
         <div className="content">
           {children}
         </div>
-        {location.pathname !== '/404' && <Footer />}
+        {location.pathname == '/' && <Footer />}
       </div>
     );
   }
@@ -60,21 +59,23 @@ function App() {
   return (
     <BrowserRouter>
       <Cover>
-        <HomePage setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
+        <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
         <Routes>
-          <Route path="/patient" element={<ProtectedRoute role="patient" userRole={userRole}><HomePagePatient /></ProtectedRoute>} />
-          <Route path="/doctor" element={<ProtectedRoute role="doctor" userRole={userRole}><DoctorHomePage /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute role="owner" userRole={userRole}><AdminPagePatient /></ProtectedRoute>} />
-          <Route path="/patient-appointment" element={<PatientAppointment />} />
+        <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
+        <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
+        <Route path="/admin" element={<AdminRoutes  userRole={userRole}/>} />
           <Route
             path="/"
             element={
-              <>
+              <div className="homepage-container">
                 <div className="mainbody">
-                  <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} userName={userName} />
+                  <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup}  />
+                 
+                </div>
+               <div>
                   <BlogSection />
                 </div>
-              </>
+              </div>
             }
           />
           <Route path="/404" element={<NotFoundPage />} />

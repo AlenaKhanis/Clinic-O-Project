@@ -8,6 +8,13 @@ body {
   background-size: cover;
 }
 
+
+.homepage-container{
+  background-image: url('../img/test.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

@@ -6,17 +6,16 @@ import "../css/homePage.css";
 type MainBodyProps = {
     userRole: string;
     setShowRegisterPopup: React.Dispatch<React.SetStateAction<boolean>>;
-    userName: string;
   }
   
-  export function MainBody({ userRole ,setShowRegisterPopup , userName }: MainBodyProps) {
+  export function MainBody({ userRole ,setShowRegisterPopup  }: MainBodyProps) {
 
     return (
         <>
           <h1>Welcome clinic-O <br></br>Caring for You<br></br> Caring for Life</h1>
           {/* <p>Hello {userName}</p> */}
                   {userRole === 'patient' ? (
-            <Link to="/patient">
+            <Link to="/patient" >
               <Button className="main-button" variant="outline-dark" >My Space</Button>
             </Link>
           ) : userRole === 'doctor' ? (
@@ -33,3 +32,4 @@ type MainBodyProps = {
       </>
     );
   }
+export default MainBody;

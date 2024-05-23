@@ -19,7 +19,7 @@ type HomePageProps = {
   userName: string;
 };
 
-function HomePage({ setShowLoginPopup , setUserName , setUserToken , userToken , userName ,setRole}: HomePageProps) {
+function HomeNavBar({ setShowLoginPopup , setUserName , setUserToken , userToken , userName ,setRole}: HomePageProps) {
   const navigate = useNavigate();
 
   function logOut() {
@@ -75,4 +75,4 @@ function HomePage({ setShowLoginPopup , setUserName , setUserToken , userToken ,
   );
 }
 
-export default HomePage;
+export default HomeNavBar;

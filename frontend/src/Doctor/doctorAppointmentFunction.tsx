@@ -88,7 +88,7 @@ const handleViewDetails = (patient_id: number | null , appointmentId?: number) =
                         appointmentId: appointmentId
                     };
                     
-                    navigate('/patient-appointment', { state: stateData });
+                    navigate('patient-appointment', { state: stateData });
                 })
                 .catch(error => {
                     console.error("Error fetching history appointments:", error);

@@ -2,11 +2,12 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-  margin-top: 100px;
+  /* background-image: url('/img/Bot.png'); */
+ 
+  
 }
 
-
-.description {
+/* .description {
   width: 100%; 
   white-space: nowrap;
   overflow: hidden;
@@ -16,14 +17,26 @@
 .description:hover {
   white-space: normal;
   overflow: visible;
-}
+} */
 .custom-card.card {
   margin-left: 100px;
   margin-right: 100px;
   margin-top: 50px;
   margin-bottom: 50px;
-  width: 500px;
+  width: 300px;
+}
 
+.card-img-top {
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .load-more-icon {

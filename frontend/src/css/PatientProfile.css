@@ -91,25 +91,3 @@
     background-color: #205a66 !important;
   }
   
-  .mainbody {
-    background-image: url('../img/test.png');
-    background-size: cover;
-  }
-  
-  .mainbody h1 {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    padding-left: 200px;
-    padding-top: 250px;
-    color: #205a66;
-  }
-  
-  .main-button {
-    width: fit-content;
-    margin-left: 250px;
-  }
-  
-  .bg-body-tertiary {
-    color: white;
-  }
-  

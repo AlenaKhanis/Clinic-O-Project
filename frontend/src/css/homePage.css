@@ -2,12 +2,6 @@
   background-color: #205a66 !important;
 }
 
-
-.mainbody {
-  background-image: url('../img/test.png');
-  background-size: cover;
-}
-
 .mainbody h1 {
   font-size: 4rem;
   margin-bottom: 1rem;
@@ -25,4 +19,5 @@
 .bg-body-tertiary {
   color: white;
 }
+
 

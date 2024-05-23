@@ -61,11 +61,6 @@ function BlogSection() {
             <Card.Img className="card-image" variant="top" src={article.urlToImage || 'placeholder_image_url'} alt={article.title} />
             <Card.Body>
               <Card.Title>{article.title}</Card.Title>
-              <Card.Text>
-                <div className="description">
-                  {article.description || 'No description available.'}
-                </div>
-              </Card.Text>
               <Button variant="primary" href={article.url} target="_blank" rel="noopener noreferrer">
                 Read more
               </Button>

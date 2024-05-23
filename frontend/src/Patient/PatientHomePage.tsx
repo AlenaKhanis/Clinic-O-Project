@@ -7,8 +7,6 @@ import '../css/Tabs.css';
 import PatientHistoryAppointments from "./PatientHistoryAppointments";
 import MyDoctors from "./MyDoctors";
 import PatientProfile from "./PatientProfile";
-import Footer from "../HomePage/Footer";
-
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -17,6 +15,7 @@ function HomePagePatient() {
     const userInfo = localStorage.getItem('userinfo');
     const [patientId, setpatientId] = useState<number | null>(null);
     const [, setAppointmentsKey] = useState<string>("app"); 
+
 
     useEffect(() => {
         if (userInfo) {
