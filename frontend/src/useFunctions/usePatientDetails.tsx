@@ -35,9 +35,22 @@ export const usePatientDetails = () => {
       });
   };
 
+  const getPatientAppointments = (patientId : number) => {
+    fetch(`${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`)
+        .then(response => response.json())
+        .then((data: Appointment[]) => {
+            const parsedAppointments = parseDateTime(data);
+            return parsedAppointments;
+        })
+        .catch(error => {
+            console.error("Error fetching appointments:", error);
+        });
+};
+
   return {
     getPatientById,
     getPatientHistoryAppointments,
+    getPatientAppointments
     
   };
 };

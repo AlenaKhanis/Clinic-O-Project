@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAppointments } from "./doctorAppointmentFunction";
-import { DisplayAppointmentsProps } from "../Types";
+import { DoctorProps } from "../Types";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import '../css/doctorProfile.css';
 
-function DoctorProfile({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
+function DoctorProfile({ doctorId, onAppointmentAdded , BACKEND_URL }: DoctorProps) {
     const { getDoctordetails, selectedDoctorDetails } = useAppointments();
     const [open, setOpen] = useState(false);
 

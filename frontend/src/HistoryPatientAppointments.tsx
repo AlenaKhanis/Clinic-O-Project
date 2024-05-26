@@ -1,15 +1,59 @@
 // HistoryAppointments.tsx
-import { useState } from 'react';
-import { Appointment } from './Types';
+import { useEffect, useState } from 'react';
+import { Appointment, Doctor } from './Types';
 import { Button, Collapse, Table } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { usePatientDetails } from './useFunctions/usePatientDetails';
+import { useDoctorAppointments } from './useFunctions/useDoctorAppointments';
 
-type HistoryAppointmentsProps =  {
-    patientHistoryAppointments: Appointment[];
-    selectedDoctorDetails: Record<number, { doctorName: string, doctorSpecialty: string }>;
-}
 
-const HistoryAppointments = ({ patientHistoryAppointments, selectedDoctorDetails } : HistoryAppointmentsProps) => {
+const HistoryAppointments = () => {
+    const { patient_id } = useParams<{ patient_id: string }>();
+    const patientIdNumber = Number(patient_id);
     const [open, setOpen] = useState(false);
+    const { getPatientHistoryAppointments } = usePatientDetails();
+    const { getDoctorById } = useDoctorAppointments();
+    const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
+    const [patientHistoryAppointments, setPatientHistoryAppointments] = useState<Appointment[]>([]);
+    
+
+    useEffect(() => {
+        if (patient_id) {
+            getPatientHistoryAppointments(patientIdNumber)
+                .then((data: Appointment[]) => {
+                    setPatientHistoryAppointments(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching patient history appointments:", error);
+                });
+        }
+    }, [patient_id]);
+
+    useEffect(() => {
+        const uniqueDoctorIds = new Set<number>();
+        patientHistoryAppointments.forEach((appointment: Appointment) => {
+            uniqueDoctorIds.add(appointment.doctor_id);
+        });
+
+        uniqueDoctorIds.forEach((doctorId: number) => {
+            getDoctorById(doctorId)
+                .then((doctor: Doctor) => {
+                    if (doctor) {
+                        setSelectedDoctorDetails(prevMap => ({
+                            ...prevMap,
+                            [doctorId]: {
+                                doctorName: doctor.full_name,
+                                doctorSpecialty: doctor.specialty
+                            }
+                        }));
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching doctor details:", error);
+                });
+        });
+    }, [patientHistoryAppointments]);
+
     return (
         <>
             <Button

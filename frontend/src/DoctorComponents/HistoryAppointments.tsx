@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import '../css/displayAppontments.css';
 import { useAppointments } from "./doctorAppointmentFunction";
-import { DisplayAppointmentsProps, Patient } from '../Types';
-import { Button } from 'react-bootstrap';
+import { DoctorProps, Patient } from '../Types';
+import { Button, Collapse } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
-function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { get_history_doctor_appointments, selectHistoryAppointments, getPatientById , handleViewDetails } = useAppointments();
-    const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({});
-    const [patient, setPatient] = useState<Patient | null>(null);
+function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
+    const { get_history_doctor_appointments, selectHistoryAppointments, getPatientById } = useAppointments();
+    const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({}); //TODO: ----?
+    const [patient, setPatient] = useState<Patient>();
 
     useEffect(() => {
         if (doctorId) {
@@ -38,48 +39,53 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
             <div className={`tab-content ${selectHistoryAppointments.length > 0 ? "with-scrollbar" : ""}`}>
                 <h2>History Appointments</h2>
                 {selectHistoryAppointments.length > 0 ? (
-                    <table>
+                    <>
+                        <table>
                         <tbody>
-                            {selectHistoryAppointments.map((appointment, index) => (
-                                <tr key={index}>
-                                    <td>Date: {appointment.date}</td>
-                                    <td>Time: {appointment.time}</td>
-                                    <td>
-                                    <Button onClick={() => handleViewDetails(appointment.patient_id , appointment.id)} style={{cursor: 'pointer' }}>
-                                        Patient: {patient ? patient.full_name : 'Loading...'}
-                                    </Button>
-                                    </td>
-                                    <td>
-                                        <Button
-                                            onClick={() => toggleAppointmentDetails(appointment.id)}
-                                            aria-controls={`appointment-details-${appointment.id}`}
-                                            aria-expanded={openAppointments[appointment.id]}
-                                        >
-                                            {openAppointments[appointment.id] ? 'Hide Details' : 'Show Appointment Details'}
-                                        </Button>
-                                    </td>
-                                    <td>
-    
-                                    </td>
-                                </tr>
+                            {selectHistoryAppointments.map(appointment => (
+                                <>
+                                    <tr key={appointment.id}>
+                                        <td>Date: {appointment.date}</td>
+                                        <td>Time: {appointment.time}</td>
+                                        <td>
+                                            {patient && (
+                                                <Link to={`patient_detail/${appointment.patient_id}`}>
+                                                    Patient: {patient.full_name}
+                                                </Link>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <Button
+                                                onClick={() => toggleAppointmentDetails(appointment.id)}
+                                                aria-controls={`appointment-details-${appointment.id}`}
+                                                aria-expanded={openAppointments[appointment.id]}
+                                            >
+                                                {openAppointments[appointment.id] ? 'Hide Details' : 'Show Appointment Details'}
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    <tr key={`details-${appointment.id}`}>
+                                        <td colSpan={4}>
+                                            <Collapse in={openAppointments[appointment.id]}>
+                                                <div>
+                                                    <p>Summary: {appointment.summery}</p>
+                                                    <p>Written Diagnosis: {appointment.writen_diagnosis}</p>
+                                                    <p>Written Prescription: {appointment.writen_prescription}</p>
+                                                </div>
+                                            </Collapse>
+                                        </td>
+                                    </tr>
+                                </>
                             ))}
                         </tbody>
                     </table>
+                    </>
                 ) : (
                     <p>No history appointments</p>
                 )}
             </div>
-            {selectHistoryAppointments.map((appointment, index) => (
-            <div key={`details-${index}`} style={{ display: openAppointments[appointment.id] ? 'block' : 'none' }}>
-                <p>
-                    <span style={{ fontWeight: 'bold' }}>Summary:</span> {appointment.summery}
-                </p>
-                <p>Writen_diagnosis: {appointment.writen_diagnosis}</p>
-                <p>Writen_prescription: {appointment.writen_prescription}</p>
-            </div>
-        ))}
         </>
     );
-}    
-
+    
+};
 export default HistoryAppointments;

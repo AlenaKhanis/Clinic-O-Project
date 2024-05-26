@@ -66,3 +66,6 @@ export type PatientProps = {
   patientId : number | null;
   refreshAppointments: () => void;
 };
+
+
+// export Patient | Patient[]

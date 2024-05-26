@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
-import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
 import { Patient, PatientProps } from "../Types";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, Collapse, ListGroup } from "react-bootstrap";
 import "../css/PatientProfile.css";
+import { usePatientDetails } from "../useFunctions/usePatientDetails";
 
 function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
-    const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | void | null>(null);
-    const {getPatientById} = useAppointments();
-
-    useEffect(() => {
-        if (patientId) {
-            getPatientById(patientId)
-                .then((data: void | Patient) => {
-                    setSelectedPatientDetails(data);
-                    // console.log(data);
-                });
-        }
-    }, [patientId, refreshAppointments]);
-
+    const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
+    const { getPatientById } = usePatientDetails();
     const [open, setOpen] = useState(false);
+    const [openDiagnosis, setOpenDiagnosis] = useState(false);
+    const [openPrescription, setOpenPrescription] = useState(false);
 
     const [editedFullName, setEditedFullName] = useState("");
     const [editedEmail, setEditedEmail] = useState("");
     const [editedPhone, setEditedPhone] = useState("");
+
+    useEffect(() => {
+        if (patientId) {
+            getPatientById(patientId)
+                .then((data: Patient) => {
+                    setSelectedPatientDetails(data);
+                })
+                .catch(error => console.error("Error fetching patient details:", error));
+        }
+    }, [patientId, refreshAppointments]);
 
     useEffect(() => {
         if (selectedPatientDetails) {
@@ -88,42 +89,57 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
                         <ListGroup.Item>Phone: {selectedPatientDetails.phone}</ListGroup.Item>
                         <ListGroup.Item>Package: {selectedPatientDetails.package}</ListGroup.Item>
                         <ListGroup.Item>
-                            <div>
-                                <p>Diagnosis:</p>
-                                {Array.isArray(selectedPatientDetails.deagnosis) && selectedPatientDetails.deagnosis.length > 0 ? (
-                                    <ListGroup as="ol" numbered>
-                                        {selectedPatientDetails.deagnosis.map((deagnosis, index) => (
-                                            <ListGroup.Item as="li" key={index}>{deagnosis}</ListGroup.Item>
-                                        ))}
-                                    </ListGroup>
-                                ) : (
-                                    <p>NONE</p>
-                                )}
-                            </div>
+                            <Button
+                                onClick={() => setOpenDiagnosis(!openDiagnosis)}
+                                aria-controls="collapse-diagnosis"
+                                aria-expanded={openDiagnosis}
+                            >
+                                Diagnosis
+                            </Button>
+                            <Collapse in={openDiagnosis}>
+                                <div id="collapse-diagnosis">
+                                    {Array.isArray(selectedPatientDetails.deagnosis) && selectedPatientDetails.deagnosis.length > 0 ? (
+                                        <ListGroup as="ol" numbered>
+                                            {selectedPatientDetails.deagnosis.map((deagnosis, index) => (
+                                                <ListGroup.Item as="li" key={index}>{deagnosis}</ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    ) : (
+                                        <p>NONE</p>
+                                    )}
+                                </div>
+                            </Collapse>
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <div>
-                                <p>Prescriptions:</p>
-                                {Array.isArray(selectedPatientDetails.prescription) && selectedPatientDetails.prescription.length > 0 ? (
-                                    <ListGroup as="ol" numbered>
-                                        {selectedPatientDetails.prescription.map((prescription, index) => (
-                                            <ListGroup.Item as="li" key={index}>{prescription}</ListGroup.Item>
-                                        ))}
-                                    </ListGroup>
-                                ) : (
-                                    <p>NONE</p>
-                                )}
-                            </div>
+                            <Button
+                                onClick={() => setOpenPrescription(!openPrescription)}
+                                aria-controls="collapse-prescription"
+                                aria-expanded={openPrescription}
+                            >
+                                Prescriptions
+                            </Button>
+                            <Collapse in={openPrescription}>
+                                <div id="collapse-prescription">
+                                    {Array.isArray(selectedPatientDetails.prescription) && selectedPatientDetails.prescription.length > 0 ? (
+                                        <ListGroup as="ol" numbered>
+                                            {selectedPatientDetails.prescription.map((prescription, index) => (
+                                                <ListGroup.Item as="li" key={index}>{prescription}</ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    ) : (
+                                        <p>NONE</p>
+                                    )}
+                                </div>
+                            </Collapse>
                         </ListGroup.Item>
-                    </ListGroup>
-                    <Button
+                                        <Button
                         onClick={() => setOpen(!open)}
                         aria-controls="collapse-profile-form"
                         aria-expanded={open}
                     >
                         Edit Profile
                     </Button>
-                    {open && (
+                    <Collapse in={open}>
                         <div id="collapse-profile-form" className="container-profile">
                             <h2>Edit Profile</h2>
                             <label>Full Name:</label>
@@ -151,8 +167,9 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
                             <Button onClick={handleSavePhone}>Save</Button>
                             <br />
                         </div>
-                    )}
-                </>
+                    </Collapse>
+                    </ListGroup>
+                    </>
             ) : (
                 <p>Loading patient profile...</p>
             )}

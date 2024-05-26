@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
 import '../css/Tabs.css';
-import 'react-calendar/dist/Calendar.css'; 
+import 'react-calendar/dist/Calendar.css';
 import '../css/calendar.css';
-import { Button } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
+
+//TODO: only add css!
 
 type AddAppointmentProps = {
     doctorId: number | null;
@@ -14,35 +16,36 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
     const [selectedDate, setSelectedDate] = useState<Date>();
-    const [selectedTime, setSelectedTime] = useState<string>(''); 
-    const [scheduledAppointments, setScheduledAppointments] = useState<string>('');
+    const [selectedTime, setSelectedTime] = useState<string>('');
+    const [alertMessage, setAlertMessage] = useState<string>('');
+    const [alertVariant, setAlertVariant] = useState<'danger' | 'success'>('danger');
+    const [showAlert, setShowAlert] = useState<boolean>(false);
 
     const handleDateChange = (date: Date) => {
-        setSelectedDate(date);// Set the selected date state to the received date if it's a valid Date object,otherwise set it to null
+        setSelectedDate(date);
         setSelectedTime('');
-        setScheduledAppointments('');
+        setAlertMessage('');
     };
 
     const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedTime(e.target.value);
-        setScheduledAppointments('');
+        setAlertMessage('');
     };
 
     const handleFormSubmit = () => {
         if (selectedDate && selectedTime) {
-            // Combine selectedDate and selectedTime into a single datetime string
             const datetime = new Date(selectedDate);
             const timeParts = selectedTime.split(':');
             datetime.setHours(parseInt(timeParts[0]));
             datetime.setMinutes(parseInt(timeParts[1]));
-    
-            const formattedDateTime = datetime.toISOString(); 
+
+            const formattedDateTime = datetime.toISOString();
             const url = `${BACKEND_URL}/check_appointment?doctor_id=${doctorId}&datetime=${formattedDateTime}`;
             const appointmentData = {
                 doctor_id: doctorId,
                 datetime: formattedDateTime
             };
-    
+
             fetch(url, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
@@ -50,7 +53,9 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
             .then(response => response.json())
             .then(data => {
                 if (data.exists === true) {
-                    setScheduledAppointments("Appointment already exists for selected date and time.");
+                    setAlertVariant('danger');
+                    setAlertMessage("Appointment already exists for selected date and time.");
+                    setShowAlert(true);
                 } else {
                     fetch(`${BACKEND_URL}/add_appointment`, {
                         method: "POST",
@@ -58,31 +63,47 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                         body: JSON.stringify(appointmentData),
                     })
                     .then(response => {
-                        if (response.ok){
-                            setScheduledAppointments(`Schedule Appointment: Date:${selectedDate} Time:${selectedTime}`);
-                            onSuccess(); 
+                        if (response.ok) {
+                            setAlertVariant('success');
+                            setAlertMessage(`Scheduled Appointment: Date: ${selectedDate?.toLocaleDateString()} Time: ${selectedTime}`);
+                            setShowAlert(true);
+                            onSuccess();
                         } else {
-                            setScheduledAppointments("Oops! There was a problem scheduling the appointment.");
+                            setAlertVariant('danger');
+                            setAlertMessage("Oops! There was a problem scheduling the appointment.");
+                            setShowAlert(true);
                         }
                     })
                     .catch(error => {
                         console.error('Error adding appointment:', error);
+                        setAlertVariant('danger');
+                        setAlertMessage("Oops! There was a problem scheduling the appointment.");
+                        setShowAlert(true);
                     });
                 }
             })
             .catch(error => {
                 console.error('Error checking appointment:', error);
+                setAlertVariant('danger');
+                setAlertMessage("Oops! There was a problem checking the appointment.");
+                setShowAlert(true);
             });
         } else {
             console.error("Date or Time not selected");
         }
     };
-    
 
     const renderTimeOptions = (startHour: number, endHour: number, step: number) => {
         const options = [];
+        const now = new Date();
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
+
         for (let hour = startHour; hour <= endHour; hour++) {
             for (let minute = 0; minute < 60; minute += step) {
+                if (selectedDate && selectedDate.toDateString() === now.toDateString() && (hour < currentHours || (hour === currentHours && minute <= currentMinutes))) {
+                    continue; // Skip times that are in the past for the selected day
+                }
                 const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
                 options.push(<option key={time} value={time}>{time}</option>);
             }
@@ -94,35 +115,32 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
         if (!selectedDate || !selectedTime) {
             return true;
         }
-    
+
         const today = new Date();
         const currentTimeInSeconds = today.getHours() * 3600 + today.getMinutes() * 60;
         const isSameDay = selectedDate.getDate() === today.getDate();
-    
+
         if (isSameDay) {
             if (selectedTime !== '') {
                 const selectedTimeParts = selectedTime.split(':');
                 const selectedTimeInSeconds = parseInt(selectedTimeParts[0]) * 3600 + parseInt(selectedTimeParts[1]) * 60;
                 return selectedTimeInSeconds <= currentTimeInSeconds;
             } else {
-                return true; 
+                return true;
             }
         } else {
             return selectedDate < today;
         }
     };
 
-
-    // Function to disable dates before yesterday
     const tileDisabled = ({ date, view }: { date: Date, view: string }) => {
         if (view === 'month') {
             const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1); 
+            yesterday.setDate(yesterday.getDate() - 1);
             return date < yesterday;
         }
         return false;
     };
-
 
     return (
         <>
@@ -132,18 +150,22 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     onClickDay={handleDateChange}
                     value={selectedDate}
                     className="custom-calendar"
-                    tileDisabled={tileDisabled} 
+                    tileDisabled={tileDisabled}
                 />
             </div>
             <div>
-                <span style={{ color: 'red' }}>{scheduledAppointments}</span>
                 <h3>Select Time:</h3>
                 <select onChange={handleTimeChange} value={selectedTime}>
                     <option value="">Select Time</option>
                     {renderTimeOptions(8, 21, 30)}
                 </select>
             </div>
-            <Button style={{ width: 'fit-content' , margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>
+            <Button style={{ width: 'fit-content', margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>
+            {showAlert && (
+                <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                    {alertMessage}
+                </Alert>
+            )}
         </>
     );
 }
