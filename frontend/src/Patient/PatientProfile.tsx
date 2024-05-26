@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppointments } from "../Doctor/doctorAppointmentFunction";
+import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
 import { Patient, PatientProps } from "../Types";
 import { Button, ListGroup } from "react-bootstrap";
 import "../css/PatientProfile.css";
@@ -13,7 +13,7 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
             getPatientById(patientId)
                 .then((data: void | Patient) => {
                     setSelectedPatientDetails(data);
-                    console.log(data);
+                    // console.log(data);
                 });
         }
     }, [patientId, refreshAppointments]);

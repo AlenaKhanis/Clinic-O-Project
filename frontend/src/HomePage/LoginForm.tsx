@@ -3,11 +3,11 @@ import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit
 import { Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Patient, Doctor , Owner } from '../Types.tsx';
+import { Patient, Doctor , Owner } from '../Types.ts';
 import '../css/LoginForm.css';
 
 //TODO: handle when login faild becuse username or password not correct - give to the userftendly message
-
+//TODO: check password correction
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 

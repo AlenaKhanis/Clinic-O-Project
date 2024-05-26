@@ -1,6 +1,6 @@
 
 import { Routes, Route } from "react-router-dom";
-import HomePagePatient from "./PatientHomePage";
+import HomePagePatient from "../Patient/PatientHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
 
 const PatientRoutes = ({ userRole }: { userRole: string }) => (

@@ -55,7 +55,7 @@ export type Appointment =  {
   doctor_id: number;
 }
 
-export type DisplayAppointmentsProps = {
+export type DoctorProps = {
   doctorId: number | null;
   onAppointmentAdded: () => void;
   BACKEND_URL: string;

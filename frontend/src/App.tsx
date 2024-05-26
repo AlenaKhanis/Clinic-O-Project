@@ -7,9 +7,9 @@ import Footer from "./HomePage/Footer";
 import HomeNavBar from "./HomePage/Navbar";
 import  MainBody  from "./HomePage/MainBody";
 import  NotFoundPage  from "./NotFoundPage";
-import PatientRoutes from "./Patient/PatientRoutes";
-import DoctorRoutes from "./Doctor/DoctorRoutes";
-import AdminRoutes from "./Admin/AdminRoutes";
+import PatientRoutes from "./Routes/PatientRoutes";
+import DoctorRoutes from "./Routes/DoctorRoutes";
+import AdminRoutes from "./Routes/AdminRoutes";
 
 import "./css/App.css";
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { DisplayAppointmentsProps, Patient } from "../Types";
+import { DoctorProps, Patient } from "../Types";
 import { useAppointments } from "./doctorAppointmentFunction";
 
 
-function AllPatientView({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayAppointmentsProps) {
+function AllPatientView({ doctorId, onAppointmentAdded , BACKEND_URL }: DoctorProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const {handleViewDetails} = useAppointments();
@@ -26,7 +26,7 @@ function AllPatientView({ doctorId, onAppointmentAdded , BACKEND_URL }: DisplayA
     };
     fetchPatients();
     }
-  }, [doctorId , onAppointmentAdded]);
+  }, [doctorId]);
 
   if (loading) {
     return <div>Loading...</div>;

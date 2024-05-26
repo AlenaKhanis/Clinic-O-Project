@@ -120,7 +120,7 @@ def get_history_patient_appointments(patient_id):
 
 #TODO: chnge to add summery by doctor
 @bp.route("/add_summary/<appointment_id>/<patietn_id>", methods=["POST"])
-def add_summary(appointment_id, patient_id):
+def add_summary(appointment_id, patietn_id):
     try:
         data = request.json 
         summary = data.get('summary')
@@ -129,7 +129,7 @@ def add_summary(appointment_id, patient_id):
         
         db = get_db()
         cursor = db.cursor()
-        Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patient_id)
+        Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patietn_id)
         
         db.commit() 
         return jsonify({"message": "Form data received and processed successfully"}), 200
@@ -150,3 +150,12 @@ def get_appointments_history(doctor_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@bp.route("/get_appointment_by_id/<appointment_id>")
+def get_appointment_by_id(appointment_id):
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        appointment = Appointment.get_appointment_by_id(cursor, appointment_id)
+        return jsonify(appointment), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

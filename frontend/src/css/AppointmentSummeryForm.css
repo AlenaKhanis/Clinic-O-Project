@@ -1,37 +1,107 @@
+ .containerSummery {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
 
-input[type="text"],
-select,
-textarea {
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.col-25 {
+  flex: 25%;
+  max-width: 25%;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+.col-75 {
+  flex: 75%;
+  max-width: 75%;
+  box-sizing: border-box;
+}
+
+label.labelSummery {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+  font-weight: bold;
+  color: #333;
+}
+
+input[type="text"], textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
-  background-color: #fff; 
-  color: #333;
 }
 
-.lableSummery {
-  padding: 12px 12px 12px 0;
-}
-
-
-.containerSummery {
-  border-radius: 5px;
-  background-color: #e6e4e4;
-  padding: 20px;
-}
-
-.col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
-  text-align: left;
+textarea {
+  height: 150px;
 }
 
 .sendButton {
-  width: 150px; 
-  margin: 20px auto;
-  display: block;
-  text-align: center; 
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
+
+.sendButton:hover {
+  background-color: #0056b3;
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: #f8f9fa;
+}
+
+.list-group-item {
+  padding: 10px 15px;
+}
+
+.list-group-item:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.list-group-item:nth-child(even) {
+  background-color: #ffffff;
+}
+.box-main-div {
+  display: 'flex'; 
+  justify-content: center;
+  align-items: 'center'; 
+  height: 100vh;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.box-main-child {
+  display: 'flex';
+  justify-content: center;
+  align-items: 'center'; 
+  padding: 20px;
+  border-radius: 8px; 
+  margin-top: 150px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ 
+} 

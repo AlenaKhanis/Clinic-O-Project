@@ -9,7 +9,6 @@ import DoctorProfile from './DocotrProfile';
 import AllPatientView from './AllPAtientView';
 
 
-//TODO: sent data summery appointment
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function DoctorHomePage() {
@@ -26,7 +25,7 @@ function DoctorHomePage() {
         }
     }, [userInfo]);
 
-    // Function to force re-render DisplayAppointments component
+   
     const refreshAppointments = () => {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };

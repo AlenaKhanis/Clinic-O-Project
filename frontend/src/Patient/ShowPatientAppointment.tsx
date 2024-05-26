@@ -3,7 +3,7 @@ import { PatientProps } from "../Types";
 import { Button, Table, Modal } from "react-bootstrap"; 
 import { usePatient } from "./patientFunction";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAppointments } from "../Doctor/doctorAppointmentFunction";
+import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
 
 function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
     const { filteredAppointments, getPatientAppointments, cancelAppointment } = usePatient();

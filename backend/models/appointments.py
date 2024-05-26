@@ -195,3 +195,14 @@ class Appointment:
         except Exception as e:
             print("Error getting appointment history:", e)
 
+    @classmethod   
+    def get_appointment_by_id(cls, cursor, appointment_id):
+        try:
+            cursor.execute("""
+                SELECT * FROM appointments WHERE id = %s
+            """, (appointment_id,))
+            appointment = cursor.fetchone()
+            return appointment
+        except Exception as e:
+            print("Error getting appointment by id:", e)
+            return None

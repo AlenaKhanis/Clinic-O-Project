@@ -1,18 +1,20 @@
 import { useEffect } from "react";
 import "../css/displayAppontments.css";
 import { useAppointments } from "./doctorAppointmentFunction";
-import { DisplayAppointmentsProps, Appointment } from '../Types';
-import { Button } from "react-bootstrap";
+import { DoctorProps, Appointment } from '../Types';
+import { Link } from "react-router-dom";
 
 
-function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmentsProps) {
-    const { appointments, fetchDoctorAppointments, handleViewDetails, filteredAppointments } = useAppointments();
+function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
+    const { appointments, fetchDoctorAppointments, filteredAppointments  } = useAppointments();
+
 
     useEffect(() => {
         if (doctorId) {
             fetchDoctorAppointments(doctorId);
         }
     }, [doctorId, onAppointmentAdded]);
+
 
     return (
         <>
@@ -36,9 +38,9 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DisplayAppointmen
                                     <td>{appointment.status}</td>
                                     <td>
                                         {appointment.status === 'schedule' && (
-                                            <Button style={{ width: 'fit-content' }} variant="outline-dark" onClick={() => handleViewDetails(appointment.patient_id, appointment.id)}>
-                                                View Details
-                                            </Button>
+                                            <Link to={`start_appointment/${appointment.patient_id}/${appointment.id}`} style={{ width: 'fit-content' }} className="btn btn-outline-dark">
+                                             Start Appointment
+                                           </Link>
                                         )}
                                     </td>
                                 </tr>

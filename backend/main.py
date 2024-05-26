@@ -20,7 +20,6 @@ from views.doctor import bp as doctors_bp
 
 
 app = Flask(__name__)
-# load_dotenv()
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])

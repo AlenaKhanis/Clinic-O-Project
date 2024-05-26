@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Appointment, Doctor, PatientProps } from "../Types";
-import { useAppointments } from "../Doctor/doctorAppointmentFunction";
+import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
 import { Button } from 'react-bootstrap';
 
 

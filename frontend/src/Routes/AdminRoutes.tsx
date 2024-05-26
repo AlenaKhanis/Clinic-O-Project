@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import AdminPage from './AdminHomePage';
+import AdminPage from '../Admin/AdminHomePage';
 import { ProtectedRoute } from "../ProtectedRoute";
 
 const AdminRoutes = ({ userRole }: { userRole: string }) => (

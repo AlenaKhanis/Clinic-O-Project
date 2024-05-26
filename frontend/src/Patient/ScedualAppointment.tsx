@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Appointment, Doctor, PatientProps } from '../Types';
-import { useAppointments } from "../Doctor/doctorAppointmentFunction";
+import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
 import '../css/displayAppontments.css'; // Import CSS file
 import { usePatient } from './patientFunction';
 
