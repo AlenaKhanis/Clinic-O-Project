@@ -84,3 +84,17 @@ class Doctor(User):
         except Exception as e:
             print(e)
             return None
+        
+    @classmethod
+    def get_doctors(cls, cursor):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
+                FROM doctors d
+                INNER JOIN users u ON u.id = d.doctor_id;
+                """)
+            doctors_data = cursor.fetchall() 
+            return doctors_data
+        except Exception as e:
+            print(e)
+            return None    

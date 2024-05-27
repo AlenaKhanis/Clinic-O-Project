@@ -87,3 +87,13 @@ def get_doctor_by_specialty(specialty):
         return jsonify({"doctors": doctor}), 200
     except Exception as e:
         return jsonify({"error": "An error occurred while retrieving the doctor."}), 500    
+    
+@bp.route('/doctors') 
+def get_doctors():
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        doctors = Doctor.get_doctors(cursor)
+        return jsonify(doctors), 200
+    except Exception as e:
+        return jsonify({"error": "An error occurred while retrieving the doctors."}), 500   

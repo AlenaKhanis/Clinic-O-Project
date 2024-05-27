@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Clinic, OwnerProps } from '../Types';
 import Alert from 'react-bootstrap/Alert';
-import { Button } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
 
 function ClinicDetails({ BACKEND_URL }: OwnerProps) {
   const [clinicDetails, setClinicDetails] = useState<Clinic | null>(null);
@@ -11,6 +11,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
   const [editedClinicPhone, setEditedClinicPhone] = useState('');
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/clinic_details`)
@@ -34,6 +35,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
 
   const handleEditToggle = () => {
     setEditing(!editing);
+    setShowModal(true);
   };
 
   const updateClinicDetail = (field: string, value: string) => {
@@ -52,6 +54,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
         setClinicDetails(prevDetails => ({ ...prevDetails, [field]: value } as Clinic));
         setSuccessMessage('Clinic details updated successfully');
         setErrorMessage(null);
+        setShowModal(false);
       })
       .catch((error) => {
         console.error('Error updating clinic details:', error);
@@ -61,8 +64,8 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+    event.preventDefault(); 
+    console.log('submitting form');
     if (clinicDetails) {
       if (editedClinicName !== clinicDetails.clinic_name) {
         updateClinicDetail('clinic_name', editedClinicName);
@@ -74,7 +77,10 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
         updateClinicDetail('clinic_phone', editedClinicPhone);
       }
     }
+  
+    setShowModal(false);
   };
+  
 
   return (
     <div>
@@ -97,44 +103,54 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
             <p>Phone: {clinicDetails.clinic_phone}</p>
             <p>Description: {clinicDetails.clinic_description}</p>
             <Button variant='outline-dark' onClick={handleEditToggle}>
-              {editing ? 'Cancel' : 'Edit Clinic Details'}
+              Edit Clinic Details
             </Button>
-            {editing && (
-              <div className="container-profile">
-                <form onSubmit={handleSubmit}>
-                  <label>
-                    Clinic Name:
-                    <input
-                      type="text"
-                      value={editedClinicName}
-                      onChange={(e) => setEditedClinicName(e.target.value)}
-                    />
-                  </label>
-                  <label>
-                    Clinic Address:
-                    <input
-                      type="text"
-                      value={editedClinicAddress}
-                      onChange={(e) => setEditedClinicAddress(e.target.value)}
-                    />
-                  </label>
-                  <label>
-                    Clinic Phone:
-                    <input
-                      type="text"
-                      value={editedClinicPhone}
-                      onChange={(e) => setEditedClinicPhone(e.target.value)}
-                    />
-                  </label>
-                  <Button variant='outline-dark' type="submit">Save</Button>
-                </form>
-              </div>
-            )}
-          </>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+          ` <Modal.Header closeButton>
+              <Modal.Title>Edit Clinic Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formClinicName">
+                  <Form.Label>Clinic Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editedClinicName}
+                    onChange={(e) => setEditedClinicName(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formClinicAddress">
+                  <Form.Label>Clinic Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editedClinicAddress}
+                    onChange={(e) => setEditedClinicAddress(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formClinicPhone">
+                  <Form.Label>Clinic Phone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editedClinicPhone}
+                    onChange={(e) => setEditedClinicPhone(e.target.value)}
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                  Save Changes
+                </Button>
+              </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowModal(false)}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>  
+            </>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default ClinicDetails;

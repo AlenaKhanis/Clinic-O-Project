@@ -84,6 +84,5 @@ export type PatientProps = {
 
 export type OwnerProps = {
   BACKEND_URL: string;
-  ownerId : number;
 
 };

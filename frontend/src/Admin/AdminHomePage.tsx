@@ -2,6 +2,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import '../css/Tabs.css';
 import ClinicDetails from "./ClinicDetails";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DoctorsList from "./DocotorList";
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -19,11 +20,14 @@ function AdminPagePatient({userId} : {userId: number}) {
                 <Tab eventKey=" Clinic Details" title="Clinic Details" className="tabs">
                     <ClinicDetails 
                         BACKEND_URL={BACKEND_URL}
-                        ownerId={userId}
+                       
                     />
                 </Tab>
                 <Tab eventKey="Doctors" title="Doctors" className="tabs">
-                    Tab content list of doctor + update doctor botton + delete button 
+                   <DoctorsList
+                    BACKEND_URL={BACKEND_URL}
+                    
+                   />
                 </Tab>
                 <Tab eventKey="Add Doctor" title="Add Doctor" className="tabs">
                     Tab content for Add new doctor
