@@ -91,7 +91,7 @@ class Appointment:
             (appointment_id,)
             )
             appointment_status = cursor.fetchone()
-        
+            print(appointment_status)
             if appointment_status and appointment_status['status'] == 'schedule':
                 return False
 

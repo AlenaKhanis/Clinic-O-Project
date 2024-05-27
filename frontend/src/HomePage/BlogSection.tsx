@@ -3,7 +3,7 @@ import '../css/BlogSection.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaArrowDown } from 'react-icons/fa'; // Import the arrow icon
-import { Spinner } from 'react-bootstrap';
+
 
 type Article = {  
   title: string;  
@@ -16,7 +16,7 @@ function BlogSection() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+
 
  useEffect(() => {
   fetch('https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=714e1b2241d04060a77d54fca596b8b7')
@@ -53,10 +53,11 @@ function BlogSection() {
     }
   };
 
-  return (
-    <>
-      <div className="blog-section">
-        {displayedArticles.map(article => (
+ return (
+  <>
+    <div className="blog-section">
+      {displayedArticles.length > 0 ? (
+        displayedArticles.map(article => (
           <Card key={article.url} className="custom-card">
             <Card.Img className="card-image" variant="top" src={article.urlToImage || 'placeholder_image_url'} alt={article.title} />
             <Card.Body>
@@ -66,13 +67,18 @@ function BlogSection() {
               </Button>
             </Card.Body>
           </Card>
-        ))}
-        <div className="load-more-container">
-          <FaArrowDown className="load-more-icon" onClick={handleLoadMore} />
+        ))
+      ) : (
+        <div className="custom-card" style={{ height: '200px', width: '100%' }}>
+         
         </div>
+      )}
+      <div className="load-more-container">
+        <FaArrowDown className="load-more-icon" onClick={handleLoadMore} />
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }
 
 export default BlogSection;

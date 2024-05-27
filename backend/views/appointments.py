@@ -64,8 +64,9 @@ def get_appointments(doctor_id) -> Response:
         return jsonify({'error': str(e)}), 500
 
 #TODO: change to scedual appointment to patient
-@bp.route("/scedual_appointment/<appointment_id>/<patient_id>" , methods = ['POST'])
+@bp.route('/schedule_appointment/<appointment_id>/<patient_id>', methods=['POST'])
 def schedule_appointment(appointment_id, patient_id) -> Response:
+    print(appointment_id, patient_id)
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
@@ -94,7 +95,7 @@ def get_appointments_by_patient_id(patient_id) -> Response:
         return jsonify({'error': str(e)}), 500
 
 #TODO: cancel appointment by patient
-@bp.route("/cancel_appointment/<appointment_id>")
+@bp.route('/cancel_appointment/<appointment_id>', methods=['POST'])
 def cancel_appointment(appointment_id) -> Response:
     db = get_db()
     cursor = db.cursor()

@@ -23,16 +23,6 @@ def get_specialetys():
         print(e)
         return {"error": "Error getting specialtys"}
 
-@bp.route('/get_doctors_by_specialty/<specialty>')
-def get_doctors_by_specialty(specialty):
-    try:
-        db = get_db()
-        cursor = db.cursor(cursor_factory=RealDictCursor)
-        doctors = Doctor.get_doctors_by_specialty(cursor, specialty)
-        return jsonify({"doctors": doctors}), 200 # TODO: return not dict.
-    except Exception as e:
-        return jsonify({"error": "An error occurred while retrieving doctors."}), 500
-
 @bp.route('/get_doctors_by_Id/<doctor_id>')
 def get_doctors_by_Id(doctor_id):
     try:
@@ -77,3 +67,23 @@ def get_doctor_patients(doctor_id):
         return jsonify(patients), 200
     except Exception as e:
         return jsonify({"error": "An error occurred while retrieving patients."}), 500
+
+@bp.route('/get_doctor/by_name/<doctor_name>')
+def get_doctor_by_name(doctor_name):
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        doctor = Doctor.get_doctor_by_name(cursor, doctor_name)
+        return jsonify({"doctors": doctor}), 200
+    except Exception as e:
+        return jsonify({"error": "An error occurred while retrieving the doctor."}), 500
+
+@bp.route('/get_doctor/by_specialty/<specialty>')
+def get_doctor_by_specialty(specialty):
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        doctor = Doctor.get_doctor_by_specialty(cursor, specialty)
+        return jsonify({"doctors": doctor}), 200
+    except Exception as e:
+        return jsonify({"error": "An error occurred while retrieving the doctor."}), 500    

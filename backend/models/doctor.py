@@ -54,5 +54,33 @@ class Doctor(User):
         except Exception as e:
             print(e)
             return None
-
-
+        
+    @classmethod
+    def get_doctor_by_name(cls, cursor, doctor_name):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
+                FROM doctors d
+                INNER JOIN users u ON u.id = d.doctor_id
+                WHERE LOWER(u.full_name) = LOWER(%s);
+                """, (doctor_name,))
+            doctor_data = cursor.fetchall() 
+            return doctor_data
+        except Exception as e:
+            print(e)
+            return None
+        
+    @classmethod    
+    def get_doctor_by_specialty(cls,cursor,specialty):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
+                FROM doctors d
+                INNER JOIN users u ON u.id = d.doctor_id
+                WHERE d.specialty = %s;
+                """, (specialty,))
+            doctor_data = cursor.fetchall() 
+            return doctor_data
+        except Exception as e:
+            print(e)
+            return None

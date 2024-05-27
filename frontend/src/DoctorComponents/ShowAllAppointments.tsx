@@ -1,26 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../css/displayAppontments.css";
-import { useAppointments } from "./doctorAppointmentFunction";
 import { DoctorProps, Appointment } from '../Types';
 import { Link } from "react-router-dom";
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
 
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
-    const { appointments, fetchDoctorAppointments, filteredAppointments  } = useAppointments();
+    const {fetchDoctorAppointments} = useDoctorAppointments();
+    const [appointment , setAppointment] = useState<Appointment[]>([])
 
 
     useEffect(() => {
         if (doctorId) {
-            fetchDoctorAppointments(doctorId);
+            fetchDoctorAppointments(doctorId)
+                .then((data: Appointment[]) => {
+                    setAppointment(data);
+                })
+                .catch(error => console.error('Error fetching doctor appointments:', error));
+                
         }
     }, [doctorId, onAppointmentAdded]);
 
 
     return (
         <>
-            <div className={`tab-content ${appointments.length > 0 ? "with-scrollbar" : ""}`}>
+            <div className={`tab-content ${appointment.length > 0 ? "with-scrollbar" : ""}`}>
                 <h2>Appointments</h2>
-                {appointments.length > 0 ? (
+                {appointment.length > 0 ? (
                     <table>
                         <thead>
                             <tr>
@@ -31,7 +37,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredAppointments.map((appointment: Appointment, index: number) => (
+                            {appointment.map((appointment: Appointment, index: number) => (
                                 <tr key={index}>
                                     <td>{appointment.date}</td>
                                     <td>{appointment.time}</td>

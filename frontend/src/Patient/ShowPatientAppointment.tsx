@@ -1,28 +1,36 @@
 import { useEffect, useState } from "react";
-import { PatientProps } from "../Types";
+import { Appointment, PatientProps } from "../Types";
 import { Button, Table, Modal } from "react-bootstrap"; 
-import { usePatient } from "./patientFunction";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAppointments } from "../DoctorComponents/doctorAppointmentFunction";
+import { usePatientDetails } from "../useFunctions/usePatientDetails";
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
-function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
-    const { filteredAppointments, getPatientAppointments, cancelAppointment } = usePatient();
-    const { getDoctordetails, selectedDoctorDetails, setSelectedDoctorDetails } = useAppointments();
+function ShowPatientAppointments({ patientId, refreshAppointments }: PatientProps) {
+    const { getPatientAppointments , cancelAppointment } = usePatientDetails();
     const [confirmCancel, setConfirmCancel] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const {getDoctorById , selectedDoctorDetails , setSelectedDoctorDetails} = useDoctorAppointments();
 
     useEffect(() => {
         if (patientId) {
-            const url = `${BACKEND_URL}/get_appointments_by_patient_id/${patientId}`;
-            getPatientAppointments(url);
+            getPatientAppointments(patientId)
+                .then((data: Appointment[]) => setAppointments(data))
+                .catch(error => console.error('Error fetching patient appointments:', error));
         }
     }, [patientId, refreshAppointments]);
     
 
     const handleCancelAppointment = (appointmentId: number) => {
-        cancelAppointment(BACKEND_URL, appointmentId);
-        setConfirmCancel(false);
-    }
+        cancelAppointment(appointmentId)
+            .then(() => {
+                setAppointments(prevAppointments => prevAppointments.filter(appointment => appointment.id !== appointmentId));
+                setConfirmCancel(false);
+                refreshAppointments();
+            })
+            .catch((error) => console.error('Error cancelling appointment:', error));
+    };
+
 
     const confirmCancelAppointment = () => {
         if (selectedAppointmentId) {
@@ -34,6 +42,42 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }
         setConfirmCancel(true);
         setSelectedAppointmentId(appointmentId);
     }
+
+    const filteredAppointments = appointments
+    .filter((appointment) => {
+        const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
+        if (match) {
+            const [, day, month, year, time] = match;
+            const [hours, minutes, seconds] = time.split(':');
+
+            // Convert month to numeric value
+            const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
+
+            // Construct a new Date object
+            const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
+
+            // Check if the constructed date object is valid
+            if (!isNaN(appointmentDateTime.getTime())) {
+                const currentDateTime = new Date();
+                const isFuture = appointmentDateTime > currentDateTime;
+                const isNotCompleted = appointment.status !== 'completed';
+                return isFuture && isNotCompleted;
+            } else {
+                console.error('Invalid date:', appointment.date_time);
+                return false; // or handle this case differently
+            }
+        } else {
+            console.error('Invalid date format:', appointment.date_time);
+            return false; // or handle this case differently
+        }
+    })
+    .sort((a, b) => {
+        const dateA = new Date(a.date_time).getTime();
+        const dateB = new Date(b.date_time).getTime();
+        
+        return dateA - dateB;
+    });
+
 
     return (
         <>
@@ -58,7 +102,7 @@ function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }
                                     <Button
                                         style={{ width: 'fit-content' }}
                                         variant="outline-dark"
-                                        onClick={() => { getDoctordetails(appointment.doctor_id) }}
+                                        onClick={() => { getDoctorById(appointment.doctor_id) }}
                                     >
                                         View Details
                                     </Button>
