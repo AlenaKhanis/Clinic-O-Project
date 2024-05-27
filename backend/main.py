@@ -16,7 +16,7 @@ from views.users import bp as users_bp
 from views.appointments import bp as appointments_bp
 from views.patient import bp as patient
 from views.doctor import bp as doctors_bp
-
+from views.clinic import bp as clinic_bp
 
 
 app = Flask(__name__)
@@ -29,6 +29,7 @@ app.register_blueprint(users_bp)
 app.register_blueprint(appointments_bp)
 app.register_blueprint(patient)
 app.register_blueprint(doctors_bp)
+app.register_blueprint(clinic_bp)
 
 
 @app.route('/login', methods=['POST'])

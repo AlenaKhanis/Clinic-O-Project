@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS clinic (
     clinic_phone TEXT,
     clinic_address TEXT,
     clinic_description TEXT,
+    clinic_email TEXT,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );
 

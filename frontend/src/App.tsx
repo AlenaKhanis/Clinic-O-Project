@@ -56,14 +56,24 @@ function App() {
     }
   });
 
+const [userId , ] = useState<number>(() => {
+    const userinfo = localStorage.getItem('userinfo');
+    if (userinfo) {
+      const { id } = JSON.parse(userinfo);
+      return id;
+    } else {
+      return 0;
+    }
+});
+
   return (
     <BrowserRouter>
       <Cover>
         <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
         <Routes>
-        <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
-        <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
-        <Route path="/admin" element={<AdminRoutes  userRole={userRole}/>} />
+        <Route path="/patient/*" element={<PatientRoutes userRole={userRole}  />} />
+        <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole}   />} />
+        <Route path="/admin/*" element={<AdminRoutes  userRole={userRole}  userId={userId}/>} />
           <Route
             path="/"
             element={
@@ -78,7 +88,7 @@ function App() {
               </div>
             }
           />
-          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="/404" element={<NotFoundPage  userRole={userRole}  />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
         {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}

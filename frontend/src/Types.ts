@@ -55,6 +55,20 @@ export type Appointment =  {
   doctor_id: number;
 }
 
+export type Clinic = {
+  id: number;
+  clinic_id: number;
+  clinic_name: string;
+  clinic_description: string;
+  clinic_address: string;
+  clinic_phone: string;
+  email: string; //add
+  created_date: Date; //add
+  updated_date: Date; // add
+  owner_id: number;
+
+}
+
 export type DoctorProps = {
   doctorId: number | null;
   onAppointmentAdded: () => void;
@@ -68,4 +82,8 @@ export type PatientProps = {
 };
 
 
-// export Patient | Patient[]
+export type OwnerProps = {
+  BACKEND_URL: string;
+  ownerId : number;
+
+};

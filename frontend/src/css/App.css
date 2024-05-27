@@ -39,14 +39,14 @@ p {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  white-space: fit-content;
 }
 
 .button:hover {
   background-color: #0056b3;
 }
-/* App.css */
+
 .app-container {
   position: relative; /* Ensure relative positioning */
   min-height: 100vh; /* Set minimum height to fill the viewport */
 }
-

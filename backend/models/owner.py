@@ -24,3 +24,5 @@ class Owner(User):
             return owner_data
         else:
             return None
+
+
