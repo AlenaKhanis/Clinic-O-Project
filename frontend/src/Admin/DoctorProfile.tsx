@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import '../css/doctorProfile.css';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
+import DoctorPatients from './DoctorPatients';
 
 
 //TODO: saparate to diffrent files
@@ -17,7 +18,7 @@ function DoctorProfile({ BACKEND_URL }: OwnerProps) {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, ] = useState<string>('all');
   const [editingDoctor, setEditingDoctor] = useState<Doctor | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -185,7 +186,7 @@ function DoctorProfile({ BACKEND_URL }: OwnerProps) {
           </div>
           <ListGroup>
           {filteredAppointments.map((appointment, index) => (
-            <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}> {/* Attach onClick handler */}
+            <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}> 
               <div>Date: {appointment.date}</div>
               <div>Time: {appointment.time}</div>
               <div>Status: {appointment.status}</div>
@@ -193,6 +194,11 @@ function DoctorProfile({ BACKEND_URL }: OwnerProps) {
           ))}
           </ListGroup>
         </div>
+      </div>
+      <div className='doctor-patients-container'>
+          <div className='patient-sidebar'>
+            <DoctorPatients doctorId={doctorID} />
+          </div>
       </div>
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
         <Modal.Header closeButton>
@@ -253,7 +259,10 @@ function DoctorProfile({ BACKEND_URL }: OwnerProps) {
                       </>
                     )}
                     {selectedAppointment.status === 'schedule' && (
-                      <h4>Patient: {patient ? patient.full_name : 'No patient assigned'}</h4>
+                      <>
+                      <h4>Patient: {patient && patient.full_name }</h4>
+                      <p>Information not yet provided.</p>
+                      </>
                     )}
                     {selectedAppointment.status === 'open' && (
                       <p>No patient assigned to this appointment.</p>

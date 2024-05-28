@@ -7,6 +7,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 export const usePatientDetails = () => {
  
   const { parseDateTime } = useGlobalFunctions();
+
  
   const getPatientById = (patientID: number): Promise<Patient> => {
     return fetch(`${BACKEND_URL}/get_patient_by_id/${patientID}`)

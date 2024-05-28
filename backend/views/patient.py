@@ -5,7 +5,7 @@ from psycopg2.extras import RealDictCursor
 
 bp = Blueprint("patient", __name__)
 
-@bp.route("/get_patient_by_id/<int:patient_id>", methods=['GET'])
+@bp.route("/get_patient_by_id/<patient_id>", methods=['GET'])
 def get_patient_by_id(patient_id):
     try:
         print("patient_id", patient_id)

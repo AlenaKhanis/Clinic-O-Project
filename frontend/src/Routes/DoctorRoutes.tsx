@@ -26,7 +26,7 @@ const DoctorRoutes = ({ userRole }: { userRole: string }) => (
     <Route
       path="/patient_detail/:patient_id"
       element={
-        <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
+        <ProtectedRoute userRole={userRole} allowedRoles={['doctor' , 'owner']}>
           <PatientDetail />
           <HistoryAppointments />
         </ProtectedRoute>

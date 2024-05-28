@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { DoctorProps, Patient } from "../Types";
 import { Link } from "react-router-dom";
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
 //TODO: add css
 
-function AllPatientView({ doctorId, BACKEND_URL }: DoctorProps) {
+function AllPatientView({ doctorId }: DoctorProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const {getDoctorPatients} = useDoctorAppointments();
+  
 
   useEffect(() => {
     if (doctorId) {
-      const fetchPatients = () => {
-        fetch(`${BACKEND_URL}/get_doctor_patients/${doctorId}`)
-          .then((response) => response.json())
+      getDoctorPatients(doctorId)
           .then((data) => {
             setPatients(data);
             setLoading(false);
@@ -22,8 +23,6 @@ function AllPatientView({ doctorId, BACKEND_URL }: DoctorProps) {
             setLoading(false);
           });
       };
-      fetchPatients();
-    }
   }, [doctorId]);
 
   if (loading) {

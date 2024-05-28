@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Appointment, Doctor } from "../Types";
+import { Appointment, Doctor, Patient } from "../Types";
 import { useGlobalFunctions } from "./useGlobalFunctions";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -48,6 +48,18 @@ export const useDoctorAppointments = () => {
       .catch(error => console.error('Error fetching history appointments:', error));
   };
 
+  const getDoctorPatients = (doctorID: number): Promise<Patient[]> => {
+    return fetch(`${BACKEND_URL}/get_doctor_patients/${doctorID}`)
+      .then(response => response.json())
+      .then((data: Patient[]) => {
+        return data;
+      })
+      .catch(error => {
+        console.error('Error fetching doctor patients:', error);
+        throw error; // Rethrow the error to be caught by the caller
+      });
+  };
+
   return {
     appointments,
     selectedDoctorAppointments,
@@ -56,6 +68,7 @@ export const useDoctorAppointments = () => {
     getDoctorById,
     getHistoryDoctorAppointments,
     selectedDoctorDetails,
-    setSelectedDoctorDetails
+    setSelectedDoctorDetails,
+    getDoctorPatients
   };
 };
