@@ -1,84 +1,85 @@
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Col, Container, Placeholder, Row } from 'react-bootstrap';
 import '../css/BlogSection.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaArrowDown } from 'react-icons/fa'; // Import the arrow icon
 
-
-type Article = {  
-  title: string;  
-  description: string;  
-  url: string;  
-  urlToImage: string;  
+type BlogPost = {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  url: string;
 };
 
+//TODO: hide api in back end
+
 function BlogSection() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    fetch('https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=714e1b2241d04060a77d54fca596b8b7')
+      .then(response => response.json())
+      .then((data) => {
+        const filteredArticles = data.articles.filter((article: any) => article.title !== '[Removed]');
+        setTimeout(() => {
+          setPosts(
+            filteredArticles.slice(0, 4).map((article: any, index: number) => ({
+              id: index,
+              title: article.title,
+              content: article.description || article.content,
+              imageUrl: article.urlToImage || 'https://via.placeholder.com/150',
+              url: article.url,
+            }))
+          );
+          setIsLoading(false);
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error('Error fetching posts:', error);
+        setIsLoading(false); // even if there's an error, stop loading
+      });
+  }, []);
 
- useEffect(() => {
-  fetch('https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=714e1b2241d04060a77d54fca596b8b7')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      const filteredArticles = data.articles.filter((article: Article) => !isRemoved(article));
-      setArticles(filteredArticles);
-      setDisplayedArticles(filteredArticles.slice(0, 4)); // Initial load of first 4 articles
-    })
-    .catch(error => {
-      console.error('Error fetching articles:', error);
-    });
-}, []);
-
-  const isRemoved = (article: Article) => {
-    // condition here to identify removed articles
-    return article.title === '[Removed]';
-  };
-
-  const handleLoadMore = () => {
-    const nextIndex = currentIndex + 4;
-    if (nextIndex < articles.length) {
-      setDisplayedArticles(articles.slice(nextIndex, nextIndex + 4));
-      setCurrentIndex(nextIndex);
-    } else {
-      // Reset to the first set of articles if there are no more articles left
-      setDisplayedArticles(articles.slice(0, 4));
-      setCurrentIndex(0);
-    }
-  };
-
- return (
-  <>
-    <div className="blog-section">
-      {displayedArticles.length > 0 ? (
-        displayedArticles.map(article => (
-          <Card key={article.url} className="custom-card">
-            <Card.Img className="card-image" variant="top" src={article.urlToImage || 'placeholder_image_url'} alt={article.title} />
-            <Card.Body>
-              <Card.Title>{article.title}</Card.Title>
-              <Button variant="primary" href={article.url} target="_blank" rel="noopener noreferrer">
-                Read more
-              </Button>
-            </Card.Body>
-          </Card>
-        ))
-      ) : (
-        <div className="custom-card" style={{ height: '200px', width: '100%' }}>
-         
-        </div>
-      )}
-      <div className="load-more-container">
-        <FaArrowDown className="load-more-icon" onClick={handleLoadMore} />
-      </div>
-    </div>
-  </>
-);
+  return (
+    <Container className='blog-container'>
+      <Row xs={1} md={2} lg={4} className="g-4">
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <Col key={index} className="mb-4">
+              <Card style={{ width: '18rem', height: '24rem' }}>
+                <Card.Img variant="top" src="https://via.placeholder.com/150" style={{ height: '150px', objectFit: 'cover' }} />
+                <Card.Body>
+                  <Placeholder as={Card.Title} animation="glow">
+                    <Placeholder xs={6} />
+                  </Placeholder>
+                  <Placeholder as={Card.Text} animation="glow">
+                    <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
+                    <Placeholder xs={6} /> <Placeholder xs={8} />
+                  </Placeholder>
+                  <Placeholder.Button variant="primary" xs={6} />
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          posts.map((post) => (
+            <Col key={post.id} className="mb-4">
+              <Card style={{ width: '18rem', height: '24rem' }}>
+                <Card.Img variant="top" src={post.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />
+                <Card.Body>
+                  <Card.Title>{post.title}</Card.Title>
+                  <div className="d-grid card-button">
+                    <Button variant="primary" href={post.url} target="_blank">Read More</Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        )}
+      </Row>
+    </Container>
+  );
 }
 
 export default BlogSection;

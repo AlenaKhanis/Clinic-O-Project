@@ -4,6 +4,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+}
+.main-container {
   background-image: url('/img/Artboard2.jpg');
   background-size: cover;
 }
@@ -13,19 +16,8 @@ body {
   background-image: url('/img/test.png');
   background-size: cover;
   background-repeat: no-repeat;
+  margin: 0;
 }
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
 p {
   font-size: 1rem;
   line-height: 1.5;

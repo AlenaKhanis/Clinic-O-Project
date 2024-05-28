@@ -1,37 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MDBContainer, MDBRow, MDBCol,MDBInput, MDBCard } from 'mdb-react-ui-kit';
-import { Button} from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Patient, Doctor , Owner } from '../Types.ts';
-import '../css/LoginForm.css';
-
-//TODO: handle when login faild becuse username or password not correct - give to the userftendly message
-//TODO: check password correction
+import React, {useRef, useState } from 'react';
+import { Modal} from 'react-bootstrap';
+import { Patient, Doctor, Owner } from '../Types';
+import '../css/newLogin.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-
 type LoginFormProps = {
-  setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
   setUserName: (userName: string) => void;
   setRole: (userRole: string) => void;
 };
 
-
-function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: LoginFormProps) {
+function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-
-
 
   const handleLoginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
-  
+
     fetch(BACKEND_URL + "/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -49,7 +41,6 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
         }
       })
       .then((data) => {
-        setShowLoginPopup(false);
         fetch(BACKEND_URL + "/get_user", {
           method: "GET",
           headers: {
@@ -67,7 +58,7 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
           })
           .then((userData: Patient | Doctor | Owner) => {
             localStorage.setItem("userinfo", JSON.stringify(userData));
-            setShowLoginPopup(false);
+            setShow(false);
             setUserName(userData.full_name);
             setRole(userData.role);
           })
@@ -76,56 +67,68 @@ function LoginForm({ setShowLoginPopup, setUserToken , setUserName ,setRole }: L
           });
       })
       .catch((error) => {
-      
         setErrorMessage(error.message);
       });
-
-    event.preventDefault();
-    };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (formRef.current && !formRef.current.contains(event.target as Node)) {
-      setShowLoginPopup(false);
-    }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-  
-
-  return <>
-    
-    <MDBContainer className='login-popup' fluid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'  }}>
-      <MDBCard className='text-black' style={{ borderRadius: '25px' , backgroundColor: 'white'}}>
-      <MDBRow>
-        <MDBCol col={12} md={6} className="mb-4 mb-md-0" ref={formRef}>
-       
-          <form className='login-form' onSubmit={handleLoginFormSubmit}>
-          <div className="d-flex justify-content-end">
-           <FontAwesomeIcon icon={faTimes} size="lg" onClick={() => setShowLoginPopup(false)} style={{ cursor: 'pointer' }} />
-          </div>
+  return (
+    <Modal show={show} onHide={() => setShow(false)} centered>
+      <Modal.Body>
+        <form onSubmit={handleLoginFormSubmit} className="login-form" autoComplete="off" role="main">
           {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
-            <h1 className='login'>Login</h1>
-            <div className="d-flex flex-row align-items-center mb-4">
-            <FontAwesomeIcon icon={faUser} className="me-3" size="lg" />
-            <MDBInput  type="text" name="username" placeholder="Username" ref={usernameRef} required />
+          <h1 className="a11y-hidden">Login Form</h1>
+          <div>
+            <label className="label-email">
+              <input
+                type="username"
+                className="text"
+                name="username"
+                placeholder="Username"
+                tabIndex={1}
+                required
+                ref={usernameRef}
+              />
+              <span className="required">Username</span>
+            </label>
+          </div>
+          <input type="checkbox" name="show-password" className="show-password a11y-hidden" id="show-password" tabIndex={3} />
+          <label className="label-show-password" htmlFor="show-password">
+            <span>Show Password</span>
+          </label>
+          <div>
+            <label className="label-password">
+              <input
+                type="password"
+                className="text"
+                name="password"
+                placeholder="Password"
+                tabIndex={2}
+                required
+                ref={passwordRef}
+              />
+              <span className="required">Password</span>
+            </label>
+          </div>
+          <input type="submit" value="Log In" />
+          <div className="email">
+            <a href="#">Forgot password?</a>
+          </div>
+          <figure aria-hidden="true">
+            <div className="person-body"></div>
+            <div className="neck skin"></div>
+            <div className="head skin">
+              <div className="eyes"></div>
+              <div className="mouth"></div>
             </div>
-            <div className="d-flex flex-row align-items-center mb-4">
-            <FontAwesomeIcon icon={faKey} className="me-3 mt-n1" size="lg" />
-            <MDBInput type="password" name="password" placeholder="Password" ref={passwordRef} required />
-            </div>
-            <Button variant="primary" type="submit" >Continue</Button>
-          </form>
-        </MDBCol>
-      </MDBRow>
-      </MDBCard>
-    </MDBContainer>
-    </>
-
+            <div className="hair"></div>
+            <div className="ears"></div>
+            <div className="shirt-1"></div>
+            <div className="shirt-2"></div>
+          </figure>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 export default LoginForm;

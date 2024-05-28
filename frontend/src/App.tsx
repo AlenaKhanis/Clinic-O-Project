@@ -5,8 +5,8 @@ import LoginForm from "./HomePage/LoginForm";
 import Register from "./HomePage/RegisterForm";
 import Footer from "./HomePage/Footer";
 import HomeNavBar from "./HomePage/Navbar";
-import  MainBody  from "./HomePage/MainBody";
-import  NotFoundPage  from "./NotFoundPage";
+import MainBody from "./HomePage/MainBody";
+import NotFoundPage from "./NotFoundPage";
 import PatientRoutes from "./Routes/PatientRoutes";
 import DoctorRoutes from "./Routes/DoctorRoutes";
 import AdminRoutes from "./Routes/AdminRoutes";
@@ -25,7 +25,7 @@ function App() {
         <div className="content">
           {children}
         </div>
-        {location.pathname == '/' && <Footer />}
+        {location.pathname === '/' && <Footer />}
       </div>
     );
   }
@@ -40,7 +40,6 @@ function App() {
 
     if (usernameInfo !== null) {
       const userinfo = JSON.parse(usernameInfo);
-
       return userinfo.full_name;
     }
     return "Guest";
@@ -56,7 +55,7 @@ function App() {
     }
   });
 
-const [userId , ] = useState<number>(() => {
+  const [userId, ] = useState<number>(() => {
     const userinfo = localStorage.getItem('userinfo');
     if (userinfo) {
       const { id } = JSON.parse(userinfo);
@@ -64,34 +63,33 @@ const [userId , ] = useState<number>(() => {
     } else {
       return 0;
     }
-});
+  });
 
   return (
     <BrowserRouter>
       <Cover>
         <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
         <Routes>
-        <Route path="/patient/*" element={<PatientRoutes userRole={userRole}  />} />
-        <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole}   />} />
-        <Route path="/admin/*" element={<AdminRoutes  userRole={userRole}  userId={userId}/>} />
+          <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
+          <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
+          <Route path="/admin/*" element={<AdminRoutes userRole={userRole} userId={userId} />} />
           <Route
             path="/"
             element={
               <div className="homepage-container">
                 <div className="mainbody">
-                  <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup}  />
-                 
+                  <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} />
                 </div>
-               <div>
+                
                   <BlogSection />
-                </div>
+                
               </div>
             }
           />
-          <Route path="/404" element={<NotFoundPage  userRole={userRole}  />} />
+          <Route path="/404" element={<NotFoundPage userRole={userRole} />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
-        {showLoginPopup && <LoginForm setShowLoginPopup={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
+        {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
         {showRegisterPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
       </Cover>
     </BrowserRouter>
