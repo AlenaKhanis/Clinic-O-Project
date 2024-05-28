@@ -14,6 +14,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
         if (doctorId) {
             fetchDoctorAppointments(doctorId)
                 .then((data: Appointment[]) => {
+                    console.log(data);
                     setAppointment(data);
                 })
                 .catch(error => console.error('Error fetching doctor appointments:', error));
@@ -21,12 +22,35 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
         }
     }, [doctorId, onAppointmentAdded]);
 
+    const filteredAppointments = appointment
+  .filter(appointment => {
+    const appointmentDateTime = new Date(appointment.date_time);
+    const currentDateTime = new Date();
+
+    // Check if the constructed date object is valid
+    if (!isNaN(appointmentDateTime.getTime())) {
+      const isFuture = appointmentDateTime > currentDateTime;
+      const isNotCompleted = appointment.status !== 'completed';
+      return isFuture && isNotCompleted;
+    } else {
+      console.error('Invalid date:', appointment.date_time);
+      return false; // or handle this case differently
+    }
+  })
+  .sort((a, b) => {
+    const dateA = new Date(a.date_time).getTime();
+    const dateB = new Date(b.date_time).getTime();
+    
+    return dateA - dateB;
+  });
+
+
 
     return (
         <>
-            <div className={`tab-content ${appointment.length > 0 ? "with-scrollbar" : ""}`}>
+            <div className={`tab-content ${filteredAppointments.length > 0 ? "with-scrollbar" : ""}`}>
                 <h2>Appointments</h2>
-                {appointment.length > 0 ? (
+                {filteredAppointments.length > 0 ? (
                     <table>
                         <thead>
                             <tr>
@@ -37,7 +61,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                             </tr>
                         </thead>
                         <tbody>
-                            {appointment.map((appointment: Appointment, index: number) => (
+                            {filteredAppointments.map((appointment: Appointment, index: number) => (
                                 <tr key={index}>
                                     <td>{appointment.date}</td>
                                     <td>{appointment.time}</td>

@@ -69,7 +69,7 @@ class Appointment:
             cursor.execute("""
                 SELECT * FROM appointments 
                 WHERE doctor_id = %s 
-                AND status IN ('schedule', 'open')
+                AND status IN ('schedule', 'open' , 'completed')
                 """,
                 (doctor_id))
 

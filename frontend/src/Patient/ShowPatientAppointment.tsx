@@ -44,40 +44,26 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: PatientProp
     }
 
     const filteredAppointments = appointments
-    .filter((appointment) => {
-        const match = appointment.date_time.match(/(\d+) (\w+) (\d+) (\d+:\d+:\d+)/);
-        if (match) {
-            const [, day, month, year, time] = match;
-            const [hours, minutes, seconds] = time.split(':');
+  .filter(appointment => {
+    const appointmentDateTime = new Date(appointment.date_time);
+    const currentDateTime = new Date();
 
-            // Convert month to numeric value
-            const numericMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(month);
-
-            // Construct a new Date object
-            const appointmentDateTime = new Date(parseInt(year), numericMonth, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
-
-            // Check if the constructed date object is valid
-            if (!isNaN(appointmentDateTime.getTime())) {
-                const currentDateTime = new Date();
-                const isFuture = appointmentDateTime > currentDateTime;
-                const isNotCompleted = appointment.status !== 'completed';
-                return isFuture && isNotCompleted;
-            } else {
-                console.error('Invalid date:', appointment.date_time);
-                return false; // or handle this case differently
-            }
-        } else {
-            console.error('Invalid date format:', appointment.date_time);
-            return false; // or handle this case differently
-        }
-    })
-    .sort((a, b) => {
-        const dateA = new Date(a.date_time).getTime();
-        const dateB = new Date(b.date_time).getTime();
-        
-        return dateA - dateB;
-    });
-
+    // Check if the constructed date object is valid
+    if (!isNaN(appointmentDateTime.getTime())) {
+      const isFuture = appointmentDateTime > currentDateTime;
+      const isNotCompleted = appointment.status !== 'completed';
+      return isFuture && isNotCompleted;
+    } else {
+      console.error('Invalid date:', appointment.date_time);
+      return false; // or handle this case differently
+    }
+  })
+  .sort((a, b) => {
+    const dateA = new Date(a.date_time).getTime();
+    const dateB = new Date(b.date_time).getTime();
+    
+    return dateA - dateB;
+  });
 
     return (
         <>

@@ -1,34 +1,111 @@
 
-.container-profile {
-    max-width: 1000px;
-    
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
+.doctor-container-profile {
     display: flex;
-    flex-direction: column; 
+    justify-content: center;
+    margin-right: 400px;
+    margin-top: 250px;
+  }  
+  .container-profile-for-doctor{
+
+    justify-content: center; /* Center horizontally */
+
+  }
+
+  .profile-content {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .doctor-info {
+    flex: 0 0 300px; /* Fixed width of 300px */
+    padding: 20px;
+    margin-right: 50px; /* Add margin between doctor-info and appointments-sidebar */
+    background-color: #fff; /* Ensure background is white */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
+    width: 500px;
+  }
+
+  .appointments-sidebar {
+    flex: 0 0 300px; /* Fixed width of 300px */
+    padding: 20px;
+    margin-right: 20px; /* Add margin between doctor-info and appointments-sidebar */
+    background-color: #fff; /* Ensure background is white */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
+    width: 500px;
+
+  }
+
+  .filter-buttons {
+    margin-bottom: 10px;
+  }
+  
+  .filter-buttons .btn {
+    margin-right: 5px;
+  }
+
+  .appointments-sidebar .list-group-item {
+    margin-bottom: 10px;
+  }
+
+  .appointments-sidebar .list-group-item {
+        margin-bottom: 10px;
+    }
+
+  .appointments-sidebar .list-group {
+        padding: 10px;
+        border-radius: 5px;
+        overflow: auto;
+        max-height: 400px;
+    }
+
+    * Style the appointment details modal */
+.modal-content {
+  border-radius: 0;
 }
 
-.container-profile input {
-    margin-right: 10px; 
+/* Style the modal header */
+.modal-header {
+  border-bottom: none;
+}
+
+/* Style the modal body */
+.modal-body {
+  padding: 20px;
+}
+
+/* Style the modal footer */
+.modal-footer {
+  border-top: none;
+  justify-content: center;
 }
 
 
-label {
-    margin-bottom: 5px;
-}
+@keyframes modalSlide {
+    from {
+      opacity: 0;
+      transform: translateX(0px) rotate(100deg) translateY(0px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .modal {
+    animation: modalSlide 0.5s ease;
+  }
+  
 
-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: white; 
-    color: black;
-}
+  .modal-dialog {
 
+    width: 500px;
+    max-width: 100%; 
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  
 
-button {
-    margin-top: 10px;
-}
+  .modal.show .modal-dialog {
+    transform: translateX(0);
+  }
+  
