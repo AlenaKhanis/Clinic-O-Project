@@ -24,6 +24,12 @@
   width: 500px;
 }
 
+.doctor-info button {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
 .appointments-sidebar {
   flex: 0 0 300px; /* Fixed width of 300px */
   padding: 20px;
@@ -36,10 +42,12 @@
 
 .filter-buttons {
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-buttons .btn {
-  margin-right: 5px;
+  margin: 5px;
 }
 
 .appointments-sidebar .list-group-item {
@@ -63,11 +71,11 @@
   margin-right: 20px; /* Add margin between doctor-info and appointments-sidebar */
   background-color: #fff; /* Ensure background is white */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
-  width: 500px;
+  width: fit-content;
 }
 
 .modal-content {
-border-radius: 0;
+border-radius: 30px;
 }
 
 /* Style the modal header */
@@ -75,15 +83,14 @@ border-radius: 0;
 border-bottom: none;
 }
 
-/* Style the modal body */
-.modal-body {
-padding: 20px;
-}
-
 /* Style the modal footer */
 .modal-footer {
 border-top: none;
 justify-content: center;
+}
+
+.modal-body div  {
+  margin: 10px;
 }
 
 
@@ -112,7 +119,16 @@ justify-content: center;
   transition: transform 0.3s ease;
 }
 
+.modal-body label {
+  font-size: 1.2rem;
+  
+}
 
 .modal.show .modal-dialog {
   transform: translateX(0);
+}
+
+.form-label {
+  font-size: 1.2rem;
+  margin-left: 40px;
 }

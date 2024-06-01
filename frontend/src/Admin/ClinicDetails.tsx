@@ -50,18 +50,19 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
         }
         return response.json();
       })
-      .then(data => {
-        setClinicDetails(prevDetails => ({ ...prevDetails, [field]: value } as Clinic));
+      .then(() => {
+        setClinicDetails(prevDetails => ({ ...prevDetails, [field]: value } as Clinic)); // TODO: check this!
         setSuccessMessage('Clinic details updated successfully');
         setErrorMessage(null);
         setShowModal(false);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error updating clinic details:', error);
         setErrorMessage('An error occurred while updating the clinic details');
         setSuccessMessage(null);
       });
   };
+  
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 

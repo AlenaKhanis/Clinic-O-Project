@@ -4,6 +4,9 @@ import { Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { Table } from 'react-bootstrap';
 
+
+ //TODO: check if same date like in the backend
+
 function DoctorPatients({ doctorId }: { doctorId: number }) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const { getDoctorPatients } = useDoctorAppointments();
@@ -44,7 +47,7 @@ function DoctorPatients({ doctorId }: { doctorId: number }) {
               <td>{patient.age}</td>
               <td>{patient.email}</td>
               <td>{patient.phone}</td>
-              <td>{new Date(patient.created_date).toLocaleString()}</td> //TODO: check if same date like in the backend
+              <td>{new Date(patient.created_date).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

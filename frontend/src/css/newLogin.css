@@ -50,9 +50,7 @@
     outline-offset: 2px;
   }
   
-  form > div {
-    order: 2;
-  }
+
   
   label {
     display: flex;
@@ -89,7 +87,6 @@
     color: var(--borderDark);
   }
   
-  /* trick from https://css-tricks.com/snippets/css/password-input-bullet-alternatives/ */
   label input[name="password"] {
     -webkit-text-security: disc;
   }
@@ -213,15 +210,15 @@
     --skinH: 30;
     --skinS: 100%;
     --skinL: 87%;
-    --hair: rgb(180,70,60);
+    --hair: rgb(224, 178, 105);
     background: hsl(var(--fgColorH), calc(var(--fgColorS) * 2), 95%);
-    border: 1px solid rgba(0,0,0,0.0625);
+    border: 1px solid rgba(27, 55, 155, 0.063);
     border-radius: 50%;
     height: 0;
     margin: auto auto;
     margin-bottom: 2rem;
     order: 1;
-    padding-top: 60%;
+    padding-top: 60%; 
     position: relative;
     width: 60%;
     overflow: hidden;
@@ -297,7 +294,7 @@
     display: inline-block;
     margin: 0 0.5rem;
     -webkit-animation: blink 5s infinite;
-    animation: blink 5s infinite;
+    animation: blink 3s infinite;
     transition: all 0.15s;
   }
   

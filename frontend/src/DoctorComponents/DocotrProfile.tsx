@@ -1,90 +1,25 @@
 import { useEffect, useState } from "react";
-import { useAppointments } from "./doctorAppointmentFunction";
-import { DoctorProps } from "../Types";
+import { Doctor, DoctorProps } from "../Types";
 import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button';
-import Collapse from 'react-bootstrap/Collapse';
 import '../css/doctorProfile.css';
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
+import EditDoctorProfile from "../useFunctions/EditDoctorProfile";
+import { Button } from "react-bootstrap";
 
-function DoctorProfile({ doctorId, onAppointmentAdded , BACKEND_URL }: DoctorProps) {
-    const { getDoctordetails, selectedDoctorDetails } = useAppointments();
-    const [open, setOpen] = useState(false);
-
-    const [editedFullName, setEditedFullName] = useState("");
-    const [editedEmail, setEditedEmail] = useState("");
-    const [editedPhone, setEditedPhone] = useState("");
-
-
-    useEffect(() => {
-        if (selectedDoctorDetails) {
-            setEditedFullName(selectedDoctorDetails.full_name);
-            setEditedEmail(selectedDoctorDetails.email);
-            setEditedPhone(selectedDoctorDetails.phone);
-        }
-    }, [selectedDoctorDetails]);
-
-    const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedFullName(e.target.value);
-    };
-
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedEmail(e.target.value);
-    };
-
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPhone(e.target.value);
-    };
-
-    const handleSaveFullName = () => {
-        // Send editedFullName to the backend to update the full name
-        saveChangesToBackend("full_name", editedFullName);
-    };
-
-    const handleSaveEmail = () => {
-        // Send editedEmail to the backend to update the email
-        saveChangesToBackend("email", editedEmail);
-    };
-
-    const handleSavePhone = () => {
-        // Send editedPhone to the backend to update the phone number
-        saveChangesToBackend("phone", editedPhone);
-    };
-
-
-    useEffect(() => {
-        if (doctorId) {
-            getDoctordetails(doctorId);
-        }
-    }, [doctorId, onAppointmentAdded]); 
-
-
-
-    const saveChangesToBackend = (field: string, value: string) => {
-        fetch(`${BACKEND_URL}/edit_doctor_profile/${doctorId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ field, value }),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-         
-            console.log(`Updated ${field} successfully!`);
-        })
-        .catch((error) => {
-            console.error(`Error updating ${field}:`, error);
-            
-        });
-    };
+function DoctorProfile({ doctorId}:  DoctorProps ) {
+    const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
+    const {getDoctorById , handleSaveChanges} = useDoctorAppointments();
+    const [showEditModal, setShowEditModal] = useState(false);
 
     
-
-    //TODO: Add saparate lable for firs name and lasn name 
-    //TODO: add ref 
-  
+    useEffect(() => {
+        if (doctorId) {
+            getDoctorById(doctorId)
+            .then((data: Doctor) => {
+                setSelectedDoctorDetails(data);
+            })
+        }
+    }, [doctorId ,showEditModal]); 
 
     return (
         <div>
@@ -98,44 +33,17 @@ function DoctorProfile({ doctorId, onAppointmentAdded , BACKEND_URL }: DoctorPro
                     <ListGroup.Item>Email: {selectedDoctorDetails.email}</ListGroup.Item>
                     <ListGroup.Item>Phone: {selectedDoctorDetails.phone}</ListGroup.Item>
                     <ListGroup.Item>Specialty: {selectedDoctorDetails.specialty}</ListGroup.Item>
+                    <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
                 </ListGroup>
-                
-                <Button
-                    onClick={() => setOpen(!open)}
-                    aria-controls="example-collapse-text"
-                    aria-expanded={open}
-                >
-                    Edit Profile
-                </Button>
-                <Collapse in={open}>
-                    <div className="container-profile">
-                        <h2>Edit Profile</h2>
-                        <label>Full Name:</label>
-                        <input
-                            type="text"
-                            value={editedFullName}
-                            onChange={handleFullNameChange}                                
-                        />
-                        <Button onClick={handleSaveFullName}>Save</Button>
-                        <br />
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            value={editedEmail}
-                            onChange={handleEmailChange}  
-                        />
-                        <Button onClick={handleSaveEmail}>Save</Button>
-                        <br />
-                        <label>Phone Number:</label>
-                        <input
-                            type="tel"
-                            value={editedPhone}
-                            onChange={handlePhoneChange}
-                        />
-                        <Button onClick={handleSavePhone}>Save</Button>
-                        <br />
-                    </div>
-                </Collapse>
+
+                {selectedDoctorDetails && (
+                    <EditDoctorProfile
+                    doctor={selectedDoctorDetails}
+                    onSaveChanges={(editedDoctor, setAlert) => handleSaveChanges(editedDoctor, setAlert, selectedDoctorDetails)}
+                    onCancel={() => setShowEditModal(false)}
+                    showEditModal={showEditModal}
+                  />
+                )}
                 </>
             ) : (
                 <p>Loading doctor profile...</p>

@@ -78,7 +78,7 @@ function App() {
             element={
               <div className="homepage-container">
                 <div className="mainbody">
-                  <MainBody userRole={userRole} setShowRegisterPopup={setShowRegisterPopup} />
+                  <MainBody userRole={userRole} />
                 </div>
                 
                   <BlogSection />
@@ -86,11 +86,12 @@ function App() {
               </div>
             }
           />
+          <Route path="/register" element={<Register />} />
           <Route path="/404" element={<NotFoundPage userRole={userRole} />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
         {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} setRole={setRole} />}
-        {showRegisterPopup && <Register setShowRegisterPopup={setShowRegisterPopup} />}
+        
       </Cover>
     </BrowserRouter>
   );

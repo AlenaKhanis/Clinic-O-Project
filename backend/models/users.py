@@ -52,18 +52,30 @@ class User:
         except Exception as e:
             print("Error inserting user:", e)
             return None
-
+            
     @classmethod
     def edit_doctor_user_profile(cls, cursor, doctor_id, field, value):
         try:
+            if field == 'specialty':  
+                cursor.execute(f"""
+                    UPDATE doctors
+                    SET {field} = %s
+                    WHERE doctor_id = %s;
+                """, (value, doctor_id))
+            else:    
+                cursor.execute(f"""
+                    UPDATE users
+                    SET {field} = %s
+                    WHERE id = %s;
+                """, (value, doctor_id))
+
             cursor.execute(f"""
-                UPDATE users
-                SET {field} = %s
+                SELECT * FROM users
                 WHERE id = %s;
-            """, (value, doctor_id))
+            """, (doctor_id,))
+            updated_data = cursor.fetchone()
 
-            return "Doctor profile updated successfully"
+            return "Doctor profile updated successfully", updated_data
         except Exception as e:
-            return f"Error updating doctor profile: {e}"
-
+            return f"Error updating doctor profile: {e}", None
 

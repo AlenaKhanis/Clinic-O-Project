@@ -1,5 +1,6 @@
 
 .register-popup {
+  display: flex;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -7,14 +8,20 @@
     max-width: fit-content;
     width: 100vw; 
     height: 100vh;
+    justify-content: center;
+    align-items: 'center'
    
   }
 
   .register-form {
-    background-color: #f1f1f2;
-    padding: 20px;
+    
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     margin: 0 auto;
   }
+
+.col-md-6.register-form
+{
+  margin-top: 150px;
+}

@@ -77,7 +77,7 @@ function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginF
         <form onSubmit={handleLoginFormSubmit} className="login-form" autoComplete="off" role="main">
           {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
           <h1 className="a11y-hidden">Login Form</h1>
-          <div>
+          <div style={{ order: 2 }}>
             <label className="label-email">
               <input
                 type="username"
@@ -95,7 +95,7 @@ function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginF
           <label className="label-show-password" htmlFor="show-password">
             <span>Show Password</span>
           </label>
-          <div>
+          <div style={{ order: 2 }}>
             <label className="label-password">
               <input
                 type="password"
@@ -110,7 +110,7 @@ function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginF
             </label>
           </div>
           <input type="submit" value="Log In" />
-          <div className="email">
+          <div style={{ order: 2 }} className="email">
             <a href="#">Forgot password?</a>
           </div>
           <figure aria-hidden="true">

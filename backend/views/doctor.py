@@ -38,25 +38,48 @@ def get_doctors_by_Id(doctor_id):
         return jsonify({"error": "An error occurred while retrieving the doctor."}), 500
 
 
-@bp.route('/edit_doctor_profile/<doctor_id>', methods=['POST'])
-def edit_doctor_user_profile(doctor_id):
-    try:
-        value = request.json.get('value')
-        field = request.json.get('field')
-        db = get_db()
-        cursor = db.cursor()
+# @bp.route('/edit_doctor_profile_by_user/<doctor_id>', methods=['POST'])
+# def edit_doctor_user_profile(doctor_id):
+#     try:
+#         value = request.json.get('value')
+#         field = request.json.get('field')
+#         db = get_db()
+#         cursor = db.cursor()
         
-        if field in ['full_name', 'email', 'phone']:
-            result = User.edit_doctor_user_profile(cursor, doctor_id, field, value)
-            db.commit()  
-            return jsonify(result), 200
-        else:
-            return jsonify({"error": "Invalid field."}), 400
-    except Exception as e:
+#         if field in ['full_name', 'email', 'phone']:
+#             result = User.edit_doctor_user_profile(cursor, doctor_id, field, value)
+#             db.commit()  
+#             return jsonify(result), 200
+#         else:
+#             return jsonify({"error": "Invalid field."}), 400
+#     except Exception as e:
 
-        return jsonify({"error": f"An error occurred while editing the doctor's profile: {e}"}), 500
+#         return jsonify({"error": f"An error occurred while editing the doctor's profile: {e}"}), 500
 
+@bp.route('/edit_doctor_profile/<doctor_id>', methods=['POST'])
+def edit_doctor_profile_by_admin(doctor_id):
+    db = get_db()
+    cursor = db.cursor()
 
+    updated_data = request.json
+    doctor = Doctor.get_doctor(cursor, doctor_id)
+
+    if doctor:
+        try:
+            updated_fields = {}  
+            for field, value in updated_data.items():
+                User.edit_doctor_user_profile(cursor, doctor_id, field, value)
+                updated_fields[field] = value 
+                print(updated_fields) 
+            db.commit()
+            return jsonify({'updated_fields': updated_fields})
+        except Exception as e:
+            db.rollback()  
+            return jsonify({'error': f"Error updating doctor profile: {e}"}), 500
+    else:
+        return jsonify({'error': 'Doctor not found'}), 404
+
+       
 
 @bp.route('/get_doctor_patients/<doctor_id>')
 def get_doctor_patients(doctor_id):
