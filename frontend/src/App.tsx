@@ -15,7 +15,6 @@ import "./css/App.css";
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showRegisterPopup, setShowRegisterPopup] = useState(false);
 
   function Cover({ children }: { children: React.ReactNode }) {
     const location = useLocation();
@@ -73,12 +72,14 @@ function App() {
           <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
           <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
           <Route path="/admin/*" element={<AdminRoutes userRole={userRole} userId={userId} />} />
+          
+
           <Route
             path="/"
             element={
               <div className="homepage-container">
                 <div className="mainbody">
-                  <MainBody userRole={userRole} />
+                  <MainBody userRole={userRole} userToken={userToken} setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} setRole={setRole} userName={userName} />
                 </div>
                 
                   <BlogSection />

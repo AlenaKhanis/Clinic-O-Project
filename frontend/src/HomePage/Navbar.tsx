@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/homePage.css';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { OffCanvasExample } from './OffCanvas';
@@ -19,21 +19,7 @@ type HomePageProps = {
   userName: string;
 };
 
-function HomeNavBar({ setShowLoginPopup , setUserName , setUserToken , userToken , userName ,setRole}: HomePageProps) {
-  const navigate = useNavigate();
-
-  function logOut() {
-    if (userToken) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("userinfo");
-      setUserToken(null);
-      setUserName("Guest");
-      setRole("")
-      navigate("/");
-    } else {
-      setShowLoginPopup(true);
-    }
-  }
+function HomeNavBar({  userToken , userName }: HomePageProps) {
 
   const [date, setDate] = useState(new Date());
   const hour = date.getHours();
@@ -61,9 +47,7 @@ function HomeNavBar({ setShowLoginPopup , setUserName , setUserToken , userToken
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-          <Nav.Link style={{color: 'white'}} onClick={() => logOut()}>
-            {userToken ? "Logout" : "Login"}
-          </Nav.Link>
+          <Nav.Link style={{color: 'white' , textDecoration: 'none'}}  href="/register" >Register</Nav.Link> 
           <Nav.Link style={{color: 'white'}} href="link">Link</Nav.Link> 
         </Nav>
         <Nav.Item>{greeting}, {userToken ? userName : "Guest"}.<br></br> {formattedDate}.</Nav.Item> 
