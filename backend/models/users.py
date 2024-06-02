@@ -79,3 +79,12 @@ class User:
         except Exception as e:
             return f"Error updating doctor profile: {e}", None
 
+
+    @classmethod
+    def delete_user_doctor(cls, cursor, doctor_id):
+        try:
+            cursor.execute("DELETE FROM doctors WHERE user_id = %s", (doctor_id,))
+            cursor.execute("DELETE FROM users WHERE id = %s", (doctor_id,))
+            return "Doctor deleted successfully"
+        except Exception as e:
+             return f"Error deleting doctor: {e}"

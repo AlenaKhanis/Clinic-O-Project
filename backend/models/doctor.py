@@ -98,3 +98,4 @@ class Doctor(User):
         except Exception as e:
             print(e)
             return None    
+        

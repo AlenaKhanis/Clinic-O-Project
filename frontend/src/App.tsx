@@ -10,8 +10,18 @@ import NotFoundPage from "./NotFoundPage";
 import PatientRoutes from "./Routes/PatientRoutes";
 import DoctorRoutes from "./Routes/DoctorRoutes";
 import AdminRoutes from "./Routes/AdminRoutes";
-
 import "./css/App.css";
+
+// import BlogSection from "./HomePage/BlogSection";
+// const LoginForm = lazy(() => import('./HomePage/LoginForm'));
+// const Register = lazy(() => import('./HomePage/RegisterForm'));
+// const Footer = lazy(() => import('./HomePage/Footer'));
+// const DoctorRoutes = lazy(() => import('./Routes/DoctorRoutes'));
+// const PatientRoutes = lazy(() => import('./Routes/PatientRoutes'));
+// const NotFoundPage = lazy(() => import('./NotFoundPage'));
+// const HomeNavBar = lazy(() => import('./HomePage/Navbar'));
+// const MainBody = lazy(() => import("./HomePage/MainBody"));
+// const AdminRoutes = lazy(() => import("./Routes/AdminRoutes"));
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);

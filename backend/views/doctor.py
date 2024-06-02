@@ -38,24 +38,6 @@ def get_doctors_by_Id(doctor_id):
         return jsonify({"error": "An error occurred while retrieving the doctor."}), 500
 
 
-# @bp.route('/edit_doctor_profile_by_user/<doctor_id>', methods=['POST'])
-# def edit_doctor_user_profile(doctor_id):
-#     try:
-#         value = request.json.get('value')
-#         field = request.json.get('field')
-#         db = get_db()
-#         cursor = db.cursor()
-        
-#         if field in ['full_name', 'email', 'phone']:
-#             result = User.edit_doctor_user_profile(cursor, doctor_id, field, value)
-#             db.commit()  
-#             return jsonify(result), 200
-#         else:
-#             return jsonify({"error": "Invalid field."}), 400
-#     except Exception as e:
-
-#         return jsonify({"error": f"An error occurred while editing the doctor's profile: {e}"}), 500
-
 @bp.route('/edit_doctor_profile/<doctor_id>', methods=['POST'])
 def edit_doctor_profile_by_admin(doctor_id):
     db = get_db()
@@ -120,3 +102,17 @@ def get_doctors():
         return jsonify(doctors), 200
     except Exception as e:
         return jsonify({"error": "An error occurred while retrieving the doctors."}), 500   
+
+@bp.route('/delete_doctor/<int:doctor_id>', methods=['DELETE'])
+def delete_doctor(doctor_id):
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        result = User.delete_user_doctor(cursor, doctor_id)
+        db.commit()
+        return jsonify({"message": result}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": f"An error occurred while deleting the doctor: {str(e)}"}), 500
+    finally:
+        cursor.close()   
