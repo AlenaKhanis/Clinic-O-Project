@@ -22,6 +22,7 @@ from views.clinic import bp as clinic_bp
 app = Flask(__name__)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
+print(FRONTEND_URL)
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)

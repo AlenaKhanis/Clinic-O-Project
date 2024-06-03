@@ -10,12 +10,12 @@ from models.users import User
 
 @dataclass
 class Patient(User):
-    patient_id: int = None
-    package: str = "silver"
-    created_date: datetime = datetime.now()
-    updated_date: datetime = datetime.now()
-
-    
+    def __init__(self, username: str, password: str = None, patient_id: int = None, package: str = "silver"):
+        super().__init__(username, password)
+        self.patient_id = patient_id
+        self.package = package
+        self.created_date = datetime.now()
+        self.updated_date = datetime.now()
 
     @classmethod
     #TODO: change to get patient by id

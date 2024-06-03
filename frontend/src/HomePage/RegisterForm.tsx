@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import '../css/Register.css'
 import { useNavigate } from 'react-router-dom';
 
-
+//TODO: Add birthday field
+//TODO: Add phone number field
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -26,6 +27,7 @@ export default function Register() {
     const emailRef = useRef<HTMLInputElement>(null);
     const fullNameRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+    
 
     const handleCheckUsername = () => {
         const username = usernameRef.current?.value;
@@ -138,33 +140,16 @@ export default function Register() {
       };
 
 
-    useEffect(() => {
-        const isUsernameFilled = !!usernameRef.current?.value;
-        const isEmailFilled = !!emailRef.current?.value;
-        const isPasswordFilled = !!passwordRef.current?.value;
-        const isConfirmPasswordFilled = !!confirmPasswordRef.current?.value;
-        const isFullNameFilled = !!fullNameRef.current?.value;
-        const isPackageSelected = !!selectedPackage;
-        const isEmailValid = !emailError;
-    
-        const isUsernameValid = !usernameError;
-        const isPasswordValid = !passwordError;
-        const isFullNameValid = !fullNameError;
-    
-        setIsFormValid(
-            isUsernameFilled &&
-            isEmailFilled &&
-            isPasswordFilled &&
-            isConfirmPasswordFilled &&
-            isFullNameFilled &&
-            isPackageSelected &&
-            isUsernameValid &&
-            isPasswordValid &&
-            isFullNameValid &&
-            isEmailValid
-        );
-    }, [selectedPackage, usernameRef, emailRef, passwordRef, confirmPasswordRef, usernameError, passwordError, fullNameError, emailError]);
-    
+useEffect(() => {
+    const fields = [usernameRef, emailRef, passwordRef, confirmPasswordRef, fullNameRef];
+    const errors = [usernameError, passwordError, fullNameError, emailError];
+
+    const areFieldsFilled = fields.every(field => !!field.current?.value);
+    const areErrorsAbsent = errors.every(error => !error);
+    const isPackageSelected = !!selectedPackage;
+
+    setIsFormValid(areFieldsFilled && areErrorsAbsent && isPackageSelected);
+}, [selectedPackage, usernameRef, emailRef, passwordRef, confirmPasswordRef, usernameError, passwordError, fullNameError, emailError]);
 
 
 

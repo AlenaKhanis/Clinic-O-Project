@@ -18,6 +18,7 @@ class User:
 
     @classmethod
     def check_username_exists(cls, username ,cursor):
+        print(username)
 
         try:
             cursor.execute(

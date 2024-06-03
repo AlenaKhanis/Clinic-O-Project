@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../css/homePage.css";
 
 type HomePageProps = {
@@ -12,21 +12,7 @@ type HomePageProps = {
   userRole: string;
 };
 
-function MainBody({ userRole, userToken, setShowLoginPopup, setUserName, setRole, setUserToken }: HomePageProps) {
-  const navigate = useNavigate();
-
-  function logOut() {
-    if (userToken) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("userinfo");
-      setUserToken(null);
-      setUserName("Guest");
-      setRole("");
-      navigate("/");
-    } else {
-      setShowLoginPopup(true);
-    }
-  }
+function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
 
   return (
     <>
@@ -44,8 +30,8 @@ function MainBody({ userRole, userToken, setShowLoginPopup, setUserName, setRole
           <Button className="main-button" variant="outline-dark">Admin Panel</Button>
         </Link>
       ) : (
-        <Button className="main-button" variant="outline-dark" onClick={logOut}>
-          {userToken ? "Logout" : "Login"}
+        <Button onClick={() => setShowLoginPopup(true)} className="main-button" variant="outline-dark" >
+          Login
         </Button>
       )}
     </>

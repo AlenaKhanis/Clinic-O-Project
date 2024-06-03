@@ -5,11 +5,27 @@ from models.users import User
 
 @dataclass
 class Doctor(User):
-    doctor_id: int = None
-    specialty: str = ""
-    open_appointments: datetime = datetime.now()
-    created_date: datetime = datetime.now()
-    updated_date: datetime = datetime.now()
+    def __init__(self, username: str, doctor_id: int, specialty: str , password: str = None):
+        super().__init__(username, password)
+        self.doctor_id = doctor_id
+        self.specialty = specialty
+        self.created_date = datetime.now()
+        self.updated_date = datetime.now()
+
+    def add_doctor(self, cursor):
+        try:
+            cursor.execute(
+                """
+                INSERT INTO doctors (doctor_id, specialty, created_date, updated_date)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (self.doctor_id, self.specialty, self.created_date, self.updated_date)
+            )
+            return True 
+        except Exception as e:
+            print("Error inserting patient:", e)
+            return False  
+        
 
     @classmethod
     def get_doctor(cls, cursor, user_id):

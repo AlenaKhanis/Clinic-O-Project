@@ -3,6 +3,7 @@ import '../css/Tabs.css';
 import ClinicDetails from "./ClinicDetails";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DoctorsList from "./DocotorList";
+import Register from '../AddUserPatienOrDoctor';;
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -30,8 +31,10 @@ function AdminPagePatient({userId} : {userId: number}) {
                     
                    />
                 </Tab>
-                <Tab eventKey="Add Doctor" title="Add Doctor" className="tabs">
-                    Tab content for Add new doctor
+                <Tab eventKey="Add Doctor" title="Add Doctor/Patient" className="tabs">
+                    <Register
+                    BACKEND_URL={BACKEND_URL}
+                    />
                 </Tab>
                 <Tab eventKey="Show Appointment by doctor" title="Show Appointment" className="tabs">
                     Tab content for show appointment - filter by open \ cancel \ shedual \ all \ date

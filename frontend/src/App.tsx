@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Routes, Route, BrowserRouter, Navigate, useLocation } from "react-router-dom";
 import BlogSection from "./HomePage/BlogSection";
 import LoginForm from "./HomePage/LoginForm";
-import Register from "./HomePage/RegisterForm";
+import Register from './HomePage/RegisterForm';
 import Footer from "./HomePage/Footer";
 import HomeNavBar from "./HomePage/Navbar";
 import MainBody from "./HomePage/MainBody";

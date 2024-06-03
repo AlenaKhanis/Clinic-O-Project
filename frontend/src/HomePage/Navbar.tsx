@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/homePage.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { OffCanvasExample } from './OffCanvas';
@@ -17,11 +17,12 @@ type HomePageProps = {
   userName: string;
 };
 
-function HomeNavBar({ userToken, userName }: HomePageProps) {
+function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setRole, setUserToken  }: HomePageProps) {
   const [date, setDate] = useState(new Date());
   const hour = date.getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
   const formattedDate = format(date, 'PPpp');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -31,6 +32,19 @@ function HomeNavBar({ userToken, userName }: HomePageProps) {
       clearInterval(timer);
     };
   }, []);
+
+  function logOut() {
+    if (userToken) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("userinfo");
+      setUserToken(null);
+      setUserName("Guest");
+      setRole("");
+      navigate("/");
+    } else {
+      setShowLoginPopup(true);
+    }
+  }
 
   return (
     <>
@@ -42,11 +56,15 @@ function HomeNavBar({ userToken, userName }: HomePageProps) {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {!userToken && (
-                <Nav.Link style={{ color: 'white', textDecoration: 'none' }} href="/register">
-                  Register
-                </Nav.Link>
-              )}
+            {userToken ? (
+              <Nav.Link onClick={() => logOut()} style={{ color: 'white', textDecoration: 'none' }}>
+                Logout
+              </Nav.Link>
+            ) : (
+              <Nav.Link style={{ color: 'white', textDecoration: 'none' }} href="/register">
+                Register
+              </Nav.Link>
+            )}
               <Nav.Link style={{ color: 'white' }} href="link">
                 Link
               </Nav.Link>
