@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import './css/Register.css';
 import React from 'react';
 
-export default function Register({BACKEND_URL}:  {BACKEND_URL : string}) {
+export default function AddUserPatienOrDoctor({BACKEND_URL}:  {BACKEND_URL : string}) {
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [selectedPackage, setSelectedPackage] = useState<string>("");
   const [role, setRole] = useState<string>("patient");

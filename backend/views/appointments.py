@@ -59,6 +59,7 @@ def get_appointments(doctor_id) -> Response:
         cursor = db.cursor(cursor_factory=RealDictCursor)
         
         appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
+        print(appointments)
         return jsonify(appointments), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -158,5 +159,15 @@ def get_appointment_by_id(appointment_id):
         cursor = db.cursor(cursor_factory=RealDictCursor)
         appointment = Appointment.get_appointment_by_id(cursor, appointment_id)
         return jsonify(appointment), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route("/get_all_appt")    
+def get_all_appt():
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=RealDictCursor)
+        appointments = Appointment.get_all_appt(cursor)
+        return jsonify(appointments), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -74,8 +74,8 @@ class Appointment:
                 (doctor_id))
 
             all_appointments = cursor.fetchall()
-
             return all_appointments
+        
 
         except Exception as e:
             print("Error getting appointments:", e)
@@ -205,4 +205,16 @@ class Appointment:
             return appointment
         except Exception as e:
             print("Error getting appointment by id:", e)
+            return None
+
+    @classmethod
+    def get_all_appt(cls , cursor):
+        try:
+            cursor.execute("""
+                SELECT * FROM appointments;
+            """)
+            appointments = cursor.fetchall()
+            return appointments
+        except Exception as e:
+            print("Error getting all appointments:", e)
             return None

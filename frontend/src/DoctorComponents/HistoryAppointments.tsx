@@ -27,16 +27,14 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
 
    useEffect(() => {
     // Create a unique set of patient IDs
-    const patientIds = new Set(selectHistoryAppointments.map(appointment => appointment.patient_id));
-    console.log(patientIds);
-
-    patientIds.forEach(id => {
-        getPatientById(id)
-            .then((patient: Patient) => {
-                setPatient(patient);
-            })
-    });
-}, [selectHistoryAppointments]);
+        const patientIds = new Set(selectHistoryAppointments.map(appointment => appointment.patient_id));
+        patientIds.forEach(id => {
+            getPatientById(id)
+                .then((patient: Patient) => {
+                    setPatient(patient);
+                })
+        });
+    }, [selectHistoryAppointments]);
 
     const toggleAppointmentDetails = (appointmentId: number) => {
         setOpenAppointments(prevState => ({
