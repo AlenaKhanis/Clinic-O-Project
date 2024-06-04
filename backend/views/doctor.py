@@ -52,7 +52,6 @@ def edit_doctor_profile_by_admin(doctor_id):
             for field, value in updated_data.items():
                 User.edit_doctor_user_profile(cursor, doctor_id, field, value)
                 updated_fields[field] = value 
-                print(updated_fields) 
             db.commit()
             return jsonify({'updated_fields': updated_fields})
         except Exception as e:

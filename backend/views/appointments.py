@@ -66,7 +66,7 @@ def get_appointments(doctor_id) -> Response:
 #TODO: change to scedual appointment to patient
 @bp.route('/schedule_appointment/<appointment_id>/<patient_id>', methods=['POST'])
 def schedule_appointment(appointment_id, patient_id) -> Response:
-    print(appointment_id, patient_id)
+    # print(appointment_id, patient_id)
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)

@@ -14,7 +14,6 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
         if (doctorId) {
             fetchDoctorAppointments(doctorId)
                 .then((data: Appointment[]) => {
-                    console.log(data);
                     setAppointment(data);
                 })
                 .catch(error => console.error('Error fetching doctor appointments:', error));

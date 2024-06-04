@@ -7,9 +7,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 export const useDoctorAppointments = () => {
   const [appointments, ] = useState<Appointment[]>([]);
   const [selectedDoctorAppointments, ] = useState<Appointment[]>([]);
-  const [selectHistoryAppointments, ] = useState<Appointment[]>([]);
+  const [selectHistoryAppointments, setSelectHistoryAppointments] = useState<Appointment[]>([]);
   const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
   const { parseDateTime } = useGlobalFunctions();
+
 
   const fetchDoctorAppointments = async (doctorID: number) => {
      try {
@@ -40,6 +41,7 @@ export const useDoctorAppointments = () => {
       const response = await fetch(`${BACKEND_URL}/get_appointments_history/${doctorID}`);
       const data = await response.json();
       const parsedData = parseDateTime(data);
+      setSelectHistoryAppointments(parsedData);
       return parsedData.sort((a, b) => (a.date_time > b.date_time ? 1 : -1));
     } catch (error) {
       console.error('Error fetching history appointments:', error);
