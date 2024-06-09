@@ -19,12 +19,12 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
-  const { getDoctorById, fetchDoctorAppointments, handleSaveChanges } = useDoctorAppointments(); // Destructure handleSaveChanges here
   const { getPatientById } = usePatientDetails();
   const [showEditModal, setShowEditModal] = useState(false);
   const [, setShowAlert] = useState<boolean>(false);
   const [, setAlertMessage] = useState<string | null>(null);
   const [, setAlertVariant] = useState<'success' | 'danger'>('success');
+  const { getDoctorById, fetchDoctorAppointments, handleSaveChanges } = useDoctorAppointments(); 
 
   useEffect(() => {
     if (doctorID) {
@@ -170,7 +170,7 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
           showEditModal={showEditModal}
         />
       )}
-            <Modal
+      <Modal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
       >

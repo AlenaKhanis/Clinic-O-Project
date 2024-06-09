@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 function DoctorsList({ BACKEND_URL }: OwnerProps) {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  
   useEffect(() => {
     fetch(`${BACKEND_URL}/doctors`)
       .then((response) => {

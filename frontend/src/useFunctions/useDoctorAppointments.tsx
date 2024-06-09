@@ -63,7 +63,7 @@ export const useDoctorAppointments = () => {
   const handleSaveChanges = async (editedDoctor: Doctor, setAlert: (message: string, variant: 'success' | 'danger') => void, originalDoctor: Doctor) => {
     if (editedDoctor && originalDoctor) {
       try {
-        // Construct an object with only the changed fields
+        //Build an object with only the changed fields
         const editedFields: Partial<Doctor> = {};
         for (const key in editedDoctor) {
           if (editedDoctor[key as keyof Doctor] !== originalDoctor[key as keyof Doctor]) {

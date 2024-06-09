@@ -63,3 +63,17 @@ class Patient(User):
             print(e)
             return None
 
+    @classmethod
+    def get_all_patients(cls, cursor):
+        try:
+            cursor.execute("""
+                SELECT DISTINCT p.*, u.username, u.full_name, u.age, u.email, u.phone
+                FROM patients p
+                INNER JOIN users u ON u.id = p.patient_id;
+                """)
+            patients_data = cursor.fetchall()
+            print(patients_data)
+            return patients_data
+        except Exception as e:
+            print(e)
+            return None

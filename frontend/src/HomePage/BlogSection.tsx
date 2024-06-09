@@ -16,6 +16,7 @@ type BlogPost = {
 function BlogSection() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     fetch('https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=714e1b2241d04060a77d54fca596b8b7')
@@ -37,14 +38,15 @@ function BlogSection() {
       })
       .catch((error) => {
         console.error('Error fetching posts:', error);
-        setIsLoading(false); // even if there's an error, stop loading
+        setIsLoading(false); 
+        setHasError(true);
       });
   }, []);
 
   return (
     <Container className='blog-container'>
       <Row xs={1} md={2} lg={4} className="g-4">
-        {isLoading ? (
+        {isLoading || hasError ? (
           Array.from({ length: 4 }).map((_, index) => (
             <Col key={index} className="mb-4">
               <Card style={{ width: '18rem', height: '24rem' }}>

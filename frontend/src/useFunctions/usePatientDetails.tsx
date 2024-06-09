@@ -62,11 +62,23 @@ const cancelAppointment = ( appointmentId: number): Promise<void> => {
       });
 };
 
+const getAllPartients = (): Promise<Patient[]> => {
+  return fetch(`${BACKEND_URL}/get_all_patients`)
+    .then(response => response.json())
+    .then((data: Patient[]) => {
+      return data;
+    })
+    .catch(error => {
+      console.error("Error fetching all patients:", error);
+      throw error;
+    });
+  }
+
   return {
     getPatientById,
     getPatientHistoryAppointments,
     getPatientAppointments,
-    cancelAppointment
-    
+    cancelAppointment,
+    getAllPartients
   };
 };

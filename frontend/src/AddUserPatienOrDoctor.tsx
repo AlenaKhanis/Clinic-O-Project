@@ -176,11 +176,11 @@ export default function AddUserPatienOrDoctor({BACKEND_URL}:  {BACKEND_URL : str
   const areErrorsAbsent = errors.every(error => !error);
   const isPackageSelected = role === 'patient' ? !!selectedPackage : true;
 
-  console.log('fields:', fields);
-  console.log('errors:', errors);
-  console.log('areFieldsFilled:', areFieldsFilled);
-  console.log('areErrorsAbsent:', areErrorsAbsent);
-  console.log('isPackageSelected:', isPackageSelected);
+  // console.log('fields:', fields);
+  // console.log('errors:', errors);
+  // console.log('areFieldsFilled:', areFieldsFilled);
+  // console.log('areErrorsAbsent:', areErrorsAbsent);
+  // console.log('isPackageSelected:', isPackageSelected);
 
   setIsFormValid(areFieldsFilled && areErrorsAbsent && isPackageSelected);
 }, [selectedPackage, username, email, password, confirmPassword, usernameError, passwordError, fullNameError, emailError, specialtyError, specialties, role]);

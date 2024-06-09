@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import DoctorsList from "./DocotorList";
 import AddUserPatienOrDoctor from "../AddUserPatienOrDoctor";
 import ShowAllAppt from "./ShowAllAppt";
+import ShowAllPatients from "./ShowAllPatinets";
 
 
 
@@ -43,7 +44,9 @@ function AdminPagePatient({userId} : {userId: number}) {
                     BACKEND_URL={BACKEND_URL} />
                 </Tab>
                 <Tab eventKey="Show all patient " title="Show all patient" className="tabs">
-                    Tab content show all patient + update button + delete button 
+                    <ShowAllPatients 
+                    BACKEND_URL={BACKEND_URL}
+                    />
                 </Tab>
             </Tabs>
         </div>
