@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Doctor, PatientProps } from "../Types";
 
-
+//TODO: when no doctors are found, display a message to the user
 
 function MyDoctors({BACKEND_URL , patientId, refreshAppointments }: PatientProps) {
     const [doctor, setdoctor] = useState<Doctor[]>([]);

@@ -77,7 +77,7 @@ function App() {
   return (
     <BrowserRouter>
       <Cover>
-        <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} />
+        <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} setRole={setRole} userName={userName} role={userRole} />
         <Routes>
           <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
           <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />

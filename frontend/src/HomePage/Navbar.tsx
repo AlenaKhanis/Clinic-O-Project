@@ -15,9 +15,10 @@ type HomePageProps = {
   userToken?: string | null;
   setRole: React.Dispatch<React.SetStateAction<string>>;
   userName: string;
+  role: string;
 };
 
-function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setRole, setUserToken  }: HomePageProps) {
+function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setRole, setUserToken , role }: HomePageProps) {
   const [date, setDate] = useState(new Date());
   const hour = date.getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
@@ -70,7 +71,7 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
               </Nav.Link>
             </Nav>
             <Nav.Item>{greeting}, {userToken ? userName : "Guest"}.<br /> {formattedDate}.</Nav.Item>
-            <OffCanvasExample placement="end" />
+            <OffCanvasExample placement="end" role={role} />
           </Navbar.Collapse>
         </Container>
       </Navbar>

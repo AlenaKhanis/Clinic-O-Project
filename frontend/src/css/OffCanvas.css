@@ -2,3 +2,29 @@
     background-color: #205a66;
     color: white;
 }
+
+  .my-offcanvas .offcanvas-header {
+    color: #fff; /* Header text color */
+  }
+  
+  .my-offcanvas .offcanvas-body {
+    padding: 20px; /* Padding inside the body */
+  }
+  
+  .my-offcanvas .offcanvas-body a {
+    display: block;
+    margin-bottom: 10px; /* Margin between links */
+
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .my-offcanvas .offcanvas-body a:hover {
+    text-decoration: underline; /* Add underline on hover */
+  }
+  
+  .my-offcanvas .offcanvas-body span {
+    display: block;
+    margin-bottom: 10px; /* Margin between elements */
+    color: #dc3545; /* Error message color */
+  }
+  

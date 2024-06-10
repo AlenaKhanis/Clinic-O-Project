@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
 //TODO: add css
+//TODO: when no patients are found, display a message
 
 function AllPatientView({ doctorId }: DoctorProps) {
   const [patients, setPatients] = useState<Patient[]>([]);

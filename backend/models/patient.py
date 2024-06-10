@@ -72,7 +72,6 @@ class Patient(User):
                 INNER JOIN users u ON u.id = p.patient_id;
                 """)
             patients_data = cursor.fetchall()
-            print(patients_data)
             return patients_data
         except Exception as e:
             print(e)

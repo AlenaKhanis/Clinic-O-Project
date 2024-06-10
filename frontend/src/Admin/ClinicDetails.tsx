@@ -31,7 +31,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
         console.error('Error fetching clinic details:', error);
         setErrorMessage('Error fetching clinic details');
       });
-  }, [BACKEND_URL]);
+  }, []);
 
   const handleEditToggle = () => {
     setEditing(!editing);

@@ -4,6 +4,8 @@ import { DoctorProps, Appointment } from '../Types';
 import { Link } from "react-router-dom";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
+//TODO: add delete appointment functionality
+
 
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
     const {fetchDoctorAppointments} = useDoctorAppointments();

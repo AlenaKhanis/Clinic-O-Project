@@ -6,6 +6,7 @@ import '../css/calendar.css';
 import { Alert, Button } from "react-bootstrap";
 
 //TODO: only add css!
+//TODO: remove the alert after a few seconds
 
 type AddAppointmentProps = {
     doctorId: number | null;

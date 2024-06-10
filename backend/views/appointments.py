@@ -34,8 +34,11 @@ def add_appointment()-> Response:
 #TODO: change name of route check if exsist appointment docot
 @bp.route("/check_appointment", methods=['GET'])
 def check_appointment()-> Response:
+
     appointment_datetime_str = request.args.get('datetime')
     doctor_id = request.args.get('doctor_id')
+
+    print(appointment_datetime_str)
 
     try:
         datetime_obj = datetime.fromisoformat(appointment_datetime_str)

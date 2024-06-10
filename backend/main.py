@@ -18,6 +18,8 @@ from views.patient import bp as patient
 from views.doctor import bp as doctors_bp
 from views.clinic import bp as clinic_bp
 
+#### Must Use in WSL Python 3.11!!!! ####
+
 
 app = Flask(__name__)
 app.config.from_prefixed_env()

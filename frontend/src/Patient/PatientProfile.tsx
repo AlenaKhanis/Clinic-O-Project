@@ -4,6 +4,10 @@ import { Button, Collapse, ListGroup } from "react-bootstrap";
 import "../css/PatientProfile.css";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
 
+//TODO: Edit profile form should be a modal
+//TODO: Add a button to delete patient profile
+// TODO: in backend add edit patient profile function
+
 function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const { getPatientById } = usePatientDetails();
