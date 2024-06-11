@@ -34,22 +34,22 @@ app.register_blueprint(patient)
 app.register_blueprint(doctors_bp)
 app.register_blueprint(clinic_bp)
 
-
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
     db = get_db()
-    cursor = db.cursor(cursor_factory=RealDictCursor)  
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
-    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
+    # Assuming your users table has a 'role' column
+    cursor.execute("SELECT id, role FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
     user = cursor.fetchone()
-    
-    if user:
-        access_token = create_access_token(identity=user["id"])
-        return {"access_token": access_token} , 200 
-    else:
-       return {"error": "Invalid username or password"} , 401
 
+    if user:
+        # Include the user's role in the token
+        access_token = create_access_token(identity=user["id"], additional_claims={"role": user["role"]})
+        return {"access_token": access_token}, 200
+    else:
+        return {"error": "Invalid username or password"}, 401
 
 # @app.route('/login', methods=['POST'])
 # def login():

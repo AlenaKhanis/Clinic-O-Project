@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import { Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { Table } from 'react-bootstrap';
-
-
- //TODO: check if same date like in the backend
 
 function DoctorPatients({ doctorId }: { doctorId: number }) {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -26,32 +23,36 @@ function DoctorPatients({ doctorId }: { doctorId: number }) {
   return (
     <div>
       <h1>Doctor's Patients</h1>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Package</th>
-            <th>Full Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Created date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {patients.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.package}</td>
-              <td>
-                <Link to={`/doctor/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link> 
-              </td>
-              <td>{patient.age}</td>
-              <td>{patient.email}</td>
-              <td>{patient.phone}</td>
-              <td>{new Date(patient.created_date).toLocaleString()}</td>
+      {patients.length > 0 ? (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Full Name</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Created date</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {patients.map((patient) => (
+              <tr key={patient.id}>
+                <td>{patient.package}</td>
+                <td>
+                  <Link to={`/doctor/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
+                </td>
+                <td>{patient.age}</td>
+                <td>{patient.email}</td>
+                <td>{patient.phone}</td>
+                <td>{new Date(patient.created_date).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      ) : (
+        <p>This doctor doesn't have any patients yet.</p>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import DoctorPatients from './DoctorPatients';
 import EditDoctorProfile from '../useFunctions/EditDoctorProfile';
 import { Doctor, OwnerProps, Appointment, Patient } from '../Types';
+import EditProfile from '../useFunctions/EditProfileProps';
 
 export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
   const { doctorId } = useParams<{ doctorId: string }>();
@@ -147,13 +148,17 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
             <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('all')}>All</Button>
           </div>
           <ListGroup>
-            {filteredAppointments.map((appointment, index) => (
-              <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}>
-                <div>Date: {appointment.date}</div>
-                <div>Time: {appointment.time}</div>
-                <div>Status: {appointment.status}</div>
-              </ListGroup.Item>
-            ))}
+            {filteredAppointments.length === 0 ? (
+              <ListGroup.Item>No appointments available</ListGroup.Item>
+            ) : (
+              filteredAppointments.map((appointment, index) => (
+                <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}>
+                  <div>Date: {appointment.date}</div>
+                  <div>Time: {appointment.time}</div>
+                  <div>Status: {appointment.status}</div>
+                </ListGroup.Item>
+              ))
+            )}
           </ListGroup>
         </div>
       </div>
@@ -163,12 +168,13 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
         </div>
       </div>
       {doctor && (
-        <EditDoctorProfile
-          doctor={doctor}
-          onSaveChanges={(editedDoctor, setAlert) => handleSaveChanges(editedDoctor, setAlert, doctor)}
-          onCancel={() => setShowEditModal(false)}
-          showEditModal={showEditModal}
-        />
+        <EditProfile
+        profile={doctor}
+        onSaveDoctorChanges={handleSaveChanges}
+        onCancel={() => setShowEditModal(false)}
+        showEditModal={showEditModal}
+      />
+      
       )}
       <Modal
         show={showDeleteModal}

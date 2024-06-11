@@ -10,10 +10,10 @@ type LoginFormProps = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
   setUserName: (userName: string) => void;
-  setRole: (userRole: string) => void;
+
 };
 
-function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginFormProps) {
+function LoginForm({ show, setShow, setUserToken, setUserName}: LoginFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -60,7 +60,6 @@ function LoginForm({ show, setShow, setUserToken, setUserName, setRole }: LoginF
             localStorage.setItem("userinfo", JSON.stringify(userData));
             setShow(false);
             setUserName(userData.full_name);
-            setRole(userData.role);
           })
           .catch(() => {
             setErrorMessage("An error occurred while fetching user information.");

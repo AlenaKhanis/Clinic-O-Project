@@ -4,12 +4,12 @@ import "../css/homePage.css";
 
 type HomePageProps = {
   setShowLoginPopup: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserToken: React.Dispatch<React.SetStateAction<string | null>>;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
-  userToken?: string | null;
   setRole: React.Dispatch<React.SetStateAction<string>>;
   userName: string;
   userRole: string;
+  userToken: string | null;
+  setUserToken: React.Dispatch<React.SetStateAction<string | null>>
 };
 
 function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {

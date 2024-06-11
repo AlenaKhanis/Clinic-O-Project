@@ -4,6 +4,7 @@ import HomePagePatient from "../Patient/PatientHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
 
 const PatientRoutes = ({ userRole }: { userRole: string }) => (
+
   
   <Routes>
     <Route
