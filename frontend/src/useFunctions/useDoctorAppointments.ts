@@ -13,9 +13,15 @@ export const useDoctorAppointments = () => {
 
 
   const fetchDoctorAppointments = async (doctorID: number) => {
-     try {
+    try {
       const response = await fetch(`${BACKEND_URL}/get_appointments/${doctorID}`);
       const data = await response.json();
+  
+      if (data === null) {
+        // No appointments found
+        return [];
+      }
+  
       const parsedAppointments = parseDateTime(data);
       return parsedAppointments.sort((a, b) => (a.date_time > b.date_time ? 1 : -1)); // TODO:check this
     } catch (error) {
@@ -23,6 +29,7 @@ export const useDoctorAppointments = () => {
       throw error;
     }
   };
+  
 
   const getDoctorById = async (doctorID: number) => {
     try {

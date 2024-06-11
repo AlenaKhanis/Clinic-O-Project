@@ -21,6 +21,7 @@ def check_username():
         return jsonify({'exists': False}), 200
 
     
+from datetime import datetime
 
 @bp.route('/register', methods=['POST'])
 def register():
@@ -29,7 +30,18 @@ def register():
     password = data.get('password')
     email = data.get('email')
     full_name = data.get('fullName')
-    role = data.get('role', 'patient') 
+    role = data.get('role', 'patient')
+    phone = data.get('phone')
+    birthday = data.get('birthday')
+    
+    print(role)
+    # Calculate age from birthday
+    def calculate_age(born):
+        today = datetime.today()
+        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    
+    age = calculate_age(datetime.strptime(birthday, '%Y-%m-%d'))
+    
 
     db = get_db()
     cursor = db.cursor()
@@ -40,7 +52,9 @@ def register():
                 password=hashed_password,
                 email=email,
                 full_name=full_name,
-                role=role)
+                role=role,
+                phone=phone,
+                age=age)
 
     user_id = user.add_user(cursor)
 
@@ -76,6 +90,7 @@ def register():
     else:
         db.rollback()
         return jsonify({'message': 'Failed to register user'}), 500
+
 
 
 

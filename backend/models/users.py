@@ -42,11 +42,11 @@ class User:
         try:
             cursor.execute(
                 """
-                INSERT INTO users (username, password, email, full_name, role)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO users (username, password, email, full_name, role , age , phone)
+                VALUES (%s, %s, %s, %s, %s ,%s ,%s)
                 RETURNING id
                 """,
-                (self.username, self.password, self.email, self.full_name, self.role)
+                (self.username, self.password, self.email, self.full_name, self.role , self.age , self.phone)
             )
             self.id = cursor.fetchone()[0] 
             return self.id

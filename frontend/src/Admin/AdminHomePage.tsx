@@ -3,7 +3,7 @@ import '../css/Tabs.css';
 import ClinicDetails from "./ClinicDetails";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DoctorsList from "./DocotorList";
-import AddUserPatienOrDoctor from "../AddUserPatienOrDoctor";
+import AddUserPatienOrDoctor from "./AddUserPatienOrDoctor";
 import ShowAllAppt from "./ShowAllAppt";
 import ShowAllPatients from "./ShowAllPatinets";
 
@@ -11,14 +11,13 @@ import ShowAllPatients from "./ShowAllPatinets";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-function AdminPagePatient({userId} : {userId: number}) {
+function AdminPagePatient() {
 
     return (
         <>
         <div className='welcome-div'>
             <h1>Here doctor panel</h1>
             <p>Welcome here you can do oparators</p>
-            <p>{userId}</p>
         </div>
         <div className="container">
             <Tabs  id="uncontrolled-tab-example" className="custom-tabs">
@@ -36,7 +35,6 @@ function AdminPagePatient({userId} : {userId: number}) {
                 </Tab>
                 <Tab eventKey="Add Doctor" title="Add Doctor/Patient" className="tabs">
                     <AddUserPatienOrDoctor
-                    BACKEND_URL={BACKEND_URL}
                     />
                 </Tab>
                 <Tab eventKey="Show Appointment" title="Show Appointment" className="tabs">
