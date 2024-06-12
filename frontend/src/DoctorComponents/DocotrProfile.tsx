@@ -3,13 +3,14 @@ import { Doctor, DoctorProps } from "../Types";
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/doctorProfile.css';
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
-import EditDoctorProfile from "../useFunctions/EditDoctorProfile";
 import { Button } from "react-bootstrap";
+import EditProfile from "../useFunctions/EditProfileProps";
 
 function DoctorProfile({ doctorId}:  DoctorProps ) {
     const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
-    const {getDoctorById , handleSaveChanges} = useDoctorAppointments();
+    const {getDoctorById} = useDoctorAppointments();
     const [showEditModal, setShowEditModal] = useState(false);
+    
 
     
     useEffect(() => {
@@ -37,12 +38,12 @@ function DoctorProfile({ doctorId}:  DoctorProps ) {
                 </ListGroup>
 
                 {selectedDoctorDetails && (
-                    <EditDoctorProfile
-                    doctor={selectedDoctorDetails}
-                    onSaveChanges={(editedDoctor, setAlert) => handleSaveChanges(editedDoctor, setAlert, selectedDoctorDetails)}
-                    onCancel={() => setShowEditModal(false)}
-                    showEditModal={showEditModal}
-                  />
+                     <EditProfile
+                     profile={selectedDoctorDetails}
+                     onCancel={() => setShowEditModal(false)}
+                     showEditModal={showEditModal}
+                     isOwner={false}
+                   />
                 )}
                 </>
             ) : (

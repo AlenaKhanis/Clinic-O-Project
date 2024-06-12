@@ -55,25 +55,25 @@ class User:
             return None
             
     @classmethod
-    def edit_doctor_user_profile(cls, cursor, doctor_id, field, value):
+    def edit_user_profile(cls, cursor, user_id, field, value):
         try:
             if field == 'specialty':  
                 cursor.execute(f"""
                     UPDATE doctors
                     SET {field} = %s
                     WHERE doctor_id = %s;
-                """, (value, doctor_id))
+                """, (value, user_id))
             else:    
                 cursor.execute(f"""
                     UPDATE users
                     SET {field} = %s
                     WHERE id = %s;
-                """, (value, doctor_id))
+                """, (value, user_id))
 
             cursor.execute(f"""
                 SELECT * FROM users
                 WHERE id = %s;
-            """, (doctor_id,))
+            """, (user_id,))
             updated_data = cursor.fetchone()
 
             return "Doctor profile updated successfully", updated_data

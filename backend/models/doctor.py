@@ -31,7 +31,7 @@ class Doctor(User):
     def get_doctor(cls, cursor, user_id):
         try:
             cursor.execute("""
-                SELECT DISTINCT d.*, u.username, u.full_name, u.age, u.email, u.phone, u.role 
+                SELECT DISTINCT d.*, u.username, u.full_name, u.age, u.email, u.phone
                 FROM doctors d
                 INNER JOIN users u ON u.id = d.doctor_id
                 WHERE u.id = %s;

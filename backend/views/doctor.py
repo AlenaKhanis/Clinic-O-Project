@@ -50,7 +50,7 @@ def edit_doctor_profile_by_admin(doctor_id):
         try:
             updated_fields = {}  
             for field, value in updated_data.items():
-                User.edit_doctor_user_profile(cursor, doctor_id, field, value)
+                User.edit_user_profile(cursor, doctor_id, field, value)
                 updated_fields[field] = value 
             db.commit()
             return jsonify({'updated_fields': updated_fields})

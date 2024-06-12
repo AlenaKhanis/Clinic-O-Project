@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from db import get_db
 from models.patient import Patient
 from psycopg2.extras import RealDictCursor
+from models.users import User
 
 bp = Blueprint("patient", __name__)
 
@@ -41,3 +42,25 @@ def get_all_patients():
     except Exception as e:
         print(f"Error in get_all_patients: {e}")
         return jsonify({"error": "An error occurred while retrieving patients."}), 500 
+    
+@bp.route('/edit_patient_profile/<patient_id>', methods=['POST'])
+def edit_doctor_profile_by_admin(patient_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    updated_data = request.json
+    doctor = Patient.get_patient(cursor, patient_id)
+
+    if doctor:
+        try:
+            updated_fields = {}  
+            for field, value in updated_data.items():
+                User.edit_user_profile(cursor, patient_id, field, value)
+                updated_fields[field] = value 
+            db.commit()
+            return jsonify({'updated_fields': updated_fields})
+        except Exception as e:
+            db.rollback()  
+            return jsonify({'error': f"Error updating doctor profile: {e}"}), 500
+    else:
+        return jsonify({'error': 'Doctor not found'}), 404    

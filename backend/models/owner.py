@@ -12,7 +12,7 @@ class Owner(User):
     @classmethod
     def get_owner(cls, cursor, user_id):
         cursor.execute("""
-            SELECT DISTINCT o.*, u.username, u.full_name, u.age, u.email, u.phone, u.role 
+            SELECT DISTINCT o.*, u.username, u.full_name, u.age, u.email, u.phone
             FROM owner o
             INNER JOIN users u ON u.id = o.owner_id
             WHERE u.id = %s;

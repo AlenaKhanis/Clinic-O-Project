@@ -5,7 +5,6 @@ import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import '../css/doctorProfile.css';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import DoctorPatients from './DoctorPatients';
-import EditDoctorProfile from '../useFunctions/EditDoctorProfile';
 import { Doctor, OwnerProps, Appointment, Patient } from '../Types';
 import EditProfile from '../useFunctions/EditProfileProps';
 
@@ -25,7 +24,7 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
   const [, setShowAlert] = useState<boolean>(false);
   const [, setAlertMessage] = useState<string | null>(null);
   const [, setAlertVariant] = useState<'success' | 'danger'>('success');
-  const { getDoctorById, fetchDoctorAppointments, handleSaveChanges } = useDoctorAppointments(); 
+  const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments(); 
 
   useEffect(() => {
     if (doctorID) {
@@ -170,9 +169,9 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
       {doctor && (
         <EditProfile
         profile={doctor}
-        onSaveDoctorChanges={handleSaveChanges}
         onCancel={() => setShowEditModal(false)}
         showEditModal={showEditModal}
+        isOwner={true}
       />
       
       )}

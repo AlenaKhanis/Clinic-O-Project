@@ -3,21 +3,18 @@ import { Patient, PatientProps } from "../Types";
 import { Button, Collapse, ListGroup } from "react-bootstrap";
 import "../css/PatientProfile.css";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
+import EditProfile from "../useFunctions/EditProfileProps";
 
-//TODO: Edit profile form should be a modal
-//TODO: Add a button to delete patient profile
-// TODO: in backend add edit patient profile function
 
-function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
+
+function PatientProfile({  patientId }: PatientProps) {
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const { getPatientById } = usePatientDetails();
-    const [open, setOpen] = useState(false);
+
     const [openDiagnosis, setOpenDiagnosis] = useState(false);
     const [openPrescription, setOpenPrescription] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
-    const [editedFullName, setEditedFullName] = useState("");
-    const [editedEmail, setEditedEmail] = useState("");
-    const [editedPhone, setEditedPhone] = useState("");
 
     useEffect(() => {
         if (patientId) {
@@ -27,59 +24,8 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
                 })
                 .catch(error => console.error("Error fetching patient details:", error));
         }
-    }, [patientId, refreshAppointments]);
-
-    useEffect(() => {
-        if (selectedPatientDetails) {
-            setEditedFullName(selectedPatientDetails.full_name);
-            setEditedEmail(selectedPatientDetails.email);
-            setEditedPhone(selectedPatientDetails.phone);
-        }
-    }, [selectedPatientDetails]);
-
-    const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedFullName(e.target.value);
-    };
-
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedEmail(e.target.value);
-    };
-
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPhone(e.target.value);
-    };
-
-    const handleSaveFullName = () => {
-        saveChangesToBackend("full_name", editedFullName);
-    };
-
-    const handleSaveEmail = () => {
-        saveChangesToBackend("email", editedEmail);
-    };
-
-    const handleSavePhone = () => {
-        saveChangesToBackend("phone", editedPhone);
-    };
-
-    const saveChangesToBackend = (field: string, value: string) => {
-        fetch(`${BACKEND_URL}/edit_patient_profile/${patientId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ field, value }),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            console.log(`Updated ${field} successfully!`);
-        })
-        .catch((error) => {
-            console.error(`Error updating ${field}:`, error);
-        });
-    };
-
+    }, [patientId ,showEditModal]);
+  
     return (
         <div className="patient-profile-container">
             {selectedPatientDetails ? (
@@ -122,6 +68,7 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
                             >
                                 Prescriptions
                             </Button>
+                            
                             <Collapse in={openPrescription}>
                                 <div id="collapse-prescription">
                                     {Array.isArray(selectedPatientDetails.prescription) && selectedPatientDetails.prescription.length > 0 ? (
@@ -136,44 +83,18 @@ function PatientProfile({ BACKEND_URL, patientId, refreshAppointments }: Patient
                                 </div>
                             </Collapse>
                         </ListGroup.Item>
-                                        <Button
-                        onClick={() => setOpen(!open)}
-                        aria-controls="collapse-profile-form"
-                        aria-expanded={open}
-                    >
-                        Edit Profile
-                    </Button>
-                    <Collapse in={open}>
-                        <div id="collapse-profile-form" className="container-profile">
-                            <h2>Edit Profile</h2>
-                            <label>Full Name:</label>
-                            <input
-                                type="text"
-                                value={editedFullName}
-                                onChange={handleFullNameChange}
+                        <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                       {selectedPatientDetails && (
+                            <EditProfile
+                                profile={selectedPatientDetails}
+                                onCancel={() => setShowEditModal(false)}
+                                showEditModal={showEditModal}
+                                isOwner={false}
                             />
-                            <Button onClick={handleSaveFullName}>Save</Button>
-                            <br />
-                            <label>Email:</label>
-                            <input
-                                type="email"
-                                value={editedEmail}
-                                onChange={handleEmailChange}
-                            />
-                            <Button onClick={handleSaveEmail}>Save</Button>
-                            <br />
-                            <label>Phone Number:</label>
-                            <input
-                                type="tel"
-                                value={editedPhone}
-                                onChange={handlePhoneChange}
-                            />
-                            <Button onClick={handleSavePhone}>Save</Button>
-                            <br />
-                        </div>
-                    </Collapse>
+                        )}
                     </ListGroup>
-                    </>
+                            
+                    </>               
             ) : (
                 <p>Loading patient profile...</p>
             )}

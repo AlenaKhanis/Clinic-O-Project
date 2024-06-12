@@ -93,4 +93,51 @@ def register():
 
 
 
+# @bp.route("/verify_password", methods=["POST"])
+# def verify_password():
+#     data = request.get_json()
+#     current_password = data.get("currentPassword")
+#     username = data.get("username")
 
+#     db = get_db()
+#     cursor = db.cursor()
+
+#     # Retrieve the hashed password from the database
+#     cursor.execute("SELECT hashed_password FROM users WHERE username = ?", (username,))
+#     user_data = cursor.fetchone()
+
+#     if user_data:
+#         hashed_password = user_data[0]
+
+#         # Check if the provided password matches the hashed password
+#         if bcrypt.checkpw(current_password.encode('utf-8'), hashed_password.encode('utf-8')):
+#             return jsonify({"message": "Password verification successful"}), 200
+#         else:
+#             return jsonify({"error": "Incorrect username or password"}), 401
+#     else:
+#         return jsonify({"error": "User not found"}), 404
+
+# @bp.route("/change_password", methods=["POST"])
+# def change_password():
+#     data = request.get_json()
+#     new_password = data.get("newPassword")
+#     username = data.get("username")
+
+#     db = get_db()
+#     cursor = db.cursor()
+
+#     # Hash the new password before storing it in the database
+#     hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+#     try:
+#         # Update the password for the user in the database
+#         cursor.execute("UPDATE users SET hashed_password = ? WHERE username = ?", (hashed_new_password, username))
+#         db.commit()
+
+#         return jsonify({"message": "Password changed successfully"}), 200
+#     except Exception as e:
+#         db.rollback()
+#         return jsonify({"error": "Failed to change password", "details": str(e)}), 500
+#     finally:
+#         cursor.close()
+#         db.close()
