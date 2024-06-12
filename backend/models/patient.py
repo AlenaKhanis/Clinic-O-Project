@@ -20,7 +20,7 @@ class Patient(User):
     @classmethod
     #TODO: change to get patient by id
     def get_patient(cls, cursor, user_id):
-        print(user_id)
+       
         cursor.execute("""
             SELECT DISTINCT p.*, u.username, u.full_name, u.age, u.email, u.phone
             FROM patients p

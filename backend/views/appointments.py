@@ -38,7 +38,7 @@ def check_appointment()-> Response:
     appointment_datetime_str = request.args.get('datetime')
     doctor_id = request.args.get('doctor_id')
 
-    print(appointment_datetime_str)
+
 
     try:
         datetime_obj = datetime.fromisoformat(appointment_datetime_str)
@@ -62,7 +62,7 @@ def get_appointments(doctor_id) -> Response:
         cursor = db.cursor(cursor_factory=RealDictCursor)
         
         appointments = Appointment.get_appointment_by_doctor_id(cursor, doctor_id)
-        print(appointments)
+
         return jsonify(appointments), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

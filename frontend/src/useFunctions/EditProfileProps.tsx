@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Alert, Form } from 'react-bootstrap';
 import { Doctor, Patient, Owner } from '../Types';
+import { validateUsername, validateEmail, validateFullName, validatePhone, validateSpecialty } from '../validations'; // Adjust the path as needed
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 type EditProfileProps = {
   profile: Doctor | Patient | Owner;
@@ -16,9 +19,12 @@ export default function EditProfile({ profile, onSaveDoctorChanges, onSavePatien
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertVariant, setAlertVariant] = useState<'success' | 'danger'>('success');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [changedFields, setChangedFields] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     setEditedProfile(profile);
+    setChangedFields({});
   }, [profile]);
 
   const [userRole, setRole] = useState<string>(() => {
@@ -31,29 +37,74 @@ export default function EditProfile({ profile, onSaveDoctorChanges, onSavePatien
     }
   });
 
-  console.log(userRole);
-  
-  const handleSaveChanges = () => {
-    if (isDoctorProfile(editedProfile) && userRole=== 'admin') {
-      onSaveDoctorChanges(editedProfile as Doctor);
-    } else if (isPatientProfile(editedProfile)) {
-      onSavePatientChanges(editedProfile as Patient);
-    } else if (isOwnerProfile(editedProfile) && userRole=== 'admin') {
-      onSaveOwnerChanges(editedProfile as Owner);
+  const handleSaveChanges = async () => {
+    const validationErrors: { [key: string]: string } = {};
+
+    if (changedFields.full_name) {
+      validationErrors.full_name = validateFullName(editedProfile.full_name);
+    }
+    if (changedFields.email) {
+      validationErrors.email = validateEmail(editedProfile.email);
+    }
+    if (changedFields.phone) {
+      validationErrors.phone = validatePhone(editedProfile.phone);
+    }
+    if (changedFields.username) {
+      validationErrors.username = await validateUsername(editedProfile.username, BACKEND_URL);
+    }
+    if (changedFields.specialty && isDoctorProfile(editedProfile) && userRole === 'owner') {
+      validationErrors.specialty = validateSpecialty((editedProfile as Doctor).specialty);
+    }
+
+    const hasErrors = Object.values(validationErrors).some((error) => error !== "");
+    setErrors(validationErrors);
+
+    if (!hasErrors) {
+      if (isDoctorProfile(editedProfile) && userRole === 'owner') {
+        onSaveDoctorChanges(editedProfile as Doctor);
+      } else if (isPatientProfile(editedProfile)) {
+        onSavePatientChanges(editedProfile as Patient);
+      } else if (isOwnerProfile(editedProfile) && userRole === 'owner') {
+        onSaveOwnerChanges(editedProfile as Owner);
+      } else {
+        console.error('Invalid profile type for editing');
+      }
     } else {
-      // Handle other profile types or show an error
-      console.error('Invalid profile type for editing');
+      setShowAlert(true);
+      setAlertMessage('Please fix the errors before saving.');
+      setAlertVariant('danger');
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedProfile(prevProfile => ({
       ...prevProfile,
       [name]: value
     }));
+
+    setChangedFields(prevChangedFields => ({
+      ...prevChangedFields,
+      [name]: true
+    }));
+
+    const validationErrors = { ...errors };
+
+    if (name === 'full_name') {
+      validationErrors.full_name = validateFullName(value);
+    } else if (name === 'email') {
+      validationErrors.email = validateEmail(value);
+    } else if (name === 'phone') {
+      validationErrors.phone = validatePhone(value);
+    } else if (name === 'username') {
+      validationErrors.username = await validateUsername(value, BACKEND_URL);
+    } else if (name === 'specialty' && userRole === 'owner') {
+      validationErrors.specialty = validateSpecialty(value);
+    }
+
+    setErrors(validationErrors);
   };
-  
+
   const handleCloseModal = () => {
     onCancel();
     setShowAlert(false);
@@ -74,28 +125,69 @@ export default function EditProfile({ profile, onSaveDoctorChanges, onSavePatien
         )}
         <Form>
           <Form.Group controlId="formProfileName">
-            Name:
+            <Form.Label>Name:</Form.Label>
             <Form.Control
               type="text"
               name="full_name"
               value={editedProfile.full_name}
               onChange={handleChange}
+              isInvalid={!!errors.full_name}
             />
+            <Form.Control.Feedback type="invalid">{errors.full_name}</Form.Control.Feedback>
           </Form.Group>
-          {userRole === 'admin' && (
+
+          <Form.Group controlId="formProfileUsername">
+            <Form.Label>Username:</Form.Label>
+            <Form.Control
+              type="text"
+              name="username"
+              value={editedProfile.username}
+              onChange={handleChange}
+              isInvalid={!!errors.username}
+            />
+            <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group controlId="formProfileEmail">
+            <Form.Label>Email:</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={editedProfile.email}
+              onChange={handleChange}
+              isInvalid={!!errors.email}
+            />
+            <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group controlId="formProfilePhone">
+            <Form.Label>Phone:</Form.Label>
+            <Form.Control
+              type="text"
+              name="phone"
+              value={editedProfile.phone}
+              onChange={handleChange}
+              isInvalid={!!errors.phone}
+            />  
+            <Form.Control.Feedback type="invalid">{errors.phone}</Form.Control.Feedback>
+          </Form.Group>
+
+          {userRole === 'owner' && (
             <Form.Group controlId="formProfileSpecialty">
-              Specialty:
+              <Form.Label>Specialty:</Form.Label>
               <Form.Control
                 type="text"
                 name="specialty"
                 value={(editedProfile as Doctor).specialty} // Only available for doctor profile
                 onChange={handleChange}
+                isInvalid={!!errors.specialty}
               />
+              <Form.Control.Feedback type="invalid">{errors.specialty}</Form.Control.Feedback>
             </Form.Group>
           )}
           {userRole === 'patient' && (
             <Form.Group controlId="formProfilePackage">
-              Package:
+              <Form.Label>Package:</Form.Label>
               <Form.Control
                 type="text"
                 name="package"
@@ -104,7 +196,7 @@ export default function EditProfile({ profile, onSaveDoctorChanges, onSavePatien
               />
             </Form.Group>
           )}
-          {/* Additional form fields based on user's role */}
+          
         </Form>
       </Modal.Body>
       <Modal.Footer>
