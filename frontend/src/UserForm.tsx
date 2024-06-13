@@ -18,6 +18,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 interface UserFormProps {
   isAdmin: boolean;
+  role: 'patient' | 'doctor';
   initialData?: {
     username?: string;
     fullName?: string;

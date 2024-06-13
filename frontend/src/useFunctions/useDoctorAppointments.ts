@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Appointment, Doctor, Owner, Patient } from "../Types";
+import { Appointment, Doctor, Patient } from "../Types";
 import { useGlobalFunctions } from "./useGlobalFunctions";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;

@@ -1,11 +1,11 @@
 // HistoryAppointments.tsx
 import { useEffect, useState } from 'react';
-import { Appointment, Doctor } from './Types';
+import { Appointment, Doctor } from '../Types';
 import { Button, Collapse, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { usePatientDetails } from './useFunctions/usePatientDetails';
-import { useDoctorAppointments } from './useFunctions/useDoctorAppointments';
-import './css/HistoryAppt.css';
+import { usePatientDetails } from '../useFunctions/usePatientDetails';
+import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
+import '../css/HistoryAppt.css';
 
 
 const HistoryAppointments = () => {

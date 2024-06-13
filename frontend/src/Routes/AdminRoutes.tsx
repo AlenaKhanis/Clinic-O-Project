@@ -21,8 +21,7 @@ const AdminRoutes = ({ userRole }: { userRole: string, userId: number }) => (
       path='doctor-profile/:doctorId'
       element={
         <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
-          <DoctorProfile
-           BACKEND_URL={BACKEND_URL}  />
+          <DoctorProfile/>
         </ProtectedRoute>
       }
       />

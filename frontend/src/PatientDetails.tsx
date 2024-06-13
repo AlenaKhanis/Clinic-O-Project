@@ -89,10 +89,13 @@ const PatientDetails = ({isowner} : {isowner : boolean}) => {
           </div>
         </div>
       )}
-      {isowner && (
+      {}
+      {isowner && patient && (
         <EditProfile
-
-          isOwner={isowner}
+        profile={patient}
+        onCancel={() => {}}
+        showEditModal={true}
+        isOwner={isowner}
         />
       )}
     </>

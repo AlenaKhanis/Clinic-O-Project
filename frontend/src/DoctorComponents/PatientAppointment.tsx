@@ -6,7 +6,7 @@ import '../css/AppointmentSummeryForm.css';
 import '../css/Tabs.css';
 import Collapse from 'react-bootstrap/Collapse';
 import { useAppointmentActions } from "../useFunctions/useAppointmentActions";
-import HistoryAppointments from "../HistoryPatientAppointments";
+import HistoryAppointments from "../Patient/HistoryPatientAppointments";
 import PatientDetails from "../PatientDetails";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
 

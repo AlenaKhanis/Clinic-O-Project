@@ -26,7 +26,7 @@ function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner
 
     return (
         <div>
-            <h1>My Doctors</h1>
+            <h1>Patient Doctors</h1>
             {doctor.length === 0 ? (
                 <p>No doctors found.</p>
             ) : (
