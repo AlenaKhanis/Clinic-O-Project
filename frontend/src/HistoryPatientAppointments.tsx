@@ -5,6 +5,7 @@ import { Button, Collapse, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { usePatientDetails } from './useFunctions/usePatientDetails';
 import { useDoctorAppointments } from './useFunctions/useDoctorAppointments';
+import './css/HistoryAppt.css';
 
 
 const HistoryAppointments = () => {
@@ -56,8 +57,9 @@ const HistoryAppointments = () => {
 
     return (
         <>
+        <div className="box-histoty_main" >
             <Button
-                style={{ width: 'fit-content' }}
+                className='history-appointments-button'
                 variant="outline-dark"
                 onClick={() => setOpen(!open)}
                 aria-controls="example-collapse-text"
@@ -97,6 +99,7 @@ const HistoryAppointments = () => {
                     </Table>
                 </div>
             </Collapse>
+            </div>
         </>
     );
 };

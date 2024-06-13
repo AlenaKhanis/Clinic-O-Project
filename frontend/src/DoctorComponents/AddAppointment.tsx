@@ -1,16 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import '../css/Tabs.css';
 import 'react-calendar/dist/Calendar.css';
 import '../css/calendar.css';
 import { Alert, Button } from "react-bootstrap";
 
-//TODO: only add css!
-//TODO: remove the alert after a few seconds
-
 type AddAppointmentProps = {
     doctorId: number | null;
-    onSuccess: () => void; // Function to trigger when a new appointment is successfully added
+    onSuccess: () => void;
 }
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -21,6 +18,16 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
     const [alertMessage, setAlertMessage] = useState<string>('');
     const [alertVariant, setAlertVariant] = useState<'danger' | 'success'>('danger');
     const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [alertTimer, setAlertTimer] = useState<number | null>(null); // Use 'number | null' for setTimeout return type
+
+    useEffect(() => {
+        // Clear the alert timer when component unmounts or when alert state changes
+        return () => {
+            if (alertTimer) {
+                clearTimeout(alertTimer);
+            }
+        };
+    }, [alertTimer]);
 
     const handleDateChange = (date: Date) => {
         setSelectedDate(date);
@@ -57,6 +64,9 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     setAlertVariant('danger');
                     setAlertMessage("Appointment already exists for selected date and time.");
                     setShowAlert(true);
+                    setAlertTimer(setTimeout(() => {
+                        setShowAlert(false);
+                    }, 3000)); // Hide alert after 3 seconds
                 } else {
                     fetch(`${BACKEND_URL}/add_appointment`, {
                         method: "POST",
@@ -68,11 +78,17 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                             setAlertVariant('success');
                             setAlertMessage(`Scheduled Appointment: Date: ${selectedDate?.toLocaleDateString()} Time: ${selectedTime}`);
                             setShowAlert(true);
-                            onSuccess();
+                            setAlertTimer(setTimeout(() => {
+                                setShowAlert(false);
+                                onSuccess(); // Trigger onSuccess callback after hiding alert
+                            }, 3000)); // Hide alert after 3 seconds
                         } else {
                             setAlertVariant('danger');
                             setAlertMessage("Oops! There was a problem scheduling the appointment.");
                             setShowAlert(true);
+                            setAlertTimer(setTimeout(() => {
+                                setShowAlert(false);
+                            }, 3000)); // Hide alert after 3 seconds
                         }
                     })
                     .catch(error => {
@@ -80,6 +96,9 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                         setAlertVariant('danger');
                         setAlertMessage("Oops! There was a problem scheduling the appointment.");
                         setShowAlert(true);
+                        setAlertTimer(setTimeout(() => {
+                            setShowAlert(false);
+                        }, 3000)); // Hide alert after 3 seconds
                     });
                 }
             })
@@ -88,6 +107,9 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                 setAlertVariant('danger');
                 setAlertMessage("Oops! There was a problem checking the appointment.");
                 setShowAlert(true);
+                setAlertTimer(setTimeout(() => {
+                    setShowAlert(false);
+                }, 3000)); // Hide alert after 3 seconds
             });
         } else {
             console.error("Date or Time not selected");

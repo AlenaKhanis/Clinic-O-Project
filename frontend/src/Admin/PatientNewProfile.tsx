@@ -1,0 +1,311 @@
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Button, Modal, ListGroup, Collapse } from 'react-bootstrap';
+
+import EditProfile from '../useFunctions/EditProfileProps';
+import MyDoctors from '../Patient/MyDoctors';
+
+import { Doctor, Appointment, Patient } from '../Types';
+import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
+import { usePatientDetails } from '../useFunctions/usePatientDetails';
+import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
+
+import '../css/doctorProfile.css';
+
+/**
+ * PatientProfile Component displays patient details, appointments, and allows editing if authorized.
+ * @param {boolean} isOwner - Indicates if the logged-in user owns this profile.
+ * @param {string} BACKEND_URL - URL for backend API.
+ */
+
+export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: boolean, BACKEND_URL: string }) {
+    const { patient_id } = useParams<{ patient_id: string }>();
+    const patientId = Number(patient_id);
+     // State variables
+    const [doctor, setDoctor] = useState<Doctor | null>(null);
+    const [patient, setPatient] = useState<Patient | null>(null);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
+    const [filter] = useState<string>('all');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
+    const [openPrescriptions, setOpenPrescriptions] = useState(false);
+    const [openDiagnosis, setOpenDiagnosis] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+
+    const [, setShowAlert] = useState<boolean>(false);
+    const [, setAlertMessage] = useState<string | null>(null);
+    const [, setAlertVariant] = useState<'success' | 'danger'>('success');
+
+    // Custom hooks from useDoctorAppointments and useGlobalFunctions
+    const { getDoctorById } = useDoctorAppointments();
+    const { getPatientById, getPatientAppointments } = usePatientDetails(); 
+    const {handleDeleteUser} = useGlobalFunctions();
+
+     // Fetch patient details and appointments on component mount or showEditModal change
+    useEffect(() => {
+        if (patientId) {
+        getPatientById(patientId)
+            .then((data: Patient) => {
+            setPatient(data);
+            })
+            .catch(error => console.error('Error fetching patient:', error));
+
+        getPatientAppointments(patientId)
+            .then((data: Appointment[]) => {
+                console.log(data);
+            setAppointments(data);
+            setFilteredAppointments(data);
+            })
+            .catch(error => console.error('Error fetching appointments:', error));
+        }
+    }, [patientId, showEditModal]);
+
+    // Fetch doctor details when selectedAppointment changes
+    useEffect(() => {
+        if (selectedAppointment && selectedAppointment.doctor_id) {
+        getDoctorById(selectedAppointment.doctor_id)
+            .then((data: Doctor) => {
+            setDoctor(data);
+            })
+            .catch(error => console.error('Error fetching doctor:', error));
+        }
+    }, [selectedAppointment]);
+
+    // Filter appointments based on filterType
+    const filterAppointments = (filterType: string) => {
+        const today = new Date();
+        const filteredAppointments = appointments.filter((appt) => {
+        const apptDate = new Date(appt.date_time);
+        switch (filterType) {
+            case 'today':
+            return apptDate.toDateString() === today.toDateString();
+            case 'thisWeek':
+            const startOfWeek = new Date(today);
+            const endOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+            return apptDate >= startOfWeek && apptDate <= endOfWeek;
+            case 'thisMonth':
+            return apptDate.getMonth() === today.getMonth();
+            default:
+            return true;
+        }
+        });
+        setFilteredAppointments(filteredAppointments);
+    };
+
+    // Handle appointment click event
+    const handleAppointmentClick = (appointment: Appointment) => {
+        setSelectedAppointment(appointment);
+        setShowAppointmentDetails(true);
+        if (appointment.patient_id) {
+        getPatientById(appointment.patient_id)
+            .then((data: Patient) => {
+            setPatient(data);
+            })
+            .catch(error => console.error('Error fetching patient:', error));
+        }
+    };
+
+    // Close appointment details modal
+    const handleCloseAppointmentDetails = () => {
+        setSelectedAppointment(null);
+        setShowAppointmentDetails(false);
+    };
+
+    // Handle delete button click event
+    const onDeleteClick = () => {
+        if (patient) {
+        handleDeleteUser(patient.patient_id, setAlertMessage, setAlertVariant, setShowAlert, setShowDeleteModal);
+        } else {
+        console.error('Patient is not selected or not available.');
+        }
+    };
+  
+  return (
+    <div className='doctor-container-profile'>
+      <div className='container-profile-for-doctor'>
+        <div className='profile-content'>
+          <div className='doctor-info'>
+            {patient && (
+              <>
+                <h2>Patient Details</h2>
+                <>
+                    <ListGroup>
+                        <ListGroup.Item>Patient Name: {patient.full_name}</ListGroup.Item>
+                        <ListGroup.Item>Age: {patient.age}</ListGroup.Item>
+                        <ListGroup.Item>Package: {patient.package}</ListGroup.Item>
+                        <ListGroup.Item>Phone: {patient.phone}</ListGroup.Item>
+                        <ListGroup.Item>Email: {patient.email}</ListGroup.Item>
+                    </ListGroup>
+                    <div style={{margin: '10px'}} >
+                        <Button
+                        style={{ width: 'fit-content', marginBottom: '10px' }}
+                        variant="outline-dark"
+                        onClick={() => setOpenDiagnosis(!openDiagnosis)}
+                        aria-controls="diagnosis-collapse-text"
+                        aria-expanded={openDiagnosis}
+                        >
+                        Diagnosis
+                        </Button>
+                        <Collapse in={openDiagnosis}>
+                        <div id="diagnosis-collapse-text">
+                            {Array.isArray(patient.deagnosis) && patient.deagnosis.length > 0 ? (
+                            <ListGroup as="ol" numbered>
+                                {patient.deagnosis.map((diagnosis: string, index: number) => (
+                                <ListGroup.Item as="li" key={index}>{diagnosis}</ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                            ) : (
+                            <p>NONE</p>
+                            )}
+                        </div>
+                        </Collapse>
+                        </div>
+                           <div>
+                            <Button
+                            style={{ width: 'fit-content', marginBottom: '10px' }}
+                            variant="outline-dark"
+                            onClick={() => setOpenPrescriptions(!openPrescriptions)}
+                            aria-controls="prescriptions-collapse-text"
+                            aria-expanded={openPrescriptions}
+                            >
+                            Prescriptions
+                            </Button>
+                            <Collapse in={openPrescriptions}>
+                            <div id="prescriptions-collapse-text">
+                                {Array.isArray(patient.prescription) && patient.prescription.length > 0 ? (
+                                <ListGroup as="ol" numbered>
+                                    {patient.prescription.map((prescription: string, index: number) => (
+                                    <ListGroup.Item as="li" key={index}>{prescription}</ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                                ) : (
+                                <p>NONE</p>
+                                )}
+                            </div>
+                            </Collapse>
+                        </div>
+                         
+                        </>
+                        
+                        
+                {isOwner && (
+                <>
+                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
+                </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className='appointments'>
+        <div className='appointments-sidebar'>
+          <h2>Appointments</h2>
+          <div className='filter-buttons'>
+            <Button variant={filter === 'today' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('today')}>Today</Button>
+            <Button variant={filter === 'thisWeek' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('thisWeek')}>This Week</Button>
+            <Button variant={filter === 'thisMonth' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('thisMonth')}>This Month</Button>
+            <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('all')}>All</Button>
+          </div>
+          <ListGroup>
+            {filteredAppointments.length === 0 ? (
+              <ListGroup.Item>No appointments available</ListGroup.Item>
+            ) : (
+              filteredAppointments.map((appointment, index) => (
+                <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}>
+                  <div>Date: {appointment.date}</div>
+                  <div>Time: {appointment.time}</div>
+                  <div>Status: {appointment.status}</div>
+                </ListGroup.Item>
+              ))
+            )}
+          </ListGroup>
+        </div>
+      </div>
+      <div className='doctor-patients-container'>
+        <div className='patient-sidebar'>
+          <MyDoctors 
+            BACKEND_URL={BACKEND_URL}
+            patientId={patientId}
+            isOwner={isOwner}
+          />
+        </div>
+      </div>
+      {patient && (
+        <EditProfile
+          profile={patient}
+          onCancel={() => setShowEditModal(false)}
+          showEditModal={showEditModal}
+          isOwner={isOwner}
+        />
+      )}
+      <Modal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete  {patient?.full_name}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={onDeleteClick}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showAppointmentDetails}
+        onHide={handleCloseAppointmentDetails}
+        
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Appointment Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedAppointment && (
+            <div>
+              {selectedAppointment.status === 'completed' && patient && (
+                <>
+                  <h4>Doctor: {doctor && doctor.full_name}</h4>
+                  <p>Patient: {patient.full_name}</p>
+                  <p>Summary: {selectedAppointment.summery}</p>
+                  <p>Written diagnosis: {selectedAppointment.writen_diagnosis}</p>
+                  <p>Written Prescription: {selectedAppointment.writen_prescription}</p>
+                </>
+              )}
+              {selectedAppointment.status === 'schedule' && (
+                <>
+                  <h4>Doctor: {doctor && doctor.full_name}</h4>  
+                  <p>Patient: {patient && patient.full_name}</p>
+                  <p>Information not yet provided.</p>
+                </>
+              )}
+              {selectedAppointment.status === 'open' && (
+                <p>No patient assigned to this appointment.</p>
+              )}
+            </div>
+          )}
+          {!selectedAppointment && <p>No appointment selected.</p>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAppointmentDetails}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
+}

@@ -98,7 +98,9 @@ const PatientDetail = () => {
         <>
             <div className="box-main-div">
                 {appointmentEnded && <Alert variant="success" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>Appointment has ended.</Alert>}
-                <PatientDetails />
+                <PatientDetails
+                isowner={false}
+                />
                 <HistoryAppointments />
                 <div>
                     <div style={{ padding: '20px', borderRadius: '8px' }}>

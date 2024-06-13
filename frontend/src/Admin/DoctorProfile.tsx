@@ -5,10 +5,11 @@ import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import '../css/doctorProfile.css';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import DoctorPatients from './DoctorPatients';
-import { Doctor, OwnerProps, Appointment, Patient } from '../Types';
+import { Doctor,Appointment, Patient } from '../Types';
 import EditProfile from '../useFunctions/EditProfileProps';
+import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
 
-export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
+export default function DoctorProfile() {
   const { doctorId } = useParams<{ doctorId: string }>();
   const doctorID = Number(doctorId);
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -25,6 +26,7 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
   const [, setAlertMessage] = useState<string | null>(null);
   const [, setAlertVariant] = useState<'success' | 'danger'>('success');
   const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments(); 
+  const {handleDeleteUser} = useGlobalFunctions();
 
   useEffect(() => {
     if (doctorID) {
@@ -96,27 +98,12 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
     setShowAppointmentDetails(false);
   };
 
-  const handleDelete = () => {
+  const onDeleteClick = () => {
     if (doctor) {
-      fetch(`${BACKEND_URL}/delete_doctor/${doctor.doctor_id}`, {
-        method: 'DELETE',
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        setAlertMessage('Doctor deleted successfully');
-        setAlertVariant('success');
-        setShowAlert(true);
-      })
-      .catch((error) => {
-        console.error('Error deleting doctor:', error);
-        setAlertMessage('Error deleting doctor');
-        setAlertVariant('danger');
-        setShowAlert(true);
-      });
+      handleDeleteUser(doctor.doctor_id, setAlertMessage, setAlertVariant, setShowAlert, setShowDeleteModal);
+    } else {
+      console.error('Doctor is not selected or not available.');
     }
-    setShowDeleteModal(false);
   };
 
   return (
@@ -192,7 +179,7 @@ export default function DoctorProfile({ BACKEND_URL }: OwnerProps) {
           >
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" onClick={onDeleteClick}>
             Delete
           </Button>
         </Modal.Footer>

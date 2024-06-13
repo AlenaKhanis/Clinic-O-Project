@@ -2,8 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import DoctorHomePage from "../DoctorComponents/DoctorHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
 import StartAppointment from "../DoctorComponents/PatientAppointment";
-import PatientDetail from "../PatientDetails";
-import HistoryAppointments from "../HistoryPatientAppointments";
+import PatientProfile from "../Admin/PatientNewProfile";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 const DoctorRoutes = ({ userRole }: { userRole: string }) => (
   <Routes>
@@ -26,9 +27,11 @@ const DoctorRoutes = ({ userRole }: { userRole: string }) => (
     <Route
       path="/patient_detail/:patient_id"
       element={
-        <ProtectedRoute userRole={userRole} allowedRoles={['doctor' , 'owner']}>
-          <PatientDetail />
-          <HistoryAppointments />
+        <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
+          <PatientProfile 
+          isOwner={false} 
+          BACKEND_URL={BACKEND_URL}
+           />
         </ProtectedRoute>
       }
     />

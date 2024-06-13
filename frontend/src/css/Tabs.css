@@ -91,3 +91,30 @@
 .appointments-sidebar .list-group-item:hover {
   background-color: #f1f1f1;
 }
+
+.box-main-child {
+  margin: 20px auto; /* 20px top and bottom, auto left and right */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 600px; /* Adjust width as needed */
+}
+
+
+.box-main-child h2 {
+  margin-bottom: 15px;
+}
+
+.box-main-child p {
+  margin-bottom: 10px;
+}
+
+.box-main-child button {
+  margin-bottom: 10px;
+}
+
+.box-main-child #diagnosis-collapse-text,
+.box-main-child #prescriptions-collapse-text {
+  margin-top: 10px;
+}
+

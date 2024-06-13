@@ -55,7 +55,7 @@ class Patient(User):
                 SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
                 FROM doctors d
                 INNER JOIN users u ON u.id = d.doctor_id
-                INNER JOIN appointments a ON  d.doctor_id =  d.doctor_id
+                INNER JOIN appointments a ON  a.doctor_id =  d.doctor_id
                 WHERE a.patient_id = %s;
                 """, (patient_id,))
             docotr_data = cursor.fetchall() 

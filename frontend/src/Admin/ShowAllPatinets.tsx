@@ -42,7 +42,7 @@ export default function ShowAllPatients({ BACKEND_URL }: { BACKEND_URL: string }
                             <tr key={patient.id}>
                                 <td>{patient.id}</td>
                                 <td>
-                                    <Link to={`/doctor/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link> 
+                                    <Link to={`/admin/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link> 
                                 </td>
                                 <td>{patient.age}</td>
                                 <td>{patient.email}</td>

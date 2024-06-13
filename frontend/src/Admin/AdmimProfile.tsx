@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
+import { Owner } from "../Types";
 
-function AdminProfile({ BACKEND_URL }) {
-    const [admins, setAdmins] = useState([]);
+function AdminProfile({ BACKEND_URL } : {BACKEND_URL: string}) {
+    const [admin, setAdmins] = useState<Owner>();
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/admins`)
+        fetch(`${BACKEND_URL}/admin`)
             .then(response => response.json())
             .then(data => {
                 setAdmins(data);
             })
             .catch(error => console.error("Error fetching admins:", error));
-    }, [BACKEND_URL]);
+    }, []);
 
     return (
         <div>
@@ -26,14 +27,12 @@ function AdminProfile({ BACKEND_URL }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {admins.map(admin => (
-                        <tr key={admin.id}>
-                            <td>{admin.id}</td>
-                            <td>{admin.name}</td>
-                            <td>{admin.email}</td>
-                            <td>{admin.role}</td>
-                        </tr>
-                    ))}
+                    <tr>
+                        <td>{admin.id}</td>
+                        <td>{admin.name}</td>
+                        <td>{admin.email}</td>
+                        <td>{admin.role}</td>
+                    </tr>
                 </tbody>
             </Table>
         </div>
