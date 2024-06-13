@@ -25,33 +25,37 @@ export default function ShowAllPatients({ BACKEND_URL }: { BACKEND_URL: string }
 
     return (
         <div className='doctor-patients-container'>
-            <div className='patient-sidebar' style={{width: '100%'}}>
-                <h1>All Patients</h1>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {patients.map(patient => (
-                            <tr key={patient.id}>
-                                <td>{patient.id}</td>
-                                <td>
-                                    <Link to={`/admin/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link> 
-                                </td>
-                                <td>{patient.age}</td>
-                                <td>{patient.email}</td>
-                                <td>{patient.phone}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </div>
+          <div className='patient-sidebar' style={{ width: '100%' }}>
+            <h1>All Patients</h1>
+            {patients.length === 0 ? (
+              <p>No patients</p>
+            ) : (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {patients.map(patient => (
+                    <tr key={patient.id}>
+                      <td>{patient.id}</td>
+                      <td>
+                        <Link to={`/admin/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
+                      </td>
+                      <td>{patient.age}</td>
+                      <td>{patient.email}</td>
+                      <td>{patient.phone}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </div>
         </div>
-    );
+      );
 }

@@ -5,7 +5,7 @@ import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import Alert from 'react-bootstrap/Alert';
 
-function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientProps) {
+function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
     const [searchDoctor, setSearchDoctor] = useState<Doctor[]>([]);
     const [specialties, setSpecialties] = useState<string[]>([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState('');

@@ -1,9 +1,11 @@
 import { toZonedTime, format } from 'date-fns-tz';
 import { Appointment, Doctor, Owner, Patient } from "../Types";
+import { useBackendUrl } from '../BackendUrlContext';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export const useGlobalFunctions = () => {
+  
+    const BACKEND_URL = useBackendUrl();
 
     // Function to parse and format date-time for appointments
     const parseDateTime = (data: Appointment[]): Appointment[] => {
@@ -87,9 +89,8 @@ export const useGlobalFunctions = () => {
         setAlertMessage: (message: string) => void,
         setAlertVariant: (variant: 'success' | 'danger') => void,
         setShowAlert: (show: boolean) => void,
-        setShowDeleteModal: (show: boolean) => void
     ) => {
-        fetch(`${BACKEND_URL}/delete_doctor/${id}`, {
+        fetch(`${BACKEND_URL}/delete_user/${id}`, {
             method: 'DELETE',
         })
         .then(response => {
@@ -99,6 +100,9 @@ export const useGlobalFunctions = () => {
             setAlertMessage('Doctor deleted successfully');
             setAlertVariant('success');
             setShowAlert(true);
+            setTimeout(() => {
+                window.location.href = '/admin';
+            }, 2000);
         })
         .catch((error) => {
             console.error('Error deleting doctor:', error);
@@ -106,9 +110,7 @@ export const useGlobalFunctions = () => {
             setAlertVariant('danger');
             setShowAlert(true);
         })
-        .finally(() => {
-            setShowDeleteModal(false);
-        });
+
     };
 
     return {

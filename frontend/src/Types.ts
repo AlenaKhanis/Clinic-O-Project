@@ -78,7 +78,7 @@ export type DoctorProps = {
 export type PatientProps = {
   BACKEND_URL: string;
   patientId : number | null;
-  // refreshAppointments: () => void;
+  
 };
 
 

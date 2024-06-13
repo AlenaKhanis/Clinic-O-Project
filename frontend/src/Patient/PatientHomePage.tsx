@@ -7,14 +7,16 @@ import '../css/Tabs.css';
 import PatientHistoryAppointments from "./PatientHistoryAppointments";
 import MyDoctors from "./MyDoctors";
 import PatientProfile from "./PatientProfile";
+import { useBackendUrl } from "../BackendUrlContext";
 
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+
 
 function HomePagePatient() {
+    const BACKEND_URL = useBackendUrl();
     const userInfo = localStorage.getItem('userinfo');
     const [patientId, setpatientId] = useState<number | null>(null);
-    // const [, setAppointmentsKey] = useState<string>("app"); 
+    const [, setAppointmentsKey] = useState<string>("app"); 
 
 
     useEffect(() => {
@@ -27,9 +29,9 @@ function HomePagePatient() {
     }, [userInfo]);
   
 
-    // const refreshAppointments = () => {
-    //     setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
-    // };
+    const refreshAppointments = () => {
+        setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
+    };
 
 
     return (
@@ -45,7 +47,7 @@ function HomePagePatient() {
                     <SearchDoctors 
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}
-                    // refreshAppointments={refreshAppointments}
+                    refreshAppointments={refreshAppointments}
                     
                      />
                 </Tab>
@@ -53,7 +55,7 @@ function HomePagePatient() {
                     <ShowPatientAppointments
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}
-                    // refreshAppointments={refreshAppointments}
+                    refreshAppointments={refreshAppointments}
                     />
                     
                 </Tab>
@@ -61,14 +63,14 @@ function HomePagePatient() {
                     <PatientHistoryAppointments
                         BACKEND_URL={BACKEND_URL}
                         patientId={patientId}
-                        // refreshAppointments={refreshAppointments}
+                        refreshAppointments={refreshAppointments}
                     />
                 </Tab>
                 <Tab eventKey="My profile" title="My profile" className='tabs'>
                    <PatientProfile
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}
-                    // refreshAppointments={refreshAppointments}
+                    
                    />
                 </Tab>
                 <Tab eventKey="see my doctors" title="My Doctors" className='tabs'>
@@ -76,7 +78,7 @@ function HomePagePatient() {
                         BACKEND_URL={BACKEND_URL}
                         patientId={patientId}
                         isOwner={false}
-                        // refreshAppointments={refreshAppointments}
+                       
                     />
                 </Tab>
             </Tabs>

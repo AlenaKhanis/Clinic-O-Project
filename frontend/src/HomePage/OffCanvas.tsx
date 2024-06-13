@@ -27,8 +27,8 @@ export function OffCanvasExample({ placement = 'end', role, ...props }: OffCanva
           <Offcanvas.Title>Offcanvas</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {role === 'owner' && <Link to="/admin_profile">My Profile</Link>}
-          {role === 'doctor' && <Link to="/doctor_profile">My Profile</Link>}
+          {role === 'owner' && <Link to="admin/admin_profile">My Profile</Link>}
+          {role === 'doctor' && <Link to="doctor/doctor_profile">My Profile</Link>}
           {role === 'patient' && <Link to="/patient_profile">My Profile</Link>}
           {role !== 'owner' && role !== 'doctor' && role !== 'patient' && <span>No profile available</span>}
           <Link to="/home">Home</Link>

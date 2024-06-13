@@ -35,8 +35,8 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
     const [showEditModal, setShowEditModal] = useState(false);
 
     const [, setShowAlert] = useState<boolean>(false);
-    const [, setAlertMessage] = useState<string | null>(null);
-    const [, setAlertVariant] = useState<'success' | 'danger'>('success');
+    const [ massage , setAlertMessage] = useState<string | null>(null);
+    const [variant, setAlertVariant] = useState<'success' | 'danger'>('success');
 
     // Custom hooks from useDoctorAppointments and useGlobalFunctions
     const { getDoctorById } = useDoctorAppointments();
@@ -54,7 +54,6 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
 
         getPatientAppointments(patientId)
             .then((data: Appointment[]) => {
-                console.log(data);
             setAppointments(data);
             setFilteredAppointments(data);
             })
@@ -118,7 +117,7 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
     // Handle delete button click event
     const onDeleteClick = () => {
         if (patient) {
-        handleDeleteUser(patient.patient_id, setAlertMessage, setAlertVariant, setShowAlert, setShowDeleteModal);
+        handleDeleteUser(patient.patient_id , setAlertMessage, setAlertVariant, setShowAlert);
         } else {
         console.error('Patient is not selected or not available.');
         }
@@ -248,6 +247,7 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
       >
+         {massage && <p className={`alert alert-${variant}`}>{massage}</p>}
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>

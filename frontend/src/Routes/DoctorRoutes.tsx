@@ -3,6 +3,7 @@ import DoctorHomePage from "../DoctorComponents/DoctorHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
 import StartAppointment from "../DoctorComponents/PatientAppointment";
 import PatientProfile from "../Admin/PatientNewProfile";
+import DoctorProfile from "../Admin/DoctorProfile";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -35,6 +36,14 @@ const DoctorRoutes = ({ userRole }: { userRole: string }) => (
         </ProtectedRoute>
       }
     />
+    <Route
+      path="/doctor_profile"
+      element={
+        <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
+          <DoctorProfile />
+        </ProtectedRoute>
+      }
+      />
   </Routes>
 );
 

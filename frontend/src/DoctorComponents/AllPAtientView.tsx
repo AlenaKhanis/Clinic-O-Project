@@ -33,28 +33,32 @@ function AllPatientView({ doctorId }: DoctorProps) {
   return (
     <div>
       <h1>All Patients</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Email</th>
-            <th>Phone</th>
-          </tr>
-        </thead>
-        <tbody>
-          {patients.map((patient) => (
-            <tr key={patient.id}>
-              <td>
-                <Link to={`patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
-              </td>
-              <td>{patient.age}</td>
-              <td>{patient.email}</td>
-              <td>{patient.phone}</td>
+      {patients.length === 0 ? (
+        <p>No patients yet</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Phone</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {patients.map((patient) => (
+              <tr key={patient.id}>
+                <td>
+                  <Link to={`patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
+                </td>
+                <td>{patient.age}</td>
+                <td>{patient.email}</td>
+                <td>{patient.phone}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

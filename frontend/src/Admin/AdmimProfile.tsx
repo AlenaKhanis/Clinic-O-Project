@@ -1,18 +1,28 @@
 import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { Owner } from "../Types";
+import { useBackendUrl } from "../BackendUrlContext";
 
-function AdminProfile({ BACKEND_URL } : {BACKEND_URL: string}) {
-    const [admin, setAdmins] = useState<Owner>();
+function AdminProfile() {
+    const [admin, setAdmin] = useState<Owner | null>(null);
+    const BACKEND_URL = useBackendUrl();
 
     useEffect(() => {
         fetch(`${BACKEND_URL}/admin`)
-            .then(response => response.json())
-            .then(data => {
-                setAdmins(data);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch admin profile");
+                }
+                return response.json();
             })
-            .catch(error => console.error("Error fetching admins:", error));
-    }, []);
+            .then(data => {
+                setAdmin(data);
+            })
+            .catch(error => {
+                console.error("Error fetching admin profile:", error);
+                setAdmin(null); // Reset admin state on error to handle retry or error message
+            });
+    }, [BACKEND_URL]);
 
     return (
         <div>
@@ -27,12 +37,17 @@ function AdminProfile({ BACKEND_URL } : {BACKEND_URL: string}) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{admin.id}</td>
-                        <td>{admin.name}</td>
-                        <td>{admin.email}</td>
-                        <td>{admin.role}</td>
-                    </tr>
+                    {admin === null ? (
+                        <tr>
+                            <td colSpan={4}>Loading...</td>
+                        </tr>
+                    ) : (
+                        <tr>
+                            <td>{admin.full_name}</td>
+                            <td>{admin.email}</td>
+                            <td>{admin.phone}</td>
+                        </tr>
+                    )}
                 </tbody>
             </Table>
         </div>

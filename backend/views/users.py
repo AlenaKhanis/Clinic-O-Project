@@ -90,6 +90,20 @@ def register():
     else:
         db.rollback()
         return jsonify({'message': 'Failed to register user'}), 500
+    
+@bp.route('/delete_user/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        result = User.delete_user(cursor, user_id )
+        db.commit()
+        return jsonify({"message": result}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": f"An error occurred while deleting the doctor: {str(e)}"}), 500
+    finally:
+        cursor.close()   
 
 
 

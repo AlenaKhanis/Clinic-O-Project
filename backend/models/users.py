@@ -82,10 +82,9 @@ class User:
 
 
     @classmethod
-    def delete_user_doctor(cls, cursor, doctor_id):
+    def delete_user(cls, cursor, user_id):    
         try:
-            cursor.execute("DELETE FROM doctors WHERE user_id = %s", (doctor_id,))
-            cursor.execute("DELETE FROM users WHERE id = %s", (doctor_id,))
+            cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
             return "Doctor deleted successfully"
         except Exception as e:
              return f"Error deleting doctor: {e}"

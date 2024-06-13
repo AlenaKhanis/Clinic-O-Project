@@ -6,6 +6,7 @@ from psycopg2.extras import RealDictCursor
 from db import get_db, close_db
 from flask_cors import CORS
 from dotenv import load_dotenv
+import os
 
 from models.users import User
 from models.patient import Patient
@@ -26,6 +27,7 @@ app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
 print(FRONTEND_URL)
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
+load_dotenv()
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
 app.register_blueprint(users_bp)
@@ -34,11 +36,14 @@ app.register_blueprint(patient)
 app.register_blueprint(doctors_bp)
 app.register_blueprint(clinic_bp)
 
+
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
+    print(data)
 
     # Assuming your users table has a 'role' column
     cursor.execute("SELECT id, role FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
@@ -54,16 +59,20 @@ def login():
 # @app.route('/login', methods=['POST'])
 # def login():
 #     data = request.json
-#     db = get_db()
-#     cursor = db.cursor(cursor_factory=RealDictCursor)  
+#     if not data or 'username' not in data or 'password' not in data:
+#         return jsonify({"error": "Invalid request data"}), 400
 
-#     cursor.execute("SELECT * FROM users WHERE username = %s", (data["username"],))
+#     db = get_db() 
+#     cursor = db.cursor(cursor_factory=RealDictCursor)
+
+#     cursor.execute("SELECT id, role, password FROM users WHERE username = %s", (data["username"],))
 #     user = cursor.fetchone()
-    
+
 #     if user and bcrypt.checkpw(data["password"].encode('utf-8'), user["password"].encode('utf-8')):
-#         access_token = create_access_token(identity=user["id"])
-#         return {"access_token": access_token}, 200 
+#         access_token = create_access_token(identity=user["id"], additional_claims={"role": user["role"]})
+#         return {"access_token": access_token}, 200
 #     else:
+
 #         return {"error": "Invalid username or password"}, 401
 
 

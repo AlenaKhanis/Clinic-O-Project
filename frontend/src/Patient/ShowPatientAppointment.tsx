@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
-function ShowPatientAppointments({ patientId, refreshAppointments }: PatientProps) {
+function ShowPatientAppointments({ BACKEND_URL, patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
     const { getPatientAppointments , cancelAppointment } = usePatientDetails();
     const [confirmCancel, setConfirmCancel] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);

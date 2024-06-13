@@ -4,6 +4,7 @@ import AdminPage from '../Admin/AdminHomePage';
 import { ProtectedRoute } from '../ProtectedRoute';
 import DoctorProfile from '../Admin/DoctorProfile';
 import PatientProfile from '../Admin/PatientNewProfile';
+import AdminProfile from '../Admin/AdmimProfile';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -32,6 +33,14 @@ const AdminRoutes = ({ userRole }: { userRole: string, userId: number }) => (
             <PatientProfile
              isOwner={true}
              BACKEND_URL={BACKEND_URL} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='admin_profile'
+        element={
+          <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
+            <AdminProfile />
           </ProtectedRoute>
         }
       />

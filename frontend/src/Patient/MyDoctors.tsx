@@ -5,7 +5,6 @@ import { Doctor, PatientProps } from "../Types";
 function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner: boolean }) {
     const [doctor, setDoctor] = useState<Doctor[]>([]);
 
-    console.log(isOwner);
 
     useEffect(() => {
         if (patientId) {
@@ -13,7 +12,6 @@ function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner
                 fetch(`${BACKEND_URL}/get_patient_doctors/${patientId}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         setDoctor(data);
                     })
                     .catch(error => {

@@ -23,8 +23,8 @@ export default function DoctorProfile() {
   const { getPatientById } = usePatientDetails();
   const [showEditModal, setShowEditModal] = useState(false);
   const [, setShowAlert] = useState<boolean>(false);
-  const [, setAlertMessage] = useState<string | null>(null);
-  const [, setAlertVariant] = useState<'success' | 'danger'>('success');
+  const [ massage , setAlertMessage] = useState<string | null>(null);
+  const [ variant , setAlertVariant] = useState<'success' | 'danger'>('success');
   const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments(); 
   const {handleDeleteUser} = useGlobalFunctions();
 
@@ -100,7 +100,7 @@ export default function DoctorProfile() {
 
   const onDeleteClick = () => {
     if (doctor) {
-      handleDeleteUser(doctor.doctor_id, setAlertMessage, setAlertVariant, setShowAlert, setShowDeleteModal);
+      handleDeleteUser(doctor.doctor_id, setAlertMessage, setAlertVariant, setShowAlert);
     } else {
       console.error('Doctor is not selected or not available.');
     }
@@ -166,6 +166,7 @@ export default function DoctorProfile() {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
       >
+        {massage && <p className={`alert alert-${variant}`}>{massage}</p>}
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>

@@ -102,16 +102,3 @@ def get_doctors():
     except Exception as e:
         return jsonify({"error": "An error occurred while retrieving the doctors."}), 500   
 
-@bp.route('/delete_doctor/<int:doctor_id>', methods=['DELETE'])
-def delete_doctor(doctor_id):
-    try:
-        db = get_db()
-        cursor = db.cursor()
-        result = User.delete_user_doctor(cursor, doctor_id)
-        db.commit()
-        return jsonify({"message": result}), 200
-    except Exception as e:
-        db.rollback()
-        return jsonify({"error": f"An error occurred while deleting the doctor: {str(e)}"}), 500
-    finally:
-        cursor.close()   

@@ -1,5 +1,9 @@
 from flask import Blueprint
-from create_scema import db
 
 
-bp = Blueprint("owner", __name__)
+
+# bp = Blueprint("owner", __name__)
+
+# @bp.route("/owner/<int:owner_id>", methods=["GET"])
+# def get_owner(owner_id):
+#     return f"Owner {owner_id}"
