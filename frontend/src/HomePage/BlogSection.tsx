@@ -1,44 +1,48 @@
 import { Button, Card, Col, Container, Placeholder, Row } from 'react-bootstrap';
 import '../css/BlogSection.css';
-import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
+import { useBackendUrl } from '../BackendUrlContext';
 
-type BlogPost = {
+interface BlogPost {
   id: number;
   title: string;
   content: string;
   imageUrl: string;
   url: string;
-};
+}
 
-//TODO: hide api in back end
-
-function BlogSection() {
+const BlogSection: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const BACKEND_URL = useBackendUrl();
 
   useEffect(() => {
-    fetch('https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=714e1b2241d04060a77d54fca596b8b7')
-      .then(response => response.json())
-      .then((data) => {
-        const filteredArticles = data.articles.filter((article: any) => article.title !== '[Removed]');
-        setTimeout(() => {
-          setPosts(
-            filteredArticles.slice(0, 4).map((article: any, index: number) => ({
-              id: index,
-              title: article.title,
-              content: article.description || article.content,
-              imageUrl: article.urlToImage || 'https://via.placeholder.com/150',
-              url: article.url,
-            }))
-          );
-          setIsLoading(false);
-        }, 1000);
+    fetch(`${BACKEND_URL}/api/news`) 
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+        return response.json();
       })
-      .catch((error) => {
+      .then((data: any) => {
+        const filteredPosts: BlogPost[] = data.articles
+          .filter((article: any) => article.title !== '[Removed]')
+          .slice(0, 4)
+          .map((article: any, index: number) => ({
+            id: index,
+            title: article.title,
+            content: article.description || article.content || '',
+            imageUrl: article.urlToImage || 'https://via.placeholder.com/150',
+            url: article.url,
+          }));
+        setPosts(filteredPosts);
+        setIsLoading(false);
+      })
+      .catch(error => {
         console.error('Error fetching posts:', error);
-        setIsLoading(false); 
+        setIsLoading(false);
         setHasError(true);
       });
   }, []);
@@ -65,7 +69,7 @@ function BlogSection() {
             </Col>
           ))
         ) : (
-          posts.map((post) => (
+          posts.map(post => (
             <Col key={post.id} className="mb-4">
               <Card style={{ width: '18rem', height: '24rem' }}>
                 <Card.Img variant="top" src={post.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />
@@ -82,6 +86,6 @@ function BlogSection() {
       </Row>
     </Container>
   );
-}
+};
 
 export default BlogSection;

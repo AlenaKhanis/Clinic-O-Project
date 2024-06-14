@@ -7,6 +7,7 @@ from db import get_db, close_db
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+import httpx
 
 from models.users import User
 from models.patient import Patient
@@ -26,6 +27,7 @@ from views.clinic import bp as clinic_bp
 app = Flask(__name__)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 print(FRONTEND_URL)
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
 load_dotenv()
@@ -120,6 +122,18 @@ def get_user():
         cursor.close()
         db.close()
 
+
+@app.route('/api/news', methods=['GET'])
+def get_news():  
+    url = 'https://newsapi.org/v2/top-headlines'
+    params = {
+        'country': 'us',
+        'category': 'health',
+        'apiKey': NEWS_API_KEY
+    }
+    response = httpx.get(url, params=params)
+    news_data = response.json()
+    return news_data
 
 
 
