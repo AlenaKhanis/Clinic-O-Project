@@ -8,6 +8,7 @@ import DoctorProfile from "../Admin/DoctorProfile";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 const DoctorRoutes = ({ userRole }: { userRole: string }) => (
+
   <Routes>
     <Route
       path="/"
@@ -31,16 +32,18 @@ const DoctorRoutes = ({ userRole }: { userRole: string }) => (
         <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
           <PatientProfile 
           isOwner={false} 
-          BACKEND_URL={BACKEND_URL}
+          
            />
         </ProtectedRoute>
       }
     />
     <Route
-      path="/doctor_profile"
+      path="/doctor_profile/:doctorId"
       element={
         <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
-          <DoctorProfile />
+          <DoctorProfile
+            isOwner={false}
+          />
         </ProtectedRoute>
       }
       />

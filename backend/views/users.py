@@ -54,7 +54,10 @@ def register():
                 full_name=full_name,
                 role=role,
                 phone=phone,
-                age=age)
+                age=age,
+                created_date=datetime.now(),
+                updated_date=datetime.now()
+                )
 
     user_id = user.add_user(cursor)
 
@@ -105,6 +108,36 @@ def delete_user(user_id):
     finally:
         cursor.close()   
 
+
+@bp.route('/edit_user_profile/<user_id>', methods=['POST'])
+def edit_user_profile_route(user_id):
+    db = get_db()
+    cursor = db.cursor()
+
+    updated_data = request.json
+    user = User.get_user(cursor, user_id)
+
+    if user:
+        try:
+            updated_fields = {}  
+            for field, value in updated_data.items():
+                updated_profile = User.edit_user_profile(cursor, user_id, field, value)
+                print("Updated profile:", updated_profile)
+                if updated_profile:
+                    updated_fields[field] = value
+                else:
+                    return jsonify({'error'}), 500
+
+            db.commit()
+            print("Updated fields:", updated_fields)
+            return jsonify({'updated_fields': updated_fields})
+        except Exception as e:
+            db.rollback()  
+            return jsonify({'error': f"Error updating user profile: {e}"}), 500
+        finally:
+            cursor.close()  # Close cursor after use
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 # @bp.route("/verify_password", methods=["POST"])

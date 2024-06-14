@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button } from 'react-bootstrap';
 import InputField from './InputFields';
@@ -11,14 +11,22 @@ import {
   validateBirthday,
   checkPasswordMatch
 } from './validations';
-import { faEnvelope, faKey, faLock, faUser, faIdCard, faBriefcaseMedical, faPhone, faBirthdayCake } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEnvelope,
+  faKey,
+  faLock,
+  faUser,
+  faIdCard,
+  faBriefcaseMedical,
+  faPhone,
+  faBirthdayCake
+} from '@fortawesome/free-solid-svg-icons';
 import './css/Register.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 interface UserFormProps {
   isAdmin: boolean;
-  role: 'patient' | 'doctor';
   initialData?: {
     username?: string;
     fullName?: string;
@@ -47,7 +55,7 @@ interface RegistrationData {
 const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSuccess }) => {
   const [registrationError, setRegistrationError] = useState<string>('');
   const [selectedPackage, setSelectedPackage] = useState<string>(initialData.package || '');
-  const [specialty, setSpecialty] = useState<string>(initialData.specialty || "");
+  const [specialty, setSpecialty] = useState<string>(initialData.specialty || '');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [registrationSuccess, setRegistrationSuccess] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<'patient' | 'doctor'>('patient');
@@ -58,7 +66,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
   const emailRef = useRef<HTMLInputElement>(null);
   const fullNameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
-  const birthdayRef = useRef<HTMLInputElement>(null); 
+  const birthdayRef = useRef<HTMLInputElement>(null);
 
   const [registrationData, setRegistrationData] = useState<RegistrationData>({
     username: initialData.username || '',
@@ -70,7 +78,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     package: selectedRole === 'patient' ? selectedPackage : undefined,
     specialty: selectedRole === 'doctor' ? specialty : undefined,
     phone: initialData.phone || '',
-    birthday: initialData.birthday || '', 
+    birthday: initialData.birthday || '',
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -79,9 +87,9 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     email: '',
     password: '',
     confirmPassword: '',
-    phone: '', 
-    birthday: '', 
-    specialty: '', 
+    phone: '',
+    birthday: '',
+    specialty: '',
   });
 
   const specialties = [
@@ -103,9 +111,10 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
       timeoutId = setTimeout(() => {
         setRegistrationSuccess(false);
         onSuccess();
+        clearFormFields();
       }, 2000);
     }
-    return () => clearTimeout(timeoutId); 
+    return () => clearTimeout(timeoutId);
   }, [registrationSuccess, onSuccess]);
 
   useEffect(() => {
@@ -125,7 +134,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
       package: selectedRole === 'patient' ? selectedPackage : undefined,
       specialty: selectedRole === 'doctor' ? specialty : undefined,
     }));
-  }, [selectedRole, selectedPackage, specialty ,formErrors]);
+  }, [selectedRole, selectedPackage, specialty, formErrors]);
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -168,6 +177,42 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     }
   };
 
+  const clearFormFields = () => {
+    setRegistrationData({
+      username: '',
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      role: selectedRole,
+      package: undefined,
+      specialty: undefined,
+      phone: '',
+      birthday: '',
+    });
+
+    setSelectedPackage('');
+    setSpecialty('');
+    setFormErrors({
+      username: '',
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      phone: '',
+      birthday: '',
+      specialty: '',
+    });
+
+    if (usernameRef.current) usernameRef.current.value = '';
+    if (passwordRef.current) passwordRef.current.value = '';
+    if (confirmPasswordRef.current) confirmPasswordRef.current.value = '';
+    if (emailRef.current) emailRef.current.value = '';
+    if (fullNameRef.current) fullNameRef.current.value = '';
+    if (phoneRef.current) phoneRef.current.value = '';
+    if (birthdayRef.current) birthdayRef.current.value = '';
+  };
+
   return (
     <div className='register-form'>
       <form onSubmit={handleRegister}>
@@ -200,7 +245,6 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
             </div>
           </div>
         )}
-
 
         {registrationSuccess && (
           <Alert variant="success">
@@ -274,7 +318,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
           onChange={(value) => handleInputChange('phone', value)}
         />
 
-        
+
         <InputField
           icon={faBirthdayCake}
           placeholder="Birthday"
@@ -288,28 +332,27 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
 
 
         {selectedRole === 'patient' && (
-        <div className="d-flex flex-row align-items-center mb-4">
+          <div className="d-flex flex-row align-items-center mb-4">
             <FontAwesomeIcon icon={faIdCard} className="me-3 mt-n1" size="lg" />
             <p className='package-p'>Package</p>
             <div>
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
-                <input type="radio" name="package" value="Silver" checked={selectedPackage === 'Silver'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
-                <label htmlFor="silver">Silver</label>
+                  <input type="radio" name="package" value="Silver" checked={selectedPackage === 'Silver'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
+                  <label htmlFor="silver">Silver</label>
                 </div>
                 <div>
-                <input type="radio" name="package" value="Gold" checked={selectedPackage === 'Gold'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
-                <label htmlFor="gold">Gold</label>
+                  <input type="radio" name="package" value="Gold" checked={selectedPackage === 'Gold'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
+                  <label htmlFor="gold">Gold</label>
                 </div>
                 <div>
-                <input type="radio" name="package" value="Premium" checked={selectedPackage === 'Premium'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
-                <label htmlFor="premium">Premium</label>
+                  <input type="radio" name="package" value="Premium" checked={selectedPackage === 'Premium'} style={{ transform: 'scale(0.8)' }} onChange={(e) => setSelectedPackage(e.target.value)} />
+                  <label htmlFor="premium">Premium</label>
                 </div>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
         )}
-
 
         {selectedRole === 'doctor' && (
           <div className="d-flex flex-row align-items-center mb-4">

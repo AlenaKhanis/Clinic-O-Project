@@ -1,0 +1,47 @@
+/* AdminProfile.css */
+
+.admin-profile-container {
+    margin-top: 200px;
+    text-align: center; /* Center align content */
+    display: 'flex'; 
+    justify-content: center;
+    align-items: 'center'; 
+    padding: 20px;
+    border-radius: 8px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-profile-header {
+    margin-bottom: 20px;
+}
+
+
+
+.admin-profile-table {
+    width: 100%;
+}
+
+.admin-profile-table th,
+.admin-profile-table td {
+    text-align: center;
+    padding: 8px;
+}
+
+.admin-profile-table th {
+    background-color: #f0f0f0; /* Light gray background for table header */
+}
+
+.admin-profile-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternate row background color */
+}
+
+.admin-profile-actions {
+    text-align: center;
+}
+
+.admin-profile-actions button {
+    margin-right: 10px;
+}

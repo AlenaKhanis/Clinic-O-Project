@@ -36,11 +36,7 @@ function HomePagePatient() {
 
     return (
         <>
-        <div className='welcomdiv'>
-            <h1>Here User panel</h1>
-            <p>Welcome here you can do oparators</p>
-        </div>
-        <div className="container">
+        <div className="container" style={{marginTop: '300px'}}>
             <div className="row">
             <Tabs id="uncontrolled-tab-example" className="custom-tabs">
                 <Tab eventKey="searchDoctor" title="Search Doctor" className='tabs'>

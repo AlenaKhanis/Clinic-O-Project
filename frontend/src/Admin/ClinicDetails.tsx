@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Clinic, OwnerProps } from '../Types';
+import { Clinic } from '../Types';
 import Alert from 'react-bootstrap/Alert';
 import { Button, Modal, Form } from 'react-bootstrap';
+import { useBackendUrl } from '../BackendUrlContext';
 
-function ClinicDetails({ BACKEND_URL }: OwnerProps) {
+function ClinicDetails() {
   const [clinicDetails, setClinicDetails] = useState<Clinic | null>(null);
   const [editing, setEditing] = useState(false);
   const [editedClinicName, setEditedClinicName] = useState('');
@@ -12,6 +13,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const BACKEND_URL = useBackendUrl();
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/clinic_details`)
@@ -22,6 +24,7 @@ function ClinicDetails({ BACKEND_URL }: OwnerProps) {
         return response.json();
       })
       .then((data: Clinic) => {
+        console.log(data)
         setClinicDetails(data);
         setEditedClinicName(data.clinic_name);
         setEditedClinicAddress(data.clinic_address);

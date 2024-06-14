@@ -16,14 +16,17 @@ type HomePageProps = {
   setRole: React.Dispatch<React.SetStateAction<string>>;
   userName: string;
   role: string;
+  subId: string | null;
 };
 
-function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setRole, setUserToken , role }: HomePageProps) {
+function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setRole, setUserToken , role ,subId }: HomePageProps) {
   const [date, setDate] = useState(new Date());
   const hour = date.getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
   const formattedDate = format(date, 'PPpp');
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,6 +50,7 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
     }
   }
 
+
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
@@ -66,12 +70,13 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
                 Register
               </Nav.Link>
             )}
-              <Nav.Link style={{ color: 'white' }} href="link">
-                Link
-              </Nav.Link>
+              {role === 'owner' && <Nav.Link style={{ color: 'white' }}  href={`/admin`}>Actions</Nav.Link>}
+              {role === 'doctor' && <Nav.Link style={{ color: 'white' }} href={`/doctor`}>Actions</Nav.Link>}
+              {role === 'patient' && <Nav.Link style={{ color: 'white' }} href={`/patient`}>Actions</Nav.Link>}
+              {role !== 'owner' && role !== 'doctor' && role !== 'patient' && <Nav.Link style={{ color: 'white' }} href="/about">About</Nav.Link>} 
             </Nav>
             <Nav.Item>{greeting}, {userToken ? userName : "Guest"}.<br /> {formattedDate}.</Nav.Item>
-            <OffCanvasExample placement="end" role={role} />
+            <OffCanvasExample placement="end" role={role} subId={subId} />
           </Navbar.Collapse>
         </Container>
       </Navbar>

@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Patient } from "../Types";
 import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useBackendUrl } from '../BackendUrlContext';
 
-export default function ShowAllPatients({ BACKEND_URL }: { BACKEND_URL: string }) {
+export default function ShowAllPatients({onPatientAdded} : {onPatientAdded : boolean}) {
     const [patients, setPatients] = useState<Patient[]>([]);
+    const BACKEND_URL = useBackendUrl();
 
     useEffect(() => {
         console.log('fetching all patients');
@@ -21,7 +23,7 @@ export default function ShowAllPatients({ BACKEND_URL }: { BACKEND_URL: string }
             .catch(error => {
                 console.error("Error fetching patient details:", error);
             });
-    }, []);
+    }, [onPatientAdded]);
 
     return (
         <div className='doctor-patients-container'>

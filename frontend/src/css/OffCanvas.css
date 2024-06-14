@@ -1,30 +1,43 @@
+
 .my-offcanvas {
-    background-color: #205a66;
-    color: white;
+  background-color: #205a66; /* Light background */
 }
 
-  .my-offcanvas .offcanvas-header {
-    color: #fff; /* Header text color */
-  }
-  
-  .my-offcanvas .offcanvas-body {
-    padding: 20px; /* Padding inside the body */
-  }
-  
-  .my-offcanvas .offcanvas-body a {
-    display: block;
-    margin-bottom: 10px; /* Margin between links */
+.offcanvas-header {
+  background-color: #f1f4f8; /* Dark header */
+  color: #ffffff; /* White text */
+}
 
-    text-decoration: none; /* Remove underline */
-  }
-  
-  .my-offcanvas .offcanvas-body a:hover {
-    text-decoration: underline; /* Add underline on hover */
-  }
-  
-  .my-offcanvas .offcanvas-body span {
-    display: block;
-    margin-bottom: 10px; /* Margin between elements */
-    color: #dc3545; /* Error message color */
-  }
-  
+.offcanvas-title {
+  font-size: 1.5rem;
+}
+
+.offcanvas-body {
+  padding: 1rem;
+}
+
+.offcanvas-body a {
+  display: block;
+  margin: 0.5rem 0;
+  text-decoration: none;
+  color: #e8f0f1;
+}
+
+.offcanvas-body a:hover {
+  text-decoration: underline;
+}
+
+.offcanvas-footer {
+  margin-top: auto;
+  padding: 1rem;
+  background-color: #343a40;
+  color: #ffffff;
+  text-align: center;
+}
+
+.profile-link {
+  font-weight: bold;
+}
+.offcanvas-title {
+  color: #205a66;
+}

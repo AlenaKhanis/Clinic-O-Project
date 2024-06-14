@@ -9,18 +9,15 @@ import { Doctor, Appointment, Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
+import { useBackendUrl } from '../BackendUrlContext';
 
 import '../css/doctorProfile.css';
 
-/**
- * PatientProfile Component displays patient details, appointments, and allows editing if authorized.
- * @param {boolean} isOwner - Indicates if the logged-in user owns this profile.
- * @param {string} BACKEND_URL - URL for backend API.
- */
 
-export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: boolean, BACKEND_URL: string }) {
+export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
     const { patient_id } = useParams<{ patient_id: string }>();
     const patientId = Number(patient_id);
+    const  BACKEND_URL  = useBackendUrl();
      // State variables
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [patient, setPatient] = useState<Patient | null>(null);
@@ -122,6 +119,9 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
         console.error('Patient is not selected or not available.');
         }
     };
+
+
+    console.log(typeof isOwner)
   
   return (
     <div className='doctor-container-profile'>
@@ -190,10 +190,9 @@ export default function PatientProfile({ isOwner, BACKEND_URL }: { isOwner: bool
                          
                         </>
                         
-                        
+                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>       
                 {isOwner && (
                 <>
-                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
                 <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
                 </>
                 )}

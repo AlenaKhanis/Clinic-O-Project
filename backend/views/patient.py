@@ -44,7 +44,7 @@ def get_all_patients():
         return jsonify({"error": "An error occurred while retrieving patients."}), 500 
     
 @bp.route('/edit_patient_profile/<patient_id>', methods=['POST'])
-def edit_doctor_profile_by_admin(patient_id):
+def edit_patient_profile(patient_id):
     db = get_db()
     cursor = db.cursor()
 

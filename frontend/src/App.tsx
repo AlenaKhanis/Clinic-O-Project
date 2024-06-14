@@ -62,25 +62,27 @@ function App() {
     return 'Guest';
   });
 
-  const [userId] = useState<number>(() => {
-    const userinfo = localStorage.getItem('userinfo');
-    if (userinfo) {
-      const { id } = JSON.parse(userinfo);
-      return id;
-    } else {
-      return 0;
+  const getSubFromToken = (token: string) => {
+    try {
+      const decodedToken: { sub: string } = jwtDecode(token);
+      return decodedToken.sub;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
     }
-  });
+  }
+
+  const subId = userToken ? getSubFromToken(userToken) : null;
 
   return (
     <BackendUrlProvider>
       <BrowserRouter>
         <Cover>
-          <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} />
+          <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId}  />
           <Routes>
             <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
             <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
-            <Route path="/admin/*" element={<AdminRoutes userRole={userRole} userId={userId} />} />
+            <Route path="/admin/*" element={<AdminRoutes userRole={userRole} subID={subId} />} />
             <Route
               path="/"
               element={

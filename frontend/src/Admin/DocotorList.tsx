@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Doctor, OwnerProps } from '../Types';
+import { Doctor } from '../Types';
 import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useBackendUrl } from '../BackendUrlContext';
 
-function DoctorsList({ BACKEND_URL }: OwnerProps) {
+function DoctorsList({ onDoctorAdded }: {onDoctorAdded : boolean}) {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const BACKEND_URL = useBackendUrl();
   
   useEffect(() => {
     fetch(`${BACKEND_URL}/doctors`)
@@ -20,7 +22,7 @@ function DoctorsList({ BACKEND_URL }: OwnerProps) {
       .catch((error) => {
         console.error('Error fetching doctors:', error);
       });
-  }, [BACKEND_URL]);
+  }, [onDoctorAdded]);
 
   return (
     <div>

@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent} from 'react';
 import { Modal, Button, Alert, Form } from 'react-bootstrap';
 import { Doctor, Patient, Owner } from '../Types';
 import { validateUsername, validateEmail, validateFullName, validatePhone, validateSpecialty } from '../validations'; 
 import { useGlobalFunctions } from './useGlobalFunctions';
+
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -13,7 +15,9 @@ type EditProfileProps = {
   isOwner: boolean;
 };
 
-export default function EditProfile({ profile, onCancel, showEditModal, isOwner }: EditProfileProps) {
+type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditModal, isOwner }) => {
   const [editedProfile, setEditedProfile] = useState<Doctor | Patient | Owner>(profile);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -36,7 +40,8 @@ export default function EditProfile({ profile, onCancel, showEditModal, isOwner 
     }, profile);
   };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: ChangeEvent<FormControlElement>) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setEditedProfile(prevProfile => ({
       ...prevProfile,
@@ -60,6 +65,8 @@ export default function EditProfile({ profile, onCancel, showEditModal, isOwner 
       validationErrors.username = await validateUsername(value, BACKEND_URL);
     } else if (name === 'specialty' && 'specialty' in profile) {
       validationErrors.specialty = validateSpecialty(value);
+    } else if (name === 'package' && 'package' in profile) {
+      // Validate package if needed
     }
 
     setErrors(validationErrors);
@@ -73,10 +80,28 @@ export default function EditProfile({ profile, onCancel, showEditModal, isOwner 
     setErrors({});
   };
 
-
   const isDoctor = (profile: Doctor | Patient | Owner): profile is Doctor => {
     return (profile as Doctor).specialty !== undefined;
   };
+
+  const isPatient = (profile: Doctor | Patient | Owner): profile is Patient => {
+    return (profile as Patient).package !== undefined;
+  };
+
+  const packageOptions = ["Silver", "Gold", "Premium"];
+
+  const specialties = [
+    "Cardiology",
+    "Dermatology",
+    "Emergency Medicine",
+    "Family Medicine",
+    "Gastroenterology",
+    "Neurology",
+    "Oncology",
+    "Pediatrics",
+    "Psychiatry",
+    "Radiology"
+  ];
 
   return (
     <Modal show={showEditModal} onHide={handleCloseModal}>
@@ -134,17 +159,43 @@ export default function EditProfile({ profile, onCancel, showEditModal, isOwner 
             />
             <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
           </Form.Group>
+          {/* Specialty dropdown for Doctor */}
           {isDoctor(editedProfile) && isOwner && (
             <Form.Group controlId="formSpecialty">
               <Form.Label>Specialty</Form.Label>
-              <Form.Control
-                type="text"
+              <Form.Select
                 name="specialty"
                 value={editedProfile.specialty || ""}
                 onChange={handleChange}
                 isInvalid={!!errors.specialty}
-              />
+              >
+                <option value="">Select specialty...</option>
+                {specialties.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Form.Select>
               <Form.Control.Feedback type="invalid">{errors.specialty}</Form.Control.Feedback>
+            </Form.Group>
+          )}
+          {/* Package dropdown for Patient */}
+          {isPatient(editedProfile) && (
+            <Form.Group controlId="formPackage">
+              <Form.Label>Package</Form.Label>
+              <Form.Select
+                name="package"
+                value={editedProfile.package || ""}
+                onChange={handleChange}
+                isInvalid={!!errors.package}
+              >
+                {packageOptions.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">{errors.package}</Form.Control.Feedback>
             </Form.Group>
           )}
         </Form>
@@ -165,3 +216,4 @@ export default function EditProfile({ profile, onCancel, showEditModal, isOwner 
   );
 }
 
+export default EditProfile;

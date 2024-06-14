@@ -9,7 +9,8 @@ import { Doctor,Appointment, Patient } from '../Types';
 import EditProfile from '../useFunctions/EditProfileProps';
 import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
 
-export default function DoctorProfile() {
+
+export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
   const { doctorId } = useParams<{ doctorId: string }>();
   const doctorID = Number(doctorId);
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -54,10 +55,6 @@ export default function DoctorProfile() {
         .catch(error => console.error('Error fetching patient:', error));
     }
   }, [selectedAppointment]);
-
-  const handleEdit = () => {
-    setShowEditModal(true);
-  };
 
   const filterAppointments = (filterType: string) => {
     const today = new Date();
@@ -117,8 +114,11 @@ export default function DoctorProfile() {
                 <p>Specialty: {doctor.specialty}</p>
                 <p>Email: {doctor.email}</p>
                 <p>Phone: {doctor.phone}</p>
-                <Button variant='outline-dark' onClick={handleEdit}>Edit</Button>
-                <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
+                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                {isOwner && (
+                  <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
+                )}
+                
               </>
             )}
           </div>
@@ -158,7 +158,7 @@ export default function DoctorProfile() {
         profile={doctor}
         onCancel={() => setShowEditModal(false)}
         showEditModal={showEditModal}
-        isOwner={true}
+        isOwner={isOwner}
       />
       
       )}
@@ -166,6 +166,7 @@ export default function DoctorProfile() {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
       >
+  
         {massage && <p className={`alert alert-${variant}`}>{massage}</p>}
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>

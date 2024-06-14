@@ -16,6 +16,7 @@ def clinic_details() -> Response:
         SELECT * FROM clinic;
         """)
     clinic_data = cursor.fetchone()
+    print(clinic_data)
     return jsonify(clinic_data), 200
 
 

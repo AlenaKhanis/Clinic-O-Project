@@ -38,14 +38,16 @@ export const useGlobalFunctions = () => {
               editedFields[key] = editedProfile[key] as Doctor[keyof Doctor] & Patient[keyof Patient] & Owner[keyof Owner];
             }
           });
-      
+          
+          console.log(editedProfile);
+
           let url = '';
           if (isDoctorProfile(editedProfile)) {
-            url = `${BACKEND_URL}/edit_doctor_profile/${editedProfile.doctor_id}`;
+            url = `${BACKEND_URL}/edit_user_profile/${editedProfile.doctor_id}`;
           } else if (isPatientProfile(editedProfile)) {
-            url = `${BACKEND_URL}/edit_patient_profile/${editedProfile.patient_id}`;
+            url = `${BACKEND_URL}/edit_user_profile/${editedProfile.patient_id}`;
           } else if (isOwnerProfile(editedProfile)) {
-            url = `${BACKEND_URL}/edit_owner_profile/${editedProfile.owner_id}`;
+            url = `${BACKEND_URL}/edit_user_profile/${editedProfile.owner_id}`;
           } else {
             throw new Error('Invalid profile type');
           }

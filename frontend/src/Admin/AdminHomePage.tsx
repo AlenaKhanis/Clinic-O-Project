@@ -1,56 +1,58 @@
-import { Tab, Tabs } from "react-bootstrap";
+import { Tab, Tabs } from 'react-bootstrap';
 import '../css/Tabs.css';
-import ClinicDetails from "./ClinicDetails";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DoctorsList from "./DocotorList";
-import AddUserPatienOrDoctor from "./AddUserPatienOrDoctor";
-import ShowAllAppt from "./ShowAllAppt";
-import ShowAllPatients from "./ShowAllPatinets";
-
-
+import ClinicDetails from './ClinicDetails';
+import DoctorsList from './DocotorList';
+import ShowAllAppt from './ShowAllAppt';
+import ShowAllPatients from './ShowAllPatinets';
+import { useState } from 'react';
+import AdminAddUser from './AddUserPatienOrDoctor';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 function AdminPagePatient() {
 
-    return (
-        <>
-        <div className='welcome-div'>
-            <h1>Here doctor panel</h1>
-            <p>Welcome here you can do oparators</p>
-        </div>
-        <div className="container">
-            <Tabs  id="uncontrolled-tab-example" className="custom-tabs">
-                <Tab eventKey=" Clinic Details" title="Clinic Details" className="tabs">
-                    <ClinicDetails 
-                        BACKEND_URL={BACKEND_URL}
-                       
-                    />
-                </Tab>
-                <Tab eventKey="Doctors" title="Doctors" className="tabs">
-                   <DoctorsList
-                    BACKEND_URL={BACKEND_URL}
-                    
-                   />
-                </Tab>
-                <Tab eventKey="Add Doctor" title="Add Doctor/Patient" className="tabs">
-                    <AddUserPatienOrDoctor
-                    />
-                </Tab>
-                <Tab eventKey="Show Appointment" title="Show Appointment" className="tabs">
-                    <ShowAllAppt 
-                    BACKEND_URL={BACKEND_URL} />
-                </Tab>
-                <Tab eventKey="Show all patient " title="Show all patient" className="tabs">
-                    <ShowAllPatients 
-                    BACKEND_URL={BACKEND_URL}
-                    />
-                </Tab>
-            </Tabs>
-        </div>
-        </>
-    );
+    const [refreshPatientsList, setRefreshPatientsList] = useState(false);
+    const [refreshDoctorsList, setRefreshDoctorsList] = useState(false);
+  
+    const handlePatientAdded = () => {
+     
+      setRefreshPatientsList(prev => !prev);
+    };
+  
+    const handleDoctorAdded = () => {
+     
+      setRefreshDoctorsList(prev => !prev);
+    };
+  
+
+  return (
+    <>
+      <div className='welcome-div'>
+        <h1>Here doctor panel</h1>
+        <p>Welcome here you can do operations</p>
+      </div>
+      <div className='container'>
+        <Tabs id='uncontrolled-tab-example' className='custom-tabs'>
+          <Tab eventKey='clinicDetails' title='Clinic Details' className='tabs'>
+            <ClinicDetails />
+          </Tab>
+          <Tab eventKey='doctors' title='Doctors' className='tabs'>
+            <DoctorsList onDoctorAdded={refreshDoctorsList} />
+          </Tab>
+          <Tab eventKey='addDoctor' title='Add Doctor/Patient' className='tabs'>
+            <AdminAddUser onPatientAdded={handlePatientAdded} onDoctorAdded={handleDoctorAdded} />
+          </Tab>
+          <Tab eventKey='showAppointment' title='Show Appointment' className='tabs'>
+            <ShowAllAppt BACKEND_URL={BACKEND_URL} />
+          </Tab>
+          <Tab eventKey='showAllPatients' title='Show all patients' className='tabs'>
+            <ShowAllPatients onPatientAdded={refreshPatientsList}  />
+          </Tab>
+        </Tabs>
+      </div>
+    </>
+  );
 }
 
 export default AdminPagePatient;
-

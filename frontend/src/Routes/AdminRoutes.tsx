@@ -8,7 +8,7 @@ import AdminProfile from '../Admin/AdmimProfile';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-const AdminRoutes = ({ userRole }: { userRole: string, userId: number }) => (
+const AdminRoutes = ({ userRole , subID }: { userRole: string , subID : string | null}) => (
   <Routes>
     <Route
       path="/"
@@ -22,7 +22,9 @@ const AdminRoutes = ({ userRole }: { userRole: string, userId: number }) => (
       path='doctor-profile/:doctorId'
       element={
         <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
-          <DoctorProfile/>
+          <DoctorProfile
+            isOwner={true}
+          />
         </ProtectedRoute>
       }
       />
@@ -32,18 +34,19 @@ const AdminRoutes = ({ userRole }: { userRole: string, userId: number }) => (
           <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
             <PatientProfile
              isOwner={true}
-             BACKEND_URL={BACKEND_URL} />
+            />
           </ProtectedRoute>
         }
       />
       <Route
-        path='admin_profile'
+        path='admin_profile/:admin_id'
         element={
           <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
-            <AdminProfile />
+            <AdminProfile subId={subID}   />
           </ProtectedRoute>
         }
       />
+
   </Routes>
 );
 

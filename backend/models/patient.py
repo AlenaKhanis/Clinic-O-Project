@@ -14,8 +14,7 @@ class Patient(User):
         super().__init__(username, password)
         self.patient_id = patient_id
         self.package = package
-        self.created_date = datetime.now()
-        self.updated_date = datetime.now()
+
 
     @classmethod
     #TODO: change to get patient by id
@@ -37,10 +36,10 @@ class Patient(User):
         try:
             cursor.execute(
                 """
-                INSERT INTO patients (patient_id, package, created_date, updated_date)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO patients (patient_id, package)
+                VALUES (%s, %s)
                 """,
-                (self.patient_id, self.package, self.created_date, self.updated_date)
+                (self.patient_id, self.package)
             )
 
             return True 
