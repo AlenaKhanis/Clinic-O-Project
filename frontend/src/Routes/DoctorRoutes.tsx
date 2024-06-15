@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import DoctorHomePage from "../DoctorComponents/DoctorHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
-import StartAppointment from "../DoctorComponents/PatientAppointment";
+import StartAppointment from "../DoctorComponents/StartAppt";
 import PatientProfile from "../Admin/PatientNewProfile";
 import DoctorProfile from "../Admin/DoctorProfile";
 

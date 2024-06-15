@@ -9,17 +9,16 @@ class Doctor(User):
         super().__init__(username, password)
         self.doctor_id = doctor_id
         self.specialty = specialty
-        self.created_date = datetime.now()
-        self.updated_date = datetime.now()
+
 
     def add_doctor(self, cursor):
         try:
             cursor.execute(
                 """
-                INSERT INTO doctors (doctor_id, specialty, created_date, updated_date)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO doctors (doctor_id, specialty)
+                VALUES (%s, %s)
                 """,
-                (self.doctor_id, self.specialty, self.created_date, self.updated_date)
+                (self.doctor_id, self.specialty)
             )
             return True 
         except Exception as e:
@@ -78,13 +77,15 @@ class Doctor(User):
                 SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
                 FROM doctors d
                 INNER JOIN users u ON u.id = d.doctor_id
-                WHERE LOWER(u.full_name) = LOWER(%s);
-                """, (doctor_name,))
-            doctor_data = cursor.fetchall() 
+                WHERE LOWER(u.full_name) LIKE LOWER(%s)
+                ORDER BY u.full_name;
+                """, (f'{doctor_name}%',))
+            doctor_data = cursor.fetchall()
             return doctor_data
         except Exception as e:
             print(e)
             return None
+
         
     @classmethod    
     def get_doctor_by_specialty(cls,cursor,specialty):

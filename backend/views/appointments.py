@@ -75,7 +75,7 @@ def schedule_appointment(appointment_id, patient_id) -> Response:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
 
-        if Appointment.scedual_appointment_for_patient(cursor, appointment_id, patient_id):
+        if Appointment.schedule_appointment_for_patient(cursor, appointment_id, patient_id):
             db.commit()
             return jsonify({'message': "Appointment scheduled successfully."}), 200
         else:
@@ -124,22 +124,29 @@ def get_history_patient_appointments(patient_id):
 
 
 #TODO: chnge to add summery by doctor
-@bp.route("/add_summary/<appointment_id>/<patietn_id>", methods=["POST"])
-def add_summary(appointment_id, patietn_id):
+@bp.route("/add_summary/<appointment_id>/<patient_id>", methods=["POST"])
+def add_summary(appointment_id, patient_id):
     try:
-        data = request.json 
+        data = request.json
         summary = data.get('summary')
         diagnosis = data.get('diagnosis')
         prescription = data.get('prescription')
         
-        db = get_db()
+        db = get_db()  # Assuming get_db() function returns a database connection
         cursor = db.cursor()
-        Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patietn_id)
+
+        # Call the class method to update the appointment and patient
+        success = Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patient_id)
         
-        db.commit() 
-        return jsonify({"message": "Form data received and processed successfully"}), 200
+        if success:
+            db.commit()
+            return jsonify({"message": "Form data received and processed successfully"}), 200
+        else:
+            db.rollback()
+            return jsonify({'error': 'Failed to update appointment and patient records'}), 500
+
     except Exception as e:
-        db.rollback() 
+        db.rollback()
         return jsonify({'error': str(e)}), 500
 
 

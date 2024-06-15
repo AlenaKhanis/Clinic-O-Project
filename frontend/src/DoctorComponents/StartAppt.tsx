@@ -1,22 +1,21 @@
-import { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { Appointment } from "../Types";
-import '../css/AppointmentSummeryForm.css';
-import '../css/Tabs.css';
 import Collapse from 'react-bootstrap/Collapse';
 import { useAppointmentActions } from "../useFunctions/useAppointmentActions";
 import HistoryAppointments from "../Patient/HistoryPatientAppointments";
 import PatientDetails from "../PatientDetails";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
+import '../css/AppointmentSummeryForm.css';
+import '../css/Tabs.css';
+import { Appointment } from "../Types";
+import { useBackendUrl } from "../BackendUrlContext";
 
-//TODO: add css
-
-const PatientDetail = () => {
+const StartAppt = () => {
     const { patient_id, appointment_id } = useParams<{ patient_id: string, appointment_id: string }>();
     const patientIdNumber = Number(patient_id);
     const appointmentIdNumber = Number(appointment_id);
-    const { getAppointmentsbyID, handleSubmit } = useAppointmentActions();
+    const { getAppointmentsbyID } = useAppointmentActions();
     const [showForm, setShowForm] = useState(false);
     const summaryRef = useRef<HTMLTextAreaElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
@@ -27,9 +26,11 @@ const PatientDetail = () => {
     const [collision, setCollision] = useState(false);
     const [appointment, setAppointment] = useState<Appointment | null>(null);
     const [patientHistoryAppointments, setPatientHistoryAppointments] = useState<Appointment[]>([]);
+    const [showErrorAlert, setShowErrorAlert] = useState(false); 
     const { getPatientHistoryAppointments } = usePatientDetails();
 
-    
+    const BACKEND_URL = useBackendUrl();
+
     useEffect(() => {
         if (patient_id) {
             getPatientHistoryAppointments(patientIdNumber)
@@ -40,7 +41,7 @@ const PatientDetail = () => {
                     console.error("Error fetching patient history appointments:", error);
                 });
         }
-    }, [patient_id]);
+    }, [patient_id ,appointmentEnded ]);
 
     useEffect(() => {
         if (appointment_id) {
@@ -56,8 +57,6 @@ const PatientDetail = () => {
                 });
         }
     }, [appointment_id]);
-
-
 
     const handleStartAppointment = () => {
         if (!appointment) return;
@@ -88,22 +87,51 @@ const PatientDetail = () => {
             setShowAlert(true);
             return;
         }
-        handleSubmit(summaryRef, diagnosisRef, prescriptionRef, appointmentIdNumber, patientIdNumber);
-        setShowForm(false);
-        setAppointmentEnded(true);
-        setShowSuccess(true);
+    
+        const formData = {
+            summary: summary,
+            diagnosis: diagnosisRef.current?.value || "",
+            prescription: prescriptionRef.current?.value || ""
+        };
+    
+        fetch(`${BACKEND_URL}/add_summary/${appointmentIdNumber}/${patientIdNumber}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(() => {
+            // Handle successful response
+            setShowForm(false);
+            setAppointmentEnded(true);
+            setShowSuccess(true);
+            setShowErrorAlert(false); // Reset error alert state
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle error response from server
+            setShowErrorAlert(true); // Set state to display error alert
+        });
     };
+    
 
     return (
         <>
             <div className="box-main-div">
-                {appointmentEnded && <Alert variant="success" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>Appointment has ended.</Alert>}
+                
                 <PatientDetails
-                isowner={false}
+                    isowner={false}
                 />
                 <HistoryAppointments />
-                <div>
-                    <div style={{ padding: '20px', borderRadius: '8px' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ padding: '20px', borderRadius: '8px', display: 'inline-block' }}>
                         <Button
                             style={{ width: 'fit-content' }}
                             variant="outline-dark"
@@ -113,8 +141,10 @@ const PatientDetail = () => {
                             }}
                             disabled={appointmentEnded}
                         >
+                             
                             {showForm ? "Close Appointment" : "Start Appointment"}
                         </Button>
+                        {appointmentEnded && <Alert variant="success" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>Appointment has ended.</Alert>}
                     </div>
                     <Collapse in={showForm}>
                         <div className="containerSummery">
@@ -149,6 +179,9 @@ const PatientDetail = () => {
                                 <Alert variant="danger" show={showAlert} onClose={() => setShowAlert(false)} dismissible>
                                     Please fill the summary to end the appointment.
                                 </Alert>
+                                <Alert variant="danger" show={showErrorAlert} onClose={() => setShowErrorAlert(false)} dismissible>
+                                    Error processing request. Please try again later.
+                                </Alert>
                             </form>
                         </div>
                     </Collapse>
@@ -161,4 +194,4 @@ const PatientDetail = () => {
     );
 };
 
-export default PatientDetail;
+export default StartAppt;

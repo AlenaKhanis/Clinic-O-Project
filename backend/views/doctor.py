@@ -81,6 +81,7 @@ def get_doctor_by_name(doctor_name):
         return jsonify({"doctors": doctor}), 200
     except Exception as e:
         return jsonify({"error": "An error occurred while retrieving the doctor."}), 500
+    
 
 @bp.route('/get_doctor/by_specialty/<specialty>')
 def get_doctor_by_specialty(specialty):

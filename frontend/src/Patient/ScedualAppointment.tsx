@@ -1,11 +1,23 @@
 import { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
+import Alert from 'react-bootstrap/Alert';
 import { Appointment, Doctor, PatientProps } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
-import Alert from 'react-bootstrap/Alert';
+import { useBackendUrl } from '../BackendUrlContext';
+import { Button } from 'react-bootstrap';
 
-function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
+/**
+ * SearchDoctors Component
+ *
+ * @param {number} patientId - The ID of the patient using the component.
+ * @param {Function} refreshAppointments - A function to refresh the patient's appointments after scheduling a new one.
+ *
+ * This component allows patients to search for doctors based on specialty or name and view available appointments.
+ * Patients can schedule appointments directly through this interface. The component handles fetching data from a backend,
+ * managing state, and displaying alert messages for user actions.
+ */
+function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
     const [searchDoctor, setSearchDoctor] = useState<Doctor[]>([]);
     const [specialties, setSpecialties] = useState<string[]>([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState('');
@@ -19,6 +31,10 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
     const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'error'>('success');
     const [alertMessage, setAlertMessage] = useState<string>('');
 
+    // Fetch the backend URL from context
+    const BACKEND_URL = useBackendUrl();
+
+    // Effect to fetch patient appointments on component mount and whenever patientId or refreshAppointments change
     useEffect(() => {
         if (patientId) {
             getPatientAppointments(patientId)
@@ -27,6 +43,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
         }
     }, [patientId, refreshAppointments]);
 
+    // Effect to fetch available specialties from the backend
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_specialties`)
             .then(response => response.json())
@@ -36,10 +53,12 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
             .catch(error => console.error('Error fetching specialties:', error));
     }, []);
 
+    // Effect to handle search when selectedSpecialty or searchName changes
     useEffect(() => {
         handleSearch();
     }, [selectedSpecialty, searchName]);
 
+    // Function to handle the search for doctors based on selected specialty and name
     const handleSearch = () => {
         let query = `${BACKEND_URL}/get_doctor`;
         if (selectedSpecialty || searchName) {
@@ -65,7 +84,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
                 .catch(error => console.error('Error fetching doctors:', error));
         }
     };
-
+    // Function to handle clicking on a doctor to view their appointments
     const handleDoctorClick = (doctorId: number) => {
         setSelectedDoctorId(doctorId);
         if (doctorId) {
@@ -78,6 +97,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
         }
     };
 
+    // Function to schedule an appointment
     const scheduleAppointment = (appointmentId: number, appointmentDate: string, appointmentTime: string) => {
         const formattedAppointmentTime = appointmentTime.split(':').map(part => part.padStart(2, '0')).join(':');
 
@@ -85,6 +105,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
             setAlertMessage('You already have an appointment at this date and time.');
             setAlertVariant('danger');
             setShowAlert(true);
+            hideAlertAfterDelay();
         } else {
             fetch(`${BACKEND_URL}/schedule_appointment/${appointmentId}/${patientId}`, {
                 method: 'POST',
@@ -96,6 +117,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
                     setAlertMessage('Appointment scheduled successfully.');
                     setAlertVariant('success');
                     setShowAlert(true);
+                    hideAlertAfterDelay();
                     setSearchDoctor([]);
                     setSelectedDoctorId(null);
                     setSelectedDoctorAppointments([]);
@@ -106,10 +128,19 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
                     setAlertMessage('Failed to schedule appointment.');
                     setAlertVariant('error');
                     setShowAlert(true);
+                    hideAlertAfterDelay();
                 });
         }
     };
 
+    // Function to hide the alert message after a delay of 3 seconds
+    const hideAlertAfterDelay = () => {
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 1000);
+    };
+
+    // Function to check if an appointment already exists for the patient at the given date and time
     const isAppointmentExists = (date: string, time: string) => {
         return appointments.some(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -122,6 +153,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
         });
     };
 
+    // Filter and sort the appointments for the selected doctor
     const filteredAppointments = selectedDoctorAppointments
         .filter(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -129,6 +161,7 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
         })
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime());
 
+    // Effect to hide alert message when the document becomes hidden (e.g., if the user switches tabs)
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -194,42 +227,54 @@ function SearchDoctors({ BACKEND_URL, patientId, refreshAppointments }: PatientP
             )}
             {selectedDoctorId !== null && (
                 <>
-                    <h2>Doctor's Appointments</h2>
+                  <h2>Doctor's Appointments</h2>
                     <div className="table-container">
-                        <Table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {filteredAppointments.map((appointment, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{appointment.date}</td>
-                                            <td>{appointment.time}</td>
-                                            <td><button onClick={() => scheduleAppointment(appointment.id, appointment.date, appointment.time)}>Schedule</button></td>
+                        {filteredAppointments.length > 0 ? (
+                            <Table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredAppointments.map((appointment, index) => {
+                                        const appointmentDateTime = new Date(appointment.date_time);
+                                        const day = appointmentDateTime.getUTCDate().toString().padStart(2, '0');
+                                        const month = (appointmentDateTime.getUTCMonth() + 1).toString().padStart(2, '0');
+                                        const year = appointmentDateTime.getUTCFullYear();
+                                        const hours = appointmentDateTime.getUTCHours().toString().padStart(2, '0');
+                                        const minutes = appointmentDateTime.getUTCMinutes().toString().padStart(2, '0');
+
+                                        return (
+                                            <tr key={index}>
+                                                <td>{index + 1}</td>
+                                                <td>{`${day}.${month}.${year}`}</td>
+                                                <td>{`${hours}:${minutes}`}</td>
+                                                <td>
+                                                <Button variant='outline-dark' onClick={() => scheduleAppointment(appointment.id, `${day}.${month}.${year}`, `${hours}:${minutes}`)}>
+                                                    Schedule
+                                                </Button>
+                                            </td>
                                         </tr>
-                                    ))}
+                                    );
+                                })}
                             </tbody>
                         </Table>
+                        ) : (
+                            <div className="no-appointments">No appointments available.</div>
+                        )}
                     </div>
-                    {!filteredAppointments.length && (
-                        <div className="no-appointments">
-                            <h3>No appointments available</h3>
-                        </div>
-                    )}
                 </>
             )}
             {showAlert && (
-                <Alert variant={alertVariant} onClose={() => {setShowAlert(false)
-                setSearchName('')
-                setSelectedDoctorAppointments([]); }  } dismissible>
-                    {alertMessage}
-                </Alert>
+                <div className="alert-container">
+                    <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                        {alertMessage}
+                    </Alert>
+                </div>
             )}
         </div>
     );
