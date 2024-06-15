@@ -4,8 +4,7 @@ from db import get_db
 import bcrypt
 from models.users import User
 from models.patient import Patient
-
-
+from datetime import datetime
 
 bp = Blueprint("users", __name__)
 
@@ -19,80 +18,6 @@ def check_username():
         return jsonify({'exists': True}), 200
     else:
         return jsonify({'exists': False}), 200
-
-    
-from datetime import datetime
-
-@bp.route('/register', methods=['POST'])
-def register():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    email = data.get('email')
-    full_name = data.get('fullName')
-    role = data.get('role', 'patient')
-    phone = data.get('phone')
-    birthday = data.get('birthday')
-    
-    print(role)
-    # Calculate age from birthday
-    def calculate_age(born):
-        today = datetime.today()
-        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-    
-    age = calculate_age(datetime.strptime(birthday, '%Y-%m-%d'))
-    
-
-    db = get_db()
-    cursor = db.cursor()
-
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-    user = User(username=username,
-                password=hashed_password,
-                email=email,
-                full_name=full_name,
-                role=role,
-                phone=phone,
-                age=age,
-                created_date=datetime.now(),
-                updated_date=datetime.now()
-                )
-
-    user_id = user.add_user(cursor)
-
-    if user_id:
-        if role == 'patient':
-            package = data.get('package')
-            patient = Patient(patient_id=user_id,
-                              package=package,
-                              username=username
-                             )
-
-            if patient.add_patient(cursor):
-                db.commit()
-                return jsonify({'message': 'Registration successful'}), 200
-            else:
-                db.rollback()
-                return jsonify({'message': 'Failed to register patient'}), 500
-        
-        elif role == 'doctor':
-            specialty = data.get('specialty')
-            doctor = Doctor(doctor_id=user_id,
-                            specialty=specialty,
-                            username=username
-                           )
-
-            if doctor.add_doctor(cursor):
-                db.commit()
-                return jsonify({'message': 'Doctor added successfully'}), 200
-            else:
-                db.rollback()
-                return jsonify({'message': 'Failed to add doctor'}), 500
-
-    else:
-        db.rollback()
-        return jsonify({'message': 'Failed to register user'}), 500
     
 @bp.route('/delete_user/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -115,30 +40,33 @@ def edit_user_profile_route(user_id):
     cursor = db.cursor()
 
     updated_data = request.json
-    user = User.get_user(cursor, user_id)
+    try:
+        user = User.get_user(cursor, user_id)
 
-    if user:
-        try:
-            updated_fields = {}  
-            for field, value in updated_data.items():
-                updated_profile = User.edit_user_profile(cursor, user_id, field, value)
-                print("Updated profile:", updated_profile)
-                if updated_profile:
-                    updated_fields[field] = value
-                else:
-                    return jsonify({'error'}), 500
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
 
-            db.commit()
-            print("Updated fields:", updated_fields)
-            return jsonify({'updated_fields': updated_fields})
-        except Exception as e:
-            db.rollback()  
-            return jsonify({'error': f"Error updating user profile: {e}"}), 500
-        finally:
-            cursor.close()  # Close cursor after use
-    else:
-        return jsonify({'error': 'User not found'}), 404
+        updated_fields = {}
+        for field, value in updated_data.items():
+            updated_profile, updated_data = User.edit_user_profile(cursor, user_id, field, value)
+            if not updated_profile:
+                db.rollback()
+                return jsonify({'error': f"Error updating user profile: {updated_data}"}), 500
 
+            updated_fields[field] = value
+
+        db.commit()
+        return jsonify({'updated_fields': updated_fields}), 200
+
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in request data: {str(e)}'}), 400
+
+    except ValueError as e:
+        return jsonify({'error': f'Invalid value: {str(e)}'}), 400
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 # @bp.route("/verify_password", methods=["POST"])
 # def verify_password():

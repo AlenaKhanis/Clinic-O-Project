@@ -10,7 +10,7 @@ export type Patient = {
   email: string;
   phone: string;
   role: string;
-  deagnosis: string | null;
+  diagnosis: string | null;
   prescription: string | null;
 };
 

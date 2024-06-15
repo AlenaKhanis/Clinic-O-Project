@@ -2,10 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import logging
 import psycopg2
-from psycopg2 import sql
 from typing import List, Optional
-
-
 
 @dataclass
 class Appointment:
@@ -28,11 +25,11 @@ class Appointment:
             cursor.execute(sql_query, (self.date_time, self.doctor_id, self.status, self.created_date, self.updated_date))
             return True
         except psycopg2.IntegrityError as e:
-            logging.error(f"IntegrityError occurred while adding appointment: {e}")
+            logging.error(f"PostgreSQL IntegrityError occurred while adding appointment: {e}")
             cursor.connection.rollback()
             return False
-        except psycopg2.Error as e:
-            logging.error(f"Database error occurred while adding appointment: {e}")
+        except psycopg2.DatabaseError as e:
+            logging.error(f"PostgreSQL DatabaseError occurred while adding appointment: {e}")
             cursor.connection.rollback()
             return False
         except Exception as e:
@@ -49,8 +46,11 @@ class Appointment:
             cursor.execute(sql_query, (appointment_datetime, doctor_id))
             existing_appointment = cursor.fetchone()
             return existing_appointment is not None
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while checking appointment: {e}")
+            return False
         except Exception as e:
-            logging.error(f"Error checking appointment: {e}")
+            logging.error(f"Unexpected error occurred while checking appointment: {e}")
             return False
 
     @classmethod
@@ -64,8 +64,11 @@ class Appointment:
             cursor.execute(sql_query, (doctor_id,))
             all_appointments = cursor.fetchall()
             return all_appointments
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while getting appointments: {e}")
+            return []
         except Exception as e:
-            logging.error(f"Error getting appointments: {e}")
+            logging.error(f"Unexpected error occurred while getting appointments: {e}")
             return []
 
     @classmethod
@@ -85,8 +88,12 @@ class Appointment:
             )
             cursor.connection.commit()
             return True
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while scheduling appointment: {e}")
+            cursor.connection.rollback()
+            return False
         except Exception as e:
-            logging.error(f"Error scheduling appointment: {e}")
+            logging.error(f"Unexpected error occurred while scheduling appointment: {e}")
             cursor.connection.rollback()
             return False
 
@@ -99,12 +106,15 @@ class Appointment:
             cursor.execute(sql_query, (patient_id,))
             appointments = cursor.fetchall()
             return appointments
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while getting appointments: {e}")
+            return []
         except Exception as e:
-            logging.error(f"Error getting appointments: {e}")
+            logging.error(f"Unexpected error occurred while getting appointments: {e}")
             return []
 
     @classmethod
-    def cancel_appointment(cls, cursor, appointment_id: int) -> bool:
+    def cancel_appointment_by_patient(cls, cursor, appointment_id: int) -> bool:
         sql_query = """
             UPDATE appointments 
             SET status = 'open', patient_id = NULL, updated_date = CURRENT_TIMESTAMP
@@ -113,8 +123,12 @@ class Appointment:
         try:
             cursor.execute(sql_query, (appointment_id,))
             return True
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while cancelling appointment: {e}")
+            cursor.connection.rollback()
+            return False
         except Exception as e:
-            logging.error(f"Error cancelling appointment: {e}")
+            logging.error(f"Unexpected error occurred while cancelling appointment: {e}")
             cursor.connection.rollback()
             return False
 
@@ -127,8 +141,11 @@ class Appointment:
             cursor.execute(sql_query, (patient_id,))
             appointments = cursor.fetchall()
             return appointments
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while fetching history patient appointments: {e}")
+            return []
         except Exception as e:
-            logging.error(f"Error fetching history patient appointments: {e}")
+            logging.error(f"Unexpected error occurred while fetching history patient appointments: {e}")
             return []
 
     @classmethod
@@ -139,25 +156,31 @@ class Appointment:
                 UPDATE appointments
                 SET summary = %s,
                     written_diagnosis = %s,
-                    written_prescription = %s,
+                    written_prescriptions = %s,
                     status = 'completed',
                     updated_date = CURRENT_TIMESTAMP,
                     date_time = CURRENT_TIMESTAMP
                 WHERE id = %s
             """
             cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
-            #deagnosis
+
             # Update the patients table with prescription and diagnosis
             patient_query = """
                 UPDATE patients
-                SET diagnosis = diagnosis || %s, 
-                prescription = prescription || %s
-                WHERE patient_id = %s
+                SET diagnosis = COALESCE(diagnosis, '') || %s,
+                    prescription = COALESCE(prescription, '') || %s
+                WHERE id = %s
             """
-            cursor.execute(patient_query, ([diagnosis], [prescription], patient_id))
+            cursor.execute(patient_query, (diagnosis, prescription, patient_id))
+
+            cursor.connection.commit()
             return True
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while adding summary: {e}")
+            cursor.connection.rollback()
+            return False
         except Exception as e:
-            logging.error(f"Error adding summary: {e}")
+            logging.error(f"Unexpected error occurred while adding summary: {e}")
             cursor.connection.rollback()
             return False
 
@@ -172,8 +195,11 @@ class Appointment:
             cursor.execute(sql_query, (doctor_id,))
             appointments = cursor.fetchall()
             return appointments
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while getting appointment history: {e}")
+            return []
         except Exception as e:
-            logging.error(f"Error getting appointment history: {e}")
+            logging.error(f"Unexpected error occurred while getting appointment history: {e}")
             return []
 
     @classmethod
@@ -185,8 +211,11 @@ class Appointment:
             cursor.execute(sql_query, (appointment_id,))
             appointment = cursor.fetchone()
             return appointment
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while getting appointment by id: {e}")
+            return None
         except Exception as e:
-            logging.error(f"Error getting appointment by id: {e}")
+            logging.error(f"Unexpected error occurred while getting appointment by id: {e}")
             return None
 
     @classmethod
@@ -198,6 +227,9 @@ class Appointment:
             cursor.execute(sql_query)
             appointments = cursor.fetchall()
             return appointments
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while getting all appointments: {e}")
+            return []
         except Exception as e:
-            logging.error(f"Error getting all appointments: {e}")
+            logging.error(f"Unexpected error occurred while getting all appointments: {e}")
             return []

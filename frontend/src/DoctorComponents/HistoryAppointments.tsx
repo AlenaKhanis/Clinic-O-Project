@@ -75,9 +75,9 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                                             <td colSpan={4}>
                                                 <Collapse in={openAppointments[appointment.id]}>
                                                     <div>
-                                                        <p>Summary: {appointment.summery}</p>
-                                                        <p>Written Diagnosis: {appointment.writen_diagnosis}</p>
-                                                        <p>Written Prescription: {appointment.writen_prescription}</p>
+                                                        <p>Summary: {appointment.summary}</p>
+                                                        <p>Written Diagnosis: {appointment.written_diagnosis}</p>
+                                                        <p>Written Prescription: {appointment.written_prescription}</p>
                                                     </div>
                                                 </Collapse>
                                             </td> 

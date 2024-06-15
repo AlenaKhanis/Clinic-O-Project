@@ -33,7 +33,7 @@ export function OffCanvasExample({ subId, placement = 'end', role, ...props }: O
           {role === 'owner' && <Link to={`/admin/admin_profile/${subId}`}>My Profile</Link>}
           {role === 'doctor' && <Link to={`/doctor/doctor_profile/${subId}`}>My Profile</Link>}
           {role === 'patient' && <Link to={`/patient/patient_profile/${subId}`}>My Profile</Link>}
-          {role !== 'owner' && role !== 'doctor' && role !== 'patient' && <span>No profile available</span>}
+          {role !== 'owner' && role !== 'doctor' && role !== 'patient' && <span></span>}
           <Link to="/">Home</Link>
         </Offcanvas.Body>
       </Offcanvas>

@@ -1,5 +1,6 @@
-#Using SQLAlchemy
+
 from datetime import datetime
+import psycopg2
 
 
 class Clinic():
@@ -19,13 +20,23 @@ class Clinic():
             for field, value in data.items():
                 cursor.execute(f"""
                     UPDATE clinic
-                    SET {field} = %s
+                    SET {field} = %s,
+                        updated_date = CURRENT_TIMESTAMP
                     WHERE id = 1;
                     """, (value,))
                 print(f"{field} updated successfully")
             return True
+        except psycopg2.IntegrityError as e:
+            cursor.connection.rollback()  # Rollback the transaction on IntegrityError
+            print(f"PostgreSQL IntegrityError occurred: {e}")
+            return False
+        except psycopg2.DatabaseError as e:
+            cursor.connection.rollback()  # Rollback the transaction on any database error
+            print(f"PostgreSQL DatabaseError occurred: {e}")
+            return False
         except Exception as e:
-            print(f"An error occurred: {e}")
+            cursor.connection.rollback()  # Rollback the transaction on any unexpected error
+            print(f"An unexpected error occurred: {e}")
             return False
   
 
