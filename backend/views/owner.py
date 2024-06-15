@@ -6,6 +6,9 @@ bp = Blueprint("owner", __name__)
 
 @bp.route("/admin/<int:owner_id>", methods=["GET"])
 def get_owner(owner_id):
+    """
+    Retrieves owner details by their ID from the database.
+    """
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
@@ -29,4 +32,3 @@ def get_owner(owner_id):
     finally:
         cursor.close()
         db.close()
-

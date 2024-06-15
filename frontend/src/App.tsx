@@ -13,6 +13,7 @@ import AdminRoutes from './Routes/AdminRoutes';
 import './css/App.css';
 import {jwtDecode} from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
+import ErrorBoundary from './ErrorBoundary';
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -77,6 +78,7 @@ function App() {
   return (
     <BackendUrlProvider>
       <BrowserRouter>
+      <ErrorBoundary>
         <Cover>
           <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId}  />
           <Routes>
@@ -100,6 +102,7 @@ function App() {
           </Routes>
           {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} />}
         </Cover>
+        </ErrorBoundary>
       </BrowserRouter>
     </BackendUrlProvider>
   );

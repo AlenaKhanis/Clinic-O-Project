@@ -163,9 +163,9 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
                                 <>  
                                     <h4>Doctor: {doctor?.full_name}</h4>
                                     <p>Patient: {patient.full_name}</p>
-                                    <p>Summary: {selectedAppointment.summery}</p>
-                                    <p>Written diagnosis: {selectedAppointment.writen_diagnosis}</p>
-                                    <p>Written Prescription: {selectedAppointment.writen_prescription}</p>
+                                    <p>Summary: {selectedAppointment.summary}</p>
+                                    <p>Written diagnosis: {selectedAppointment.written_diagnosis}</p>
+                                    <p>Written Prescription: {selectedAppointment.written_prescription}</p>
                                 </>
                             )}
                             {selectedAppointment.status === 'schedule' && (

@@ -15,7 +15,7 @@ class Clinic():
     clinic_updated_date = datetime.now()
 
     @classmethod
-    def update_clinic_details(cls, cursor, data) -> bool:
+    def update_clinic_details(cls, cursor, data: dict) -> bool:
         try:
             for field, value in data.items():
                 cursor.execute(f"""
@@ -27,15 +27,15 @@ class Clinic():
                 print(f"{field} updated successfully")
             return True
         except psycopg2.IntegrityError as e:
-            cursor.connection.rollback()  # Rollback the transaction on IntegrityError
+            cursor.connection.rollback()  
             print(f"PostgreSQL IntegrityError occurred: {e}")
             return False
         except psycopg2.DatabaseError as e:
-            cursor.connection.rollback()  # Rollback the transaction on any database error
+            cursor.connection.rollback()  
             print(f"PostgreSQL DatabaseError occurred: {e}")
             return False
         except Exception as e:
-            cursor.connection.rollback()  # Rollback the transaction on any unexpected error
+            cursor.connection.rollback()
             print(f"An unexpected error occurred: {e}")
             return False
   

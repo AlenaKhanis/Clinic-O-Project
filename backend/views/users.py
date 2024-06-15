@@ -67,6 +67,87 @@ def edit_user_profile_route(user_id):
     except Exception as e:
         db.rollback()
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+    
+@bp.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    full_name = data.get('fullName')
+    role = data.get('role', 'patient')
+    phone = data.get('phone')
+    birthday = data.get('birthday')
+    
+    # Calculate age from birthday
+    def calculate_age(born):
+        today = datetime.today()
+        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    
+    age = calculate_age(datetime.strptime(birthday, '%Y-%m-%d'))
+    
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        user = User(
+            username=username,
+            password=hashed_password,
+            email=email,
+            full_name=full_name,
+            role=role,
+            phone=phone,
+            age=age,
+            created_date=datetime.now(),
+            updated_date=datetime.now()
+        )
+
+        user_id = user.add_user(cursor)
+
+        if not user_id:
+            db.rollback()
+            return jsonify({'message': 'Failed to register user'}), 500
+
+        if role == 'patient':
+            package = data.get('package')
+            patient = Patient(
+                patient_id=user_id,
+                package=package,
+                username=username
+            )
+            print(patient)
+
+            if not patient.add_patient(cursor):
+                db.rollback()
+                return jsonify({'message': 'Failed to register patient'}), 500
+
+        elif role == 'doctor':
+            specialty = data.get('specialty')
+            doctor = Doctor(
+                doctor_id=user_id,
+                specialty=specialty,
+                username=username
+            )
+
+            if not doctor.add_doctor(cursor):
+                db.rollback()
+                return jsonify({'message': 'Failed to add doctor'}), 500
+
+        db.commit()
+        return jsonify({'message': 'Registration successful'}), 200
+    
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in request data: {str(e)}'}), 400
+    
+    except ValueError as e:
+        return jsonify({'error': f'Invalid value: {str(e)}'}), 400
+    
+    except Exception as e:
+        db.rollback()
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+
 
 # @bp.route("/verify_password", methods=["POST"])
 # def verify_password():

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from models.users import User
 from psycopg2 import Error
-from psycopg2.extras import RealDictCursor
+from typing import Optional
 
 
 @dataclass
@@ -12,7 +12,7 @@ class Owner(User):
     updated_date: datetime = datetime.now()
 
     @classmethod
-    def get_owner(cls, cursor, user_id):
+    def get_owner(cls, cursor, user_id: int) -> Optional[dict]:
         try:
             cursor.execute("""
                 SELECT DISTINCT o.*, u.username, u.full_name, u.age, u.email, u.phone

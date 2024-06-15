@@ -6,8 +6,10 @@ from typing import Optional ,List
 
 @dataclass
 class Patient(User):
-    patient_id: int = None
-    package: str = "silver"
+    def __init__(self, username: str, password: str = None, patient_id: int = None, package: str = "silver"):
+        super().__init__(username, password)
+        self.patient_id = patient_id
+        self.package = package
 
     def add_patient(self, cursor) -> bool:
         try:
@@ -39,7 +41,7 @@ class Patient(User):
             return None
 
     @classmethod
-    def get_patient_doctors(cls, cursor, patient_id: int) -> List[dict]:
+    def get_patient_doctors(cls, cursor, patient_id: int) -> List[dict]: 
         try:
             cursor.execute("""
                 SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone

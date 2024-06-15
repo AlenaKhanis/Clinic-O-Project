@@ -8,6 +8,9 @@ bp = Blueprint("clinic", __name__)
 
 @bp.route("/clinic_details", methods=["GET"])
 def clinic_details() -> Response:
+    """
+    Retrieves the details of the clinic from the database.
+    """
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=RealDictCursor)
@@ -27,6 +30,9 @@ def clinic_details() -> Response:
 
 @bp.route("/update_clinic", methods=["POST"])
 def update_clinic() -> Response:
+    """
+    Updates specific details of the clinic in the database.
+    """
     try:
         data = request.json
         value = data.get('value')
