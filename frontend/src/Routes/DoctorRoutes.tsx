@@ -5,7 +5,6 @@ import StartAppointment from "../DoctorComponents/PatientAppointment";
 import PatientProfile from "../Admin/PatientNewProfile";
 import DoctorProfile from "../Admin/DoctorProfile";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 const DoctorRoutes = ({ userRole }: { userRole: string }) => (
 

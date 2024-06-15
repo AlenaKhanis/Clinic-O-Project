@@ -6,7 +6,6 @@ import DoctorProfile from '../Admin/DoctorProfile';
 import PatientProfile from '../Admin/PatientNewProfile';
 import AdminProfile from '../Admin/AdmimProfile';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 const AdminRoutes = ({ userRole , subID }: { userRole: string , subID : string | null}) => (
   <Routes>

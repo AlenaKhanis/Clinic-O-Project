@@ -5,7 +5,7 @@ import { usePatientDetails } from "../useFunctions/usePatientDetails";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 import React from "react";
 
-function PatientHistoryAppointments({ BACKEND_URL, patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
+function PatientHistoryAppointments({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
     const [selectHistoryAppointments, setSelectHistoryAppointments] = useState<Appointment[]>([]);
     const { getPatientHistoryAppointments } = usePatientDetails();
     const { getDoctorById } = useDoctorAppointments();
