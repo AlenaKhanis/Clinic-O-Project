@@ -14,7 +14,7 @@ class Appointment:
     patient_id: Optional[int] = None
     summary: Optional[str] = None
     written_diagnosis: Optional[str] = None
-    written_prescriptions: Optional[str] = None
+    written_prescription: Optional[str] = None
 
     def add_open_appointment_for_doctor(self, cursor) -> bool:
         sql_query = """
@@ -148,41 +148,41 @@ class Appointment:
             logging.error(f"Unexpected error occurred while fetching history patient appointments: {e}")
             return []
 
-    @classmethod
-    def add_summary(cls, cursor, summary: str, diagnosis: str, prescription: str, appointment_id: int, patient_id: int) -> bool:
-        try:
-            # Update the appointments table
-            appointment_query = """
-                UPDATE appointments
-                SET summary = %s,
-                    written_diagnosis = %s,
-                    written_prescriptions = %s,
-                    status = 'completed',
-                    updated_date = CURRENT_TIMESTAMP,
-                    date_time = CURRENT_TIMESTAMP
-                WHERE id = %s
-            """
-            cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
+    # @classmethod
+    # def add_summary(cls, cursor, summary: str, diagnosis: str, prescription: str, appointment_id: int, patient_id: int) -> bool:
+    #     try:
+    #         # Update the appointments table
+    #         appointment_query = """
+    #             UPDATE appointments
+    #             SET summary = %s,
+    #                 written_diagnosis = %s,
+    #                 written_prescription = %s,
+    #                 status = 'completed',
+    #                 updated_date = CURRENT_TIMESTAMP,
+    #                 date_time = CURRENT_TIMESTAMP
+    #             WHERE id = %s
+    #         """
+    #         cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
 
-            # Update the patients table with prescription and diagnosis
-            patient_query = """
-                UPDATE patients
-                SET diagnosis = COALESCE(diagnosis, '') || %s,
-                    prescription = COALESCE(prescription, '') || %s
-                WHERE id = %s
-            """
-            cursor.execute(patient_query, (diagnosis, prescription, patient_id))
+    #         # Update the patients table with prescription and diagnosis
+    #         patient_query = """
+    #             UPDATE patients
+    #             SET diagnosis = COALESCE(diagnosis, '') || %s,
+    #                 prescription = COALESCE(prescription, '') || %s
+    #             WHERE id = %s
+    #         """
+    #         cursor.execute(patient_query, (diagnosis, prescription, patient_id))
 
-            cursor.connection.commit()
-            return True
-        except psycopg2.Error as e:
-            logging.error(f"PostgreSQL error occurred while adding summary: {e}")
-            cursor.connection.rollback()
-            return False
-        except Exception as e:
-            logging.error(f"Unexpected error occurred while adding summary: {e}")
-            cursor.connection.rollback()
-            return False
+    #         cursor.connection.commit()
+    #         return True
+    #     except psycopg2.Error as e:
+    #         logging.error(f"PostgreSQL error occurred while adding summary: {e}")
+    #         cursor.connection.rollback()
+    #         return False
+    #     except Exception as e:
+    #         logging.error(f"Unexpected error occurred while adding summary: {e}")
+    #         cursor.connection.rollback()
+    #         return False
 
     @classmethod
     def get_appointments_history(cls, cursor, doctor_id: int) -> List[dict]:
@@ -233,3 +233,39 @@ class Appointment:
         except Exception as e:
             logging.error(f"Unexpected error occurred while getting all appointments: {e}")
             return []
+
+    @classmethod
+    def add_summary(cls, cursor, summary: str, diagnosis: str, prescription: str, appointment_id: int, patient_id: int) -> bool:
+        try:
+            # Update the appointments table
+            appointment_query = """
+                UPDATE appointments
+                SET summary = %s,
+                    written_diagnosis = %s,
+                    written_prescription = %s,
+                    status = 'completed',
+                    updated_date = CURRENT_TIMESTAMP,
+                    date_time = CURRENT_TIMESTAMP
+                WHERE id = %s
+            """
+            cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
+
+            # Update the patients table with prescription and diagnosis as arrays
+            patient_query = """
+                UPDATE patients
+                SET diagnosis = array_append(COALESCE(diagnosis, '{}'), %s),
+                    prescription = array_append(COALESCE(prescription, '{}'), %s)
+                WHERE id = %s
+            """
+            cursor.execute(patient_query, (diagnosis, prescription, patient_id))
+
+            cursor.connection.commit()
+            return True
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while adding summary: {e}")
+            cursor.connection.rollback()
+            return False
+        except Exception as e:
+            logging.error(f"Unexpected error occurred while adding summary: {e}")
+            cursor.connection.rollback()
+            return False

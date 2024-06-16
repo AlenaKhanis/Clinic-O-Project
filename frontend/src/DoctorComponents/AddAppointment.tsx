@@ -66,7 +66,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     setShowAlert(true);
                     setAlertTimer(setTimeout(() => {
                         setShowAlert(false);
-                    }, 3000)); // Hide alert after 3 seconds
+                    }, 1000)); 
                 } else {
                     fetch(`${BACKEND_URL}/add_appointment`, {
                         method: "POST",
@@ -80,15 +80,15 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                             setShowAlert(true);
                             setAlertTimer(setTimeout(() => {
                                 setShowAlert(false);
-                                onSuccess(); // Trigger onSuccess callback after hiding alert
-                            }, 3000)); // Hide alert after 3 seconds
+                                onSuccess(); 
+                            }, 1000));
                         } else {
                             setAlertVariant('danger');
                             setAlertMessage("Oops! There was a problem scheduling the appointment.");
                             setShowAlert(true);
                             setAlertTimer(setTimeout(() => {
                                 setShowAlert(false);
-                            }, 3000)); // Hide alert after 3 seconds
+                            }, 1000)); 
                         }
                     })
                     .catch(error => {
@@ -98,7 +98,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                         setShowAlert(true);
                         setAlertTimer(setTimeout(() => {
                             setShowAlert(false);
-                        }, 3000)); // Hide alert after 3 seconds
+                        }, 1000));
                     });
                 }
             })
@@ -109,7 +109,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                 setShowAlert(true);
                 setAlertTimer(setTimeout(() => {
                     setShowAlert(false);
-                }, 3000)); // Hide alert after 3 seconds
+                }, 1000));
             });
         } else {
             console.error("Date or Time not selected");

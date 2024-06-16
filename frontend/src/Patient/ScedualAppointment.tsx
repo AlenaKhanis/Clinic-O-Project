@@ -46,13 +46,21 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
     // Effect to fetch available specialties from the backend
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_specialties`)
-            .then(response => response.json())
-            .then((data: { specialtys: string[] }) => {
-                setSpecialties([...new Set(data.specialtys)]);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
             })
-            .catch(error => console.error('Error fetching specialties:', error));
+            .then((data: { specialties: string[] }) => {
+                setSpecialties([...new Set(data.specialties)]);
+            })
+            .catch(error => {
+                console.error('Error fetching specialties:', error);
+            });
     }, []);
 
+  
     // Effect to handle search when selectedSpecialty or searchName changes
     useEffect(() => {
         handleSearch();

@@ -9,7 +9,7 @@ bp = Blueprint("appointments", __name__)
 @bp.route("/add_appointment", methods=["POST"])
 def add_appointment() -> Response:
     """
-    Endpoint to add a new open appointment to doctor .
+    Endpoint to add a new open appointment to a doctor.
     Expects JSON data with 'doctor_id' and 'datetime'.
     """
     try:
@@ -27,9 +27,10 @@ def add_appointment() -> Response:
 
         with get_db() as db:
             with db.cursor() as cursor:
-                appointment.add_open_appointment_for_doctor(cursor)
+                # Assuming add_open_appointment_for_doctor now returns the appointment ID
+                appointment_id = appointment.add_open_appointment_for_doctor(cursor)
                 db.commit()
-                return jsonify({'message': 'Appointment added successfully'}), 200
+                return jsonify({'message': 'Appointment added successfully', 'appointment_id': appointment_id}), 200
 
     except KeyError as e:
         return jsonify({'error': f'Missing key: {str(e)}'}), 400
@@ -39,7 +40,6 @@ def add_appointment() -> Response:
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 @bp.route("/check_appointment", methods=['GET'])
 def check_appointment() -> Response:
@@ -149,6 +149,33 @@ def get_history_patient_appointments(patient_id):
         return jsonify({'error': str(e)}), 500
 
 
+# @bp.route("/add_summary/<appointment_id>/<patient_id>", methods=["POST"])
+# def add_summary(appointment_id, patient_id):
+#     """
+#     Endpoint to add a summary (diagnosis, prescription) to an appointment by doctor.
+#     """
+#     try:
+#         data = request.json
+#         summary = data.get('summary')
+#         diagnosis = data.get('diagnosis')
+#         prescription = data.get('prescription')
+
+#         with get_db() as db:
+#             with db.cursor() as cursor:
+#                 success = Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patient_id)
+
+#                 if success:
+#                     db.commit()
+#                     return jsonify({"message": "Form data received and processed successfully"}), 200
+#                 else:
+#                     return jsonify({'error': 'Failed to update appointment and patient records'}), 500
+
+#     except KeyError as e:
+#         return jsonify({'error': f'Missing key: {str(e)}'}), 400
+
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
+
 @bp.route("/add_summary/<appointment_id>/<patient_id>", methods=["POST"])
 def add_summary(appointment_id, patient_id):
     """
@@ -175,6 +202,7 @@ def add_summary(appointment_id, patient_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 @bp.route("/get_appointments_history/<doctor_id>")
