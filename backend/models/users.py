@@ -79,7 +79,7 @@ class User:
                     WHERE d.doctor_id = %s;
                     """, (user_id,))
                 updated_data = cursor.fetchone()
-                return "Doctor profile updated successfully", updated_data
+                return updated_data
 
             elif field == 'package':
                 cursor.execute("""
@@ -94,7 +94,7 @@ class User:
                     WHERE p.patient_id = %s;
                     """, (user_id,))
                 updated_data = cursor.fetchone()
-                return "Patient profile updated successfully", updated_data
+                return updated_data
 
             else:
                 cursor.execute(f"""
@@ -105,7 +105,7 @@ class User:
                     """, (value, user_id))
                 cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
                 updated_data = cursor.fetchone()
-                return "User profile updated successfully", updated_data
+                return updated_data
 
         except psycopg2.Error as e:
             return f"PostgreSQL error occurred while updating user profile: {e}", None

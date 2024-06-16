@@ -48,11 +48,12 @@ def edit_user_profile_route(user_id):
 
         updated_fields = {}
         for field, value in updated_data.items():
-            updated_profile, updated_data = User.edit_user_profile(cursor, user_id, field, value)
-            if not updated_profile:
+            updated_data = User.edit_user_profile(cursor, user_id, field, value)
+            
+            if not updated_data:
                 db.rollback()
                 return jsonify({'error': f"Error updating user profile: {updated_data}"}), 500
-
+            
             updated_fields[field] = value
 
         db.commit()
