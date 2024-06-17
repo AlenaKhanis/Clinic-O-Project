@@ -86,7 +86,6 @@ class Appointment:
                 """,
                 (patient_id, appointment_id)
             )
-            cursor.connection.commit()
             return True
         except psycopg2.Error as e:
             logging.error(f"PostgreSQL error occurred while scheduling appointment: {e}")
@@ -269,3 +268,5 @@ class Appointment:
             logging.error(f"Unexpected error occurred while adding summary: {e}")
             cursor.connection.rollback()
             return False
+
+

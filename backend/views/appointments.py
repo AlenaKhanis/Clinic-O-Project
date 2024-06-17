@@ -12,11 +12,18 @@ def add_appointment() -> Response:
     Endpoint to add a new open appointment to a doctor.
     Expects JSON data with 'doctor_id' and 'datetime'.
     """
-    try:
-        data = request.get_json()
-        doctor_id = data.get("doctor_id")
-        datetime_str = data.get("datetime")
 
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.get_json()
+    doctor_id = data.get("doctor_id")
+    datetime_str = data.get("datetime")
+
+    if not doctor_id or not datetime_str:
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    try:
         datetime_object = datetime.fromisoformat(datetime_str)
 
         appointment = Appointment(
@@ -24,21 +31,15 @@ def add_appointment() -> Response:
             doctor_id=doctor_id,
             status="open"
         )
-
-        with get_db() as db:
-            with db.cursor() as cursor:
-                # Assuming add_open_appointment_for_doctor now returns the appointment ID
-                appointment_id = appointment.add_open_appointment_for_doctor(cursor)
-                db.commit()
-                return jsonify({'message': 'Appointment added successfully', 'appointment_id': appointment_id}), 200
-
-    except KeyError as e:
-        return jsonify({'error': f'Missing key: {str(e)}'}), 400
+        appointment.add_open_appointment_for_doctor(cursor)
+        db.commit()
+        return jsonify({'message': 'Appointment added successfully'}), 200
 
     except ValueError as e:
         return jsonify({'error': f'Invalid datetime format: {str(e)}'}), 400
 
     except Exception as e:
+        db.rollback()
         return jsonify({'error': str(e)}), 500
 
 @bp.route("/check_appointment", methods=['GET'])
@@ -49,13 +50,15 @@ def check_appointment() -> Response:
     appointment_datetime_str = request.args.get('datetime')
     doctor_id = request.args.get('doctor_id')
 
+    # Validate parameters
+    if not datetime or not doctor_id:
+        return jsonify({'error': 'Missing parameters'}), 400
+
     try:
         datetime_obj = datetime.fromisoformat(appointment_datetime_str)
-
         with get_db() as db:
-            with db.cursor() as cursor:
+            with db.cursor(cursor_factory=RealDictCursor) as cursor:
                 exists = Appointment.check_appointment_exists(datetime_obj, doctor_id, cursor)
-
         return jsonify({'exists': exists}), 200
 
     except ValueError as e:
@@ -64,7 +67,7 @@ def check_appointment() -> Response:
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
+# get appointments by doctor id
 @bp.route("/get_appointments/<doctor_id>", methods=['GET'])
 def get_appointments(doctor_id) -> Response:
     """
