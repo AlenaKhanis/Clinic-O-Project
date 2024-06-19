@@ -1,0 +1,6 @@
+/* Assuming you have a CSS file or styled-components setup */
+.doctor-row:hover {
+    background-color: #918d8d; /* Light gray background */
+    cursor: pointer; /* Show pointer cursor on hover */
+  }
+  

@@ -6,6 +6,7 @@ import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { useBackendUrl } from '../BackendUrlContext';
 import { Button } from 'react-bootstrap';
+import '../css/SearchDoctors.css';
 
 /**
  * SearchDoctors Component

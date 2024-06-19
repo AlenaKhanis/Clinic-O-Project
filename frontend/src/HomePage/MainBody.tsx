@@ -19,7 +19,7 @@ function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
       <h1>Welcome clinic-O <br />Caring for You<br /> Caring for Life</h1>
       {userRole === 'patient' ? (
         <Link to="/patient">
-          <Button className="main-button" variant="outline-dark">My Space</Button>
+          <Button className="main-button" variant="outline-dark">Panel</Button>
         </Link>
       ) : userRole === 'doctor' ? (
         <Link to="/doctor">
