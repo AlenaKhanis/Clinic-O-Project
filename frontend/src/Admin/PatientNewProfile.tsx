@@ -187,8 +187,9 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
                         </div>
                          
                         </>
-                        
-                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>       
+                {isOwner &&  patient &&(        
+                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button> 
+                )}      
                 {isOwner && (
                 <>
                 <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>

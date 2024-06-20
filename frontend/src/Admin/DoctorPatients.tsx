@@ -32,20 +32,19 @@ function DoctorPatients({ doctorId }: { doctorId: number }) {
               <th>Age</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Created date</th>
             </tr>
           </thead>
           <tbody>
             {patients.map((patient) => (
+              console.log(patient.patient_id),
               <tr key={patient.id}>
                 <td>{patient.package}</td>
                 <td>
-                  <Link to={`/doctor/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
+                  <Link to={`/admin/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
                 </td>
                 <td>{patient.age}</td>
                 <td>{patient.email}</td>
                 <td>{patient.phone}</td>
-                <td>{new Date(patient.created_date).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

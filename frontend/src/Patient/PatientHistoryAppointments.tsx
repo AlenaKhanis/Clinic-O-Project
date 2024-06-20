@@ -59,9 +59,9 @@ function PatientHistoryAppointments({ patientId, refreshAppointments }: PatientP
                                     <td colSpan={3}>
                                         <Collapse in={openAppointments[appointment.id]}>
                                             <div id={`appointment-details-${appointment.id}`}>
-                                                <p><span style={{ fontWeight: 'bold' }}>Summary:</span> {appointment.summery}</p>
-                                                <p>Written Diagnosis: {appointment.writen_diagnosis}</p>
-                                                <p>Written Prescription: {appointment.writen_prescription}</p>
+                                                <p><span style={{ fontWeight: 'bold' }}>Summary:</span> {appointment.summary}</p>
+                                                <p>Written Diagnosis: {appointment.written_diagnosis}</p>
+                                                <p>Written Prescription: {appointment.written_prescription}</p>
                                                 <p>Doctor: {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].full_name : 'Loading...'}</p>
                                                 <p>Specialty: {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].specialty : 'Loading...'}</p>
                                             </div>

@@ -51,9 +51,9 @@ const PatientDetails = ({isowner} : {isowner : boolean}) => {
             </Button>
             <Collapse in={openDiagnosis}>
               <div id="diagnosis-collapse-text">
-                {Array.isArray(patient.deagnosis) && patient.deagnosis.length > 0 ? (
+                {Array.isArray(patient.diagnosis) && patient.diagnosis.length > 0 ? (
                   <ListGroup as="ol" numbered>
-                    {patient.deagnosis.map((diagnosis: string, index: number) => (
+                    {patient.diagnosis.map((diagnosis: string, index: number) => (
                       <ListGroup.Item as="li" key={index}>{diagnosis}</ListGroup.Item>
                     ))}
                   </ListGroup>

@@ -199,9 +199,9 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
               {selectedAppointment.status === 'completed' && patient && (
                 <>
                   <h4>Patient: {patient.full_name}</h4>
-                  <p>Summary: {selectedAppointment.summery}</p>
-                  <p>Written diagnosis: {selectedAppointment.writen_diagnosis}</p>
-                  <p>Written Prescription: {selectedAppointment.writen_prescription}</p>
+                  <p>Summary: {selectedAppointment.summary}</p>
+                  <p>Written diagnosis: {selectedAppointment.written_diagnosis}</p>
+                  <p>Written Prescription: {selectedAppointment.written_prescription}</p>
                 </>
               )}
               {selectedAppointment.status === 'schedule' && (

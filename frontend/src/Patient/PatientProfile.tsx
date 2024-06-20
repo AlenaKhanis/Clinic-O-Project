@@ -48,9 +48,9 @@ function PatientProfile({  patientId }: PatientProps) {
                             </Button>
                             <Collapse in={openDiagnosis}>
                                 <div id="collapse-diagnosis">
-                                    {Array.isArray(selectedPatientDetails.deagnosis) && selectedPatientDetails.deagnosis.length > 0 ? (
+                                    {Array.isArray(selectedPatientDetails.diagnosis) && selectedPatientDetails.diagnosis.length > 0 ? (
                                         <ListGroup as="ol" numbered>
-                                            {selectedPatientDetails.deagnosis.map((deagnosis, index) => (
+                                            {selectedPatientDetails.diagnosis.map((deagnosis, index) => (
                                                 <ListGroup.Item as="li" key={index}>{deagnosis}</ListGroup.Item>
                                             ))}
                                         </ListGroup>

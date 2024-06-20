@@ -61,6 +61,9 @@ CREATE TABLE IF NOT EXISTS appointments (
     doctor_id INTEGER NOT NULL,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    summary TEXT,
+    written_prescription TEXT,
+    written_diagnosis TEXT,
     FOREIGN KEY (doctor_id) REFERENCES doctors (doctor_id) ON DELETE CASCADE,
     FOREIGN KEY (patient_id) REFERENCES patients (patient_id) ON DELETE CASCADE
 );
