@@ -121,7 +121,11 @@ class Appointment:
         """
         try:
             cursor.execute(sql_query, (appointment_id,))
-            return True
+            # Check if any rows were affected by the update
+            if cursor.rowcount == 0:
+                return False  # No rows updated means appointment does not exist
+            else:
+                return True   # Rows updated means appointment was successfully cancelled
         except psycopg2.Error as e:
             logging.error(f"PostgreSQL error occurred while cancelling appointment: {e}")
             cursor.connection.rollback()
@@ -130,6 +134,7 @@ class Appointment:
             logging.error(f"Unexpected error occurred while cancelling appointment: {e}")
             cursor.connection.rollback()
             return False
+
 
     @classmethod
     def get_history_patient_appointment(cls, cursor, patient_id: int) -> List[dict]:
@@ -146,43 +151,7 @@ class Appointment:
         except Exception as e:
             logging.error(f"Unexpected error occurred while fetching history patient appointments: {e}")
             return []
-
-    # @classmethod
-    # def add_summary(cls, cursor, summary: str, diagnosis: str, prescription: str, appointment_id: int, patient_id: int) -> bool:
-    #     try:
-    #         # Update the appointments table
-    #         appointment_query = """
-    #             UPDATE appointments
-    #             SET summary = %s,
-    #                 written_diagnosis = %s,
-    #                 written_prescription = %s,
-    #                 status = 'completed',
-    #                 updated_date = CURRENT_TIMESTAMP,
-    #                 date_time = CURRENT_TIMESTAMP
-    #             WHERE id = %s
-    #         """
-    #         cursor.execute(appointment_query, (summary, diagnosis, prescription, appointment_id))
-
-    #         # Update the patients table with prescription and diagnosis
-    #         patient_query = """
-    #             UPDATE patients
-    #             SET diagnosis = COALESCE(diagnosis, '') || %s,
-    #                 prescription = COALESCE(prescription, '') || %s
-    #             WHERE id = %s
-    #         """
-    #         cursor.execute(patient_query, (diagnosis, prescription, patient_id))
-
-    #         cursor.connection.commit()
-    #         return True
-    #     except psycopg2.Error as e:
-    #         logging.error(f"PostgreSQL error occurred while adding summary: {e}")
-    #         cursor.connection.rollback()
-    #         return False
-    #     except Exception as e:
-    #         logging.error(f"Unexpected error occurred while adding summary: {e}")
-    #         cursor.connection.rollback()
-    #         return False
-
+        
     @classmethod
     def get_appointments_history(cls, cursor, doctor_id: int) -> List[dict]:
         sql_query = """
@@ -252,9 +221,9 @@ class Appointment:
             # Update the patients table with prescription and diagnosis as arrays
             patient_query = """
                 UPDATE patients
-                SET diagnosis = array_append(COALESCE(diagnosis, '{}'), %s),
-                    prescription = array_append(COALESCE(prescription, '{}'), %s)
-                WHERE id = %s
+                SET diagnosis = array_append(COALESCE(diagnosis, ARRAY[]::TEXT[]), %s),
+                    prescription = array_append(COALESCE(prescription, ARRAY[]::TEXT[]), %s)
+                WHERE patient_id = %s
             """
             cursor.execute(patient_query, (diagnosis, prescription, patient_id))
 
@@ -268,5 +237,3 @@ class Appointment:
             logging.error(f"Unexpected error occurred while adding summary: {e}")
             cursor.connection.rollback()
             return False
-
-

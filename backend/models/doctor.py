@@ -14,6 +14,7 @@ class Doctor(User):
 
     def add_doctor(self, cursor) -> bool:
         try:
+
             cursor.execute(
                 """
                 INSERT INTO doctors (doctor_id, specialty)
@@ -86,9 +87,8 @@ class Doctor(User):
             print(f"Unexpected error occurred while retrieving doctor's patients: {e}")
             return None
         
-    
     @classmethod
-    def get_doctor_by_name(cls, cursor, doctor_name: str) -> List[dict]:
+    def get_doctor_by_name(cls, cursor, doctor_name: str) -> Optional[List[dict]]:
         try:
             cursor.execute("""
                 SELECT DISTINCT d.*, u.full_name, u.age, u.email, u.phone
@@ -96,9 +96,12 @@ class Doctor(User):
                 INNER JOIN users u ON u.id = d.doctor_id
                 WHERE LOWER(u.full_name) LIKE LOWER(%s)
                 ORDER BY u.full_name;
-                """, (f'{doctor_name}%',))
+            """, (f'{doctor_name}%',))
             doctor_data = cursor.fetchall()
-            return doctor_data
+            if doctor_data:
+                return doctor_data
+            else:
+                return None
         except psycopg2.Error as e:
             print(f"PostgreSQL error occurred while retrieving doctor by name: {e}")
             return None

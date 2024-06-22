@@ -30,6 +30,7 @@ class User:
             return False
 
     def add_user(self, cursor) -> int:
+        
         try:
             cursor.execute("""
                 INSERT INTO users (username, password, email, full_name, role, age, phone, created_date, updated_date)
@@ -37,16 +38,24 @@ class User:
                 RETURNING id;
                 """,
                 (self.username, self.password, self.email, self.full_name, self.role,
-                 self.age, self.phone, self.created_date, self.updated_date)
+                self.age, self.phone, self.created_date, self.updated_date)
             )
-            self.id = cursor.fetchone()[0]
-            return self.id
+
+            inserted_row = cursor.fetchone()
+            if inserted_row:
+                self.id = inserted_row['id']
+                return self.id
+            else:
+                print("No ID returned after insertion")
+                return None
+
         except psycopg2.Error as e:
             print(f"PostgreSQL error occurred while inserting user: {e}")
-            return None
+            return None 
         except Exception as e:
             print(f"Unexpected error occurred while inserting user: {e}")
-            return None
+            return None 
+
 
     @classmethod
     def get_user(cls, cursor, user_id: int) -> Optional[dict]:

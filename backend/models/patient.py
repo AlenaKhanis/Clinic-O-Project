@@ -65,7 +65,7 @@ class Patient(User):
                 INNER JOIN users u ON u.id = p.patient_id;
                 """)
             patients_data = cursor.fetchall()
-            return patients_data  # Returns a list of all patients with details, or None if an error occurs
+            return patients_data  
         except (Error, DatabaseError) as e:
             print(f"Error retrieving all patients: {e}")
             return None

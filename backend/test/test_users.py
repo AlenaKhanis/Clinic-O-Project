@@ -1,102 +1,130 @@
-import psycopg2
 import pytest
-from unittest.mock import MagicMock
-from models.users import User
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from datetime import datetime
+from models.users import User  
+from dotenv import load_dotenv
+
+load_dotenv()
+
+@pytest.fixture(scope="function")
+def db_cursor():
+    conn = psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT")
+    )
+    conn.autocommit = True
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    yield cursor
+    cursor.close()
+    conn.close()
+
+def cleanup(db_cursor):
+    db_cursor.execute("DELETE FROM users WHERE id = %s OR username = %s", (999, 'testuser'))
+    db_cursor.execute("DELETE FROM doctors WHERE doctor_id = %s", (999,))
+    db_cursor.execute("DELETE FROM patients WHERE patient_id = %s", (999,))
 
 @pytest.fixture
-def mock_cursor():
-    cursor = MagicMock()
-    cursor.fetchone.return_value = [2]  
-    return cursor
+def user():
+    return User(
+        username="testuser",
+        password="testpass",
+        email="test@example.com",
+        full_name="Test User",
+        role="patient",
+        age=30,
+        phone="1234567890",
+        created_date=datetime.now(),
+        updated_date=datetime.now()
+    )
 
-def test_add_user_success(mock_cursor):
-    user = User(username="testuser", password="testpassword", email="test@example.com",
-                full_name="Test User", role="patient", age=30, phone="1234567890",
-                created_date="2024-01-01", updated_date="2024-01-01")
-    user_id = user.add_user(mock_cursor)
-    assert user_id == 2
-    mock_cursor.execute.assert_called_once_with("""
-                INSERT INTO users (username, password, email, full_name, role, age, phone, created_date, updated_date)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id;
-                """,
-                ("testuser", "testpassword", "test@example.com", "Test User", "patient",
-                 30, "1234567890", "2024-01-01", "2024-01-01")
-            )
-    mock_cursor.fetchone.assert_called_once()
+
+
+# def test_check_username_exists(db_cursor):
+#     db_cursor.execute("INSERT INTO users (id, username, password, full_name,role) VALUES (%s, %s, %s, %s,%s)", (999, 'testuser', 'testpass', 'Test User' , 'patient'))
+
+#     try:
+#         exists = User.check_username_exists("testuser", db_cursor)
+#         assert exists == True
     
+#         not_exists = User.check_username_exists("nonexistentuser", db_cursor)
+#         assert not_exists == False
+#     finally:
+#         cleanup(db_cursor)
 
-def test_edit_user_profile_specialty(mock_cursor):
-    mock_cursor.fetchone.return_value = {'doctor_id': 1, 'specialty': 'Cardiology'}
-    data = User.edit_user_profile(mock_cursor, 1, 'specialty', 'Cardiology')
-    assert data == {'doctor_id': 1, 'specialty': 'Cardiology'}
-    mock_cursor.execute.assert_any_call("""
-                    UPDATE doctors
-                    SET specialty = %s
-                    WHERE doctor_id = %s;
-                    """, ('Cardiology', 1))
-    mock_cursor.execute.assert_any_call("""
-                    SELECT DISTINCT d.*, u.username, u.full_name, u.age, u.email, u.phone 
-                    FROM doctors d
-                    INNER JOIN users u ON u.id = d.doctor_id
-                    WHERE d.doctor_id = %s;
-                    """, (1,))
+def test_add_user(db_cursor , user):
+    try:
 
+        user_id = user.add_user(db_cursor)
+        assert user_id is not None     
+        db_cursor.execute("SELECT * FROM users WHERE username = %s", ('testuser',))
+        added_user = db_cursor.fetchone()
 
-def test_edit_user_profile_package(mock_cursor):
-    mock_cursor.fetchone.return_value = {'patient_id': 1, 'package': 'Premium'}
-    data = User.edit_user_profile(mock_cursor, 1, 'package', 'Premium')
-    assert data == {'patient_id': 1, 'package': 'Premium'}
-    
-    mock_cursor.execute.assert_any_call("""
-                    UPDATE patients
-                    SET package = %s
-                    WHERE patient_id = %s;
-                    """, ('Premium', 1))
-    mock_cursor.execute.assert_any_call("""
-                    SELECT DISTINCT p.*, u.username, u.full_name, u.age, u.email, u.phone 
-                    FROM patients p
-                    INNER JOIN users u ON u.id = p.patient_id
-                    WHERE p.patient_id = %s;
-                    """, (1,))
+        
+        assert added_user is not None
+        assert added_user['username'] == 'testuser'
+        assert added_user['full_name'] == 'Test User'
+    finally:
+        cleanup(db_cursor)
 
 
-def test_edit_user_profile_general(mock_cursor):
-    mock_cursor.fetchone.return_value = {'id': 1, 'username': 'john_doe'}
-    data = User.edit_user_profile(mock_cursor, 1, 'username', 'john_doe')
-    
-    
-    assert data == {'id': 1, 'username': 'john_doe'}
-    mock_cursor.execute.assert_any_call("""
-                    UPDATE users
-                    SET username = %s,
-                        updated_date = CURRENT_TIMESTAMP
-                    WHERE id = %s;
-                    """, ('john_doe', 1))
-    mock_cursor.execute.assert_any_call("SELECT * FROM users WHERE id = %s", (1,))
+def test_get_user(db_cursor, user):
+    try:
+        user_id = user.add_user(db_cursor)        
+        retrieved_user = User.get_user(db_cursor, user_id)
+        assert retrieved_user is not None
+        assert retrieved_user['username'] == 'testuser'
+        assert retrieved_user['full_name'] == 'Test User'
+    finally:
+        cleanup(db_cursor)
 
-def test_delete_user_success(mock_cursor):
-    message = User.delete_user(mock_cursor, 1)
-    
-    assert message == "User deleted successfully"
-    mock_cursor.execute.assert_called_once_with("DELETE FROM users WHERE id = %s", (1,))
+def test_edit_user_profile(db_cursor,user):
+    try:
+        user_id = user.add_user(db_cursor)
+        updated_user = User.edit_user_profile(db_cursor, user_id, 'email', 'test2@example.com')
+        assert updated_user['email'] == 'test2@example.com'
+        
+        updated_user = User.edit_user_profile(db_cursor, user_id, 'full_name', 'Updated User')
+        assert updated_user['full_name'] == 'Updated User'
+    finally:
+        cleanup(db_cursor)
 
-def test_add_user_success_empty_cursor(mock_cursor):
-    mock_cursor.fetchone.return_value = None
-    
-    user = User(username="testuser", password="testpassword", email="test@example.com",
-                full_name="Test User", role="patient", age=30, phone="1234567890",
-                created_date="2024-01-01", updated_date="2024-01-01")
-    
-    user_id = user.add_user(mock_cursor)
-    assert user_id is None
-    mock_cursor.execute.assert_called_once_with("""
-                INSERT INTO users (username, password, email, full_name, role, age, phone, created_date, updated_date)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id;
-                """,
-                ("testuser", "testpassword", "test@example.com", "Test User", "patient",
-                 30, "1234567890", "2024-01-01", "2024-01-01")
-            )
-    mock_cursor.fetchone.assert_called_once()
+def test_edit_user_profile_doctor(db_cursor , user):
+    try:
+        user_id = user.add_user(db_cursor)
+        
+        db_cursor.execute("INSERT INTO doctors (doctor_id, specialty) VALUES (%s, %s)", (user_id, 'General'))
+        
+        updated_doctor = User.edit_user_profile(db_cursor, user_id, 'specialty', 'Cardiology')
+        assert updated_doctor['specialty'] == 'Cardiology'
+    finally:
+        cleanup(db_cursor)
 
+def test_edit_user_profile_patient(db_cursor,user):
+    try:
+        user_id = user.add_user(db_cursor)
+        
+        db_cursor.execute("INSERT INTO patients (patient_id, package) VALUES (%s, %s)", (user_id, 'Silver'))
+        
+        updated_patient = User.edit_user_profile(db_cursor, user_id, 'package', 'Premium')
+        assert updated_patient['package'] == 'Premium'
+    finally:
+        cleanup(db_cursor)
+
+def test_delete_user(db_cursor,user):
+    try:
+        user_id = user.add_user(db_cursor)
+        
+        result = User.delete_user(db_cursor, user_id)
+        assert result == "User deleted successfully"
+        
+        db_cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+        deleted_user = db_cursor.fetchone()
+        
+        assert deleted_user is None
+    finally:
+        cleanup(db_cursor)

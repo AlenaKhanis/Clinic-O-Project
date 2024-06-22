@@ -98,10 +98,12 @@ def test_get_all_patients():
         {'patient_id': 888, 'username': 'test_username_patientTWO', 'package': 'Gold'}
     ])
     
-    patients = Patient.get_all_patients(db_cursor)
-    
+    patients = Patient.get_all_patients(db_cursor)  
+
     assert len(patients) == 2
     assert patients[0]['patient_id'] == 999
     assert patients[1]['patient_id'] == 888
     assert patients[0]['package'] == 'Silver'
     assert patients[1]['package'] == 'Gold'
+    assert patients[0]['username'] == 'test_username_patient'
+    assert patients[1]['username'] == 'test_username_patientTWO'

@@ -1,110 +1,185 @@
-from typing import List
+import os
+from unittest.mock import MagicMock
 import pytest
-from unittest.mock import MagicMock, patch
-from models.doctor import Doctor
 import psycopg2
+from psycopg2.extras import RealDictCursor
+from models.doctor import Doctor
+from dotenv import load_dotenv
 
-@pytest.fixture
-def mock():
-    return MagicMock()
+load_dotenv()
 
-@pytest.fixture
-def mock_cursor(mock):
-    mock_cursor = mock.MagicMock()
-    mock_cursor.execute = mock.MagicMock()
-    mock_cursor.fetchall = mock.MagicMock()
-    return mock_cursor
+@pytest.fixture(scope="function")
+def db_cursor(request):
+    # Connect to the test database
+    conn = psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT")
+    )
+    conn.autocommit = True
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    
+    # Cleanup function
+    def cleanup():
+        try:
+            cursor.execute("DELETE FROM patients WHERE patient_id IN (999, 888)")
+            cursor.execute("DELETE FROM users WHERE id IN (999, 888)")
+            cursor.execute("DELETE FROM doctors WHERE doctor_id = 888")
+            cursor.execute("DELETE FROM appointments WHERE id = 101")
+        except psycopg2.Error as e:
+            print(f"Error during cleanup: {e}")
+        except Exception as e:
+            print(f"Unexpected error during cleanup: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+    
+    request.addfinalizer(cleanup)
+    yield cursor 
+    
+
 
 @pytest.fixture
 def doctor():
-    return Doctor(username='test_user_doctor', doctor_id=1, specialty='Cardiology', password='test_pass')
+    return Doctor(username='test_user_doctor', doctor_id=888, specialty='Cardiology', password='test_pass')
 
-def test_add_doctor_psycopg2_error(mock_cursor, doctor):
-    mock_cursor.execute.side_effect = psycopg2.Error
-    result = doctor.add_doctor(mock_cursor)
-    assert result == False
+def test_add_doctor(db_cursor, doctor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'doctor name', 'doctor')
+                      """)
+
+    result = doctor.add_doctor(db_cursor)
+    assert result is True
+
+    db_cursor.execute("SELECT * FROM doctors WHERE doctor_id = %s", (888,))
+    inserted_doctor = db_cursor.fetchone()
+    assert inserted_doctor is not None
+    assert inserted_doctor['doctor_id'] == 888
+    assert inserted_doctor['specialty'] == 'Cardiology'
 
 
-def test_add_doctor_unexpected_error(mock_cursor, doctor):
-    mock_cursor.execute.side_effect = Exception("Unexpected error")
-    result = doctor.add_doctor(mock_cursor)
-    assert result == False
-    mock_cursor.execute.assert_called_once()
+def test_get_doctor(db_cursor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'doctor name', 'doctor')
+                      """)
+    db_cursor.execute("""
+                      INSERT INTO doctors (doctor_id, specialty)
+                       VALUES (888, 'Cardiology')
+                      """)
+ 
+    doctor_data = Doctor.get_doctor(db_cursor, 888)
+    assert doctor_data is not None
+    assert doctor_data['doctor_id'] == 888
+    assert doctor_data['specialty'] == 'Cardiology'
+
+def test_get_doctor_by_specialty(db_cursor, doctor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'doctor name', 'doctor')
+                      """)
+    db_cursor.execute("""
+                      INSERT INTO doctors (doctor_id, specialty)
+                       VALUES (888, 'Cardiology')
+                      """)
+   
+    doctors_data = Doctor.get_doctor_by_specialty(db_cursor, 'Cardiology')
+    assert doctors_data is not None
+    assert len(doctors_data) == 1
+    assert doctors_data[0]['doctor_id'] == 888
+    assert doctors_data[0]['specialty'] == 'Cardiology'
+
+def test_get_doctor_patients(db_cursor, doctor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'doctor name', 'doctor')
+                      """)
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                          VALUES (999, 'test_user_patient', 'test_pass', 'patient name', 'patient')
+                         """)
+    db_cursor.execute("""
+                      INSERT INTO patients (patient_id)
+                       VALUES (999)
+                      """)
+    db_cursor.execute("""
+                        INSERT INTO doctors (doctor_id, specialty)
+                        VALUES (888, 'Cardiology')
+                        """)
+    db_cursor.execute("""INSERT INTO appointments (id, patient_id, doctor_id, date_time, status)
+                        VALUES (101, 999, 888, '2022-01-01 10:00:00 ', 'completed')""")
+ 
+    patients = doctor.get_doctor_patients(db_cursor, 888)
+    assert patients[0]['patient_id'] == 999
+    assert patients[0]['full_name'] == 'patient name'
     
-def test_add_doctor_success(mock_cursor, doctor):
-    result = doctor.add_doctor(mock_cursor)
-    assert result == True
-    mock_cursor.execute.assert_called_once_with(
-        """
-                INSERT INTO doctors (doctor_id, specialty)
-                VALUES (%s, %s)
-                """,
-        (1, 'Cardiology')
-    )
-def test_get_doctor_success(mock_cursor):
-    mock_cursor.fetchone.return_value = {'username': 'testdoctor', 'full_name': 'Test Doctor', 'age': 45, 'email': 'test@hospital.com', 'phone': '1234567890'}
-    result = Doctor.get_doctor(mock_cursor, 1)
-    assert result is not None
-    assert result['username'] == 'testdoctor'
+    
+def test_get_doctor_patient_none(db_cursor, doctor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'doctor name', 'doctor')
+                      """)
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                          VALUES (999, 'test_user_patient', 'test_pass', 'patient name', 'patient')
+                         """)
+    db_cursor.execute("""
+                      INSERT INTO patients (patient_id)
+                       VALUES (999)
+                      """)
+    db_cursor.execute("""
+                        INSERT INTO doctors (doctor_id, specialty)
+                        VALUES (888, 'Cardiology')
+                        """)
+ 
+    patients = doctor.get_doctor_patients(db_cursor, 999)
+    assert patients == []
+    
+def test_get_doctor_by_name(db_cursor):
+    db_cursor.execute("""
+                      INSERT INTO users (id, username, password, full_name, role)
+                       VALUES (888, 'test_user_doctor', 'test_pass', 'Doctor Name', 'doctor')
+                      """)
+    db_cursor.execute("""
+                      INSERT INTO doctors (doctor_id, specialty)
+                       VALUES (888, 'Cardiology')
+                      """)
 
-def test_get_doctor_psycopg2_error(mock_cursor):
-    mock_cursor.execute.side_effect = psycopg2.Error("Database error")
-    result = Doctor.get_doctor(mock_cursor, 1)
-    assert result is None
+    doctor_data = Doctor.get_doctor_by_name(db_cursor, 'Doctor Name')
+    
+    assert doctor_data is not None
+    assert len(doctor_data) == 1
+    assert doctor_data[0]['doctor_id'] == 888
+    assert doctor_data[0]['specialty'] == 'Cardiology'
+    assert doctor_data[0]['full_name'] == 'Doctor Name'
 
-def test_get_doctor_unexpected_error(mock_cursor):
-    mock_cursor.execute.side_effect = Exception("Unexpected error")
-    result = Doctor.get_doctor(mock_cursor, 1)
-    assert result is None
 
-def test_get_doctor_by_specialty_success(mock_cursor):
-    mock_cursor.fetchall.return_value = [
-        {'doctor_id': 1, 'specialty': 'Cardiology', 'full_name': 'Dr. Doctor', 'age': 45, 'email': 'doctor@gmail.com', 'phone': '123456789'},
-        {'doctor_id': 2, 'specialty': 'Cardiology', 'full_name': 'Dr. John', 'age': 50, 'email': 'john@gmail.com', 'phone': '123456789'}
-    ]
-    result = Doctor.get_doctor_by_specialty(mock_cursor, 'Cardiology')
-    print("result",result)
-    assert isinstance(result, List)
-    assert len(result) == 2
-    assert result[0]['full_name'] == 'Dr. Doctor'
-    assert result[1]['full_name'] == 'Dr. John'
+def test_get_doctors():
 
-def test_get_doctor_by_specialty_psycopg2_error(mock_cursor):
-    mock_cursor.execute.side_effect = psycopg2.Error("Database error")
-    result = Doctor.get_doctor_by_specialty(mock_cursor, 'Cardiology')
-    assert result is None
+    db_cursor = MagicMock()
+    db_cursor.execute = MagicMock()
 
-def test_get_doctor_by_specialty_unexpected_error(mock_cursor):
-    mock_cursor.execute.side_effect = Exception("Unexpected error")
-    result = Doctor.get_doctor_by_specialty(mock_cursor, 'Cardiology')
-    assert result is None
+    db_cursor.fetchall = MagicMock(return_value=[
+        {
+            'doctor_id': 888,
+            'specialty': 'Cardiology',
+            'full_name': 'doctor name',
+            'age': 45,
+            'email': 'doctor@example.com',
+            'phone': '1234567890'
+        }
+    ])
 
-def test_get_doctor_patients_success(mock_cursor):
-    mock_cursor.fetchall.return_value = [
-        {'patient_id': 1, 'full_name': 'Patient One', 'age': 30, 'email': 'patient1@example.com', 'phone': '111-222-3333'},
-        {'patient_id': 2, 'full_name': 'Patient Two', 'age': 40, 'email': 'patient2@example.com', 'phone': '444-555-6666'}
-    ]
-    result = Doctor.get_doctor_patients(mock_cursor, 1) 
-    assert isinstance(result, List)
-    assert len(result) == 2
-    assert result[0]['full_name'] == 'Patient One'
+    doctors_data = Doctor.get_doctors(db_cursor)
 
-def test_get_doctor_patients_psycopg2_error(mock_cursor):
-    mock_cursor.execute.side_effect = psycopg2.Error("Database error")
-    result = Doctor.get_doctor_patients(mock_cursor, 1)
-    assert result is None
-
-def test_get_doctor_patients_unexpected_error(mock_cursor):
-    mock_cursor.execute.side_effect = Exception("Unexpected error")
-    result = Doctor.get_doctor_patients(mock_cursor, 1)
-    assert result is None
-
-def test_get_doctors(mock_cursor):
-    mock_cursor.fetchall.return_value = [
-        {'doctor_id': 1, 'specialty': 'Cardiology', 'full_name': 'Dr. Doctor', 'age': 45, 'email': 'doctor@gamil.com','phone': '123456789'},
-        {'doctor_id': 2, 'specialty': 'Cardiology', 'full_name': 'Dr. John', 'age': 50, 'email': 'doctor2@gamil.com','phone': '123456789'}
-    ]
-    result = Doctor.get_doctors(mock_cursor)
-    assert isinstance(result, List)
-    assert len(result) == 2
-    assert result[0]['full_name'] == 'Dr. Doctor'
+    assert doctors_data is not None
+    assert len(doctors_data) == 1
+    assert doctors_data[0]['doctor_id'] == 888
+    assert doctors_data[0]['specialty'] == 'Cardiology'
+    assert doctors_data[0]['full_name'] == 'doctor name'
+    assert doctors_data[0]['age'] == 45
+    assert doctors_data[0]['email'] == 'doctor@example.com'
+    assert doctors_data[0]['phone'] == '1234567890'
