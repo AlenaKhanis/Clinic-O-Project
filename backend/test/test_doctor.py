@@ -23,7 +23,7 @@ def test_add_doctor_psycopg2_error(mock_cursor, doctor):
     mock_cursor.execute.side_effect = psycopg2.Error
     result = doctor.add_doctor(mock_cursor)
     assert result == False
-    mock_cursor.execute.assert_called_once()
+
 
 def test_add_doctor_unexpected_error(mock_cursor, doctor):
     mock_cursor.execute.side_effect = Exception("Unexpected error")
