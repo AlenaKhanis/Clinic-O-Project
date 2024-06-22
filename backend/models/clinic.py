@@ -14,30 +14,32 @@ class Clinic():
     clinic_created_date = datetime.now()
     clinic_updated_date = datetime.now()
 
+
     @classmethod
-    def update_clinic_details(cls, cursor, data: dict) -> bool:
+    def update_clinic_details(cls, cursor, clinic_id: int, data: dict) -> bool:
         try:
             for field, value in data.items():
                 cursor.execute(f"""
                     UPDATE clinic
                     SET {field} = %s,
                         updated_date = CURRENT_TIMESTAMP
-                    WHERE id = 1;
-                    """, (value,))
+                    WHERE id = %s;
+                """, (value, clinic_id))
                 print(f"{field} updated successfully")
             return True
         except psycopg2.IntegrityError as e:
-            cursor.connection.rollback()  
+            cursor.connection.rollback()
             print(f"PostgreSQL IntegrityError occurred: {e}")
             return False
         except psycopg2.DatabaseError as e:
-            cursor.connection.rollback()  
+            cursor.connection.rollback()
             print(f"PostgreSQL DatabaseError occurred: {e}")
             return False
         except Exception as e:
             cursor.connection.rollback()
             print(f"An unexpected error occurred: {e}")
             return False
+
   
 
         
