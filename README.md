@@ -2,9 +2,7 @@
 
 This is a demo project for managing clinic appointments for doctors and patients. This backend application is built with Python and PostgreSQL.
 
-## Table of Contents
 - [Clinic-O Project](#clinic-o-project)
-  - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Prerequisites](#prerequisites)
   - [Usage](#usage)
