@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models.doctor import Doctor
-from db import get_db
+from db.db import get_db
 import bcrypt
 from models.users import User
 from models.patient import Patient

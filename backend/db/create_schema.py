@@ -8,8 +8,8 @@ load_dotenv()
 
 
 CURRENT_DIR = Path(__file__).parent
-SCHEMA_PATH = CURRENT_DIR / "sql" / "schema.sql"
-DATA_PATH = CURRENT_DIR / "sql" / "example.sql"
+SCHEMA_PATH = CURRENT_DIR / "../sql/schema.sql"
+DATA_PATH = CURRENT_DIR / "../sql/example.sql"
 
 def run_sql_file(db, file_path):
     with file_path.open() as file:

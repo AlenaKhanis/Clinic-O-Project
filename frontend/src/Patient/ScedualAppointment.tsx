@@ -31,6 +31,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
     const [showAlert, setShowAlert] = useState(false);
     const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'error'>('success');
     const [alertMessage, setAlertMessage] = useState<string>('');
+    const [showNoDoctorsFound,setShowNoDoctorsFound] = useState(false);
 
     // Fetch the backend URL from context
     const BACKEND_URL = useBackendUrl();
@@ -77,7 +78,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
             if (searchName) {
                 query += `/by_name/${searchName}`;
             }
-
+    
             fetch(query)
                 .then(response => {
                     if (!response.ok) {
@@ -86,17 +87,30 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                     return response.json();
                 })
                 .then((data: { doctors: Doctor[] }) => {
-                    setSearchDoctor(data.doctors);
-                    setSelectedDoctorId(null);
-                    setSelectedDoctorAppointments([]);
+                    if (data.doctors.length === 0) {
+                        setSearchDoctor([]);
+                        setShowNoDoctorsFound(true); // Set state to indicate no doctors found
+                    } else {
+                        setSearchDoctor(data.doctors);
+                        setSelectedDoctorId(null);
+                        setSelectedDoctorAppointments([]);
+                        setShowNoDoctorsFound(false); // Reset state if doctors are found
+                    }
                 })
-                .catch(error => console.error('Error fetching doctors:', error));
+                .catch(error => {
+                    console.error('Error fetching doctors:', error);
+                    setSearchDoctor([]);
+                    setShowNoDoctorsFound(true); // Set state on error
+                });
         }
     };
+    
     // Function to handle clicking on a doctor to view their appointments
     const handleDoctorClick = (doctorId: number) => {
-        setSelectedDoctorId(doctorId);
-        if (doctorId) {
+        if (selectedDoctorId === doctorId) {
+            setSelectedDoctorId(null); // Collapse the appointments if clicking on the same doctor again
+        } else {
+            setSelectedDoctorId(doctorId);
             fetchDoctorAppointments(doctorId)
                 .then((data: Appointment[]) => {
                     setSelectedDoctorAppointments(data);
@@ -104,7 +118,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                 })
                 .catch(error => console.error('Error fetching doctor appointments:', error));
         }
-    };
+    }
 
     // Function to schedule an appointment
     const scheduleAppointment = (appointmentId: number, appointmentDate: string, appointmentTime: string) => {
@@ -189,12 +203,16 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
             <div>
                 <h2>Search for Doctors</h2>
                 <div className="search-filters">
-                    <select value={selectedSpecialty} onChange={(e) => {
-                        setSelectedSpecialty(e.target.value);
-                        setSearchName('');
-                        setSelectedDoctorId(null); 
-                        setSelectedDoctorAppointments([]); 
-                    }}>
+                    <select
+                        value={selectedSpecialty}
+                        onChange={(e) => {
+                            setSelectedSpecialty(e.target.value);
+                            setSearchName('');
+                            setSelectedDoctorId(null);
+                            setSelectedDoctorAppointments([]);
+                            setShowNoDoctorsFound(false); // Reset state when filters change
+                        }}
+                    >
                         <option value="">Select Specialty</option>
                         {specialties.map((specialty, index) => (
                             <option key={index} value={specialty}>{specialty}</option>
@@ -213,7 +231,6 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                     <Table>
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Name</th>
                                 <th>Specialty</th>
                                 <th>Email</th>
@@ -222,8 +239,11 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                         </thead>
                         <tbody>
                             {searchDoctor.map((doctor, index) => (
-                                <tr key={index} onClick={() => handleDoctorClick(doctor.doctor_id)} className="doctor-row">
-                                    <td>{index + 1}</td>
+                                <tr
+                                    key={index}
+                                    onClick={() => handleDoctorClick(doctor.doctor_id)}
+                                    className="doctor-row"
+                                >
                                     <td>{doctor.full_name}</td>
                                     <td>{doctor.specialty}</td>
                                     <td>{doctor.email}</td>
@@ -232,17 +252,19 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                             ))}
                         </tbody>
                     </Table>
+                    {showNoDoctorsFound && searchDoctor.length === 0 && (
+                        <div className="not-found">No doctors found matching your search criteria.</div>
+                    )}
                 </div>
             )}
             {selectedDoctorId !== null && (
                 <>
-                  <h2>Doctor's Appointments</h2>
+                    <h2>Doctor's Appointments</h2>
                     <div className="table-container">
                         {filteredAppointments.length > 0 ? (
                             <Table className="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th></th>
@@ -256,24 +278,30 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                                         const year = appointmentDateTime.getUTCFullYear();
                                         const hours = appointmentDateTime.getUTCHours().toString().padStart(2, '0');
                                         const minutes = appointmentDateTime.getUTCMinutes().toString().padStart(2, '0');
-
+    
                                         return (
                                             <tr key={index}>
-                                                <td>{index + 1}</td>
                                                 <td>{`${day}.${month}.${year}`}</td>
                                                 <td>{`${hours}:${minutes}`}</td>
                                                 <td>
-                                                <Button variant='outline-dark' onClick={() => scheduleAppointment(appointment.id, `${day}.${month}.${year}`, `${hours}:${minutes}`)}>
-                                                    Schedule
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
+                                                    <Button
+                                                        variant='outline-dark'
+                                                        onClick={() => scheduleAppointment(
+                                                            appointment.id,
+                                                            `${day}.${month}.${year}`,
+                                                            `${hours}:${minutes}`
+                                                        )}
+                                                    >
+                                                        Schedule
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </Table>
                         ) : (
-                            <div className="no-appointments">No appointments available.</div>
+                            <div className="not-found">No appointments available.</div>
                         )}
                     </div>
                 </>
@@ -288,5 +316,4 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         </div>
     );
 }
-
-export default SearchDoctors;
+export default SearchDoctors;    

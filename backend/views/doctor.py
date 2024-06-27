@@ -1,6 +1,6 @@
 from flask import Blueprint, Response, jsonify, request
 from models.users import User
-from db import get_db
+from db.db import get_db
 from models.doctor import Doctor
 from psycopg2.extras import RealDictCursor
 

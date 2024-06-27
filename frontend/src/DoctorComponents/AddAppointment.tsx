@@ -66,7 +66,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     setShowAlert(true);
                     setAlertTimer(setTimeout(() => {
                         setShowAlert(false);
-                    }, 1000)); 
+                    }, 2000)); 
                 } else {
                     fetch(`${BACKEND_URL}/add_appointment`, {
                         method: "POST",
@@ -81,14 +81,14 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                             setAlertTimer(setTimeout(() => {
                                 setShowAlert(false);
                                 onSuccess(); 
-                            }, 1000));
+                            }, 2000));
                         } else {
                             setAlertVariant('danger');
                             setAlertMessage("Oops! There was a problem scheduling the appointment.");
                             setShowAlert(true);
                             setAlertTimer(setTimeout(() => {
                                 setShowAlert(false);
-                            }, 1000)); 
+                            }, 2000)); 
                         }
                     })
                     .catch(error => {
@@ -98,7 +98,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                         setShowAlert(true);
                         setAlertTimer(setTimeout(() => {
                             setShowAlert(false);
-                        }, 1000));
+                        }, 2000));
                     });
                 }
             })
@@ -109,7 +109,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                 setShowAlert(true);
                 setAlertTimer(setTimeout(() => {
                     setShowAlert(false);
-                }, 1000));
+                }, 2000));
             });
         } else {
             console.error("Date or Time not selected");
@@ -167,28 +167,30 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
 
     return (
         <>
-            <div>
+            <div className="select-date">
                 <h3>Select Date:</h3>
                 <Calendar
                     onClickDay={handleDateChange}
                     value={selectedDate}
+
                     className="custom-calendar"
                     tileDisabled={tileDisabled}
                 />
             </div>
-            <div>
+            <div className="select-time">
                 <h3>Select Time:</h3>
                 <select onChange={handleTimeChange} value={selectedTime}>
                     <option value="">Select Time</option>
                     {renderTimeOptions(8, 21, 30)}
                 </select>
-            </div>
-            <Button style={{ width: 'fit-content', margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>
+            
+            <Button style={{ margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>
             {showAlert && (
                 <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
                     {alertMessage}
                 </Alert>
             )}
+            </div>
         </>
     );
 }

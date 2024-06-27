@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 CURRENT_DIR = Path(__file__).parent
-DB_PATH = CURRENT_DIR / "sql" / "schema.sql"
+DB_PATH = CURRENT_DIR / "../sql/schema.sql"
 
 
 def get_db() -> psycopg2.extensions.connection:

@@ -213,3 +213,17 @@ docker-compose down
 ```
 
 This setup ensures that your application components are containerized, making it easier to manage dependencies, environments, and deployments.
+
+
+```
+docker build -t backend . 
+docker run --env-file=.env -p 8081:8080 backend
+```
+
+```
+docker build -t frontend .
+docker run -p 8080:80 frontend
+```
+
+```
+docker run --name some-postgres -p 5432:5432 -ePOSTGRES_PASSWORD=mysecretpassword -d postgres```

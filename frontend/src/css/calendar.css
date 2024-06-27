@@ -1,7 +1,7 @@
 /* Custom styles for the calendar */
 .custom-calendar {
     width: 100%; /* Set desired width */
-    height: 300px; /* Set desired height */
+    height: 350px; /* Set desired height */
     border: 2px solid #ccc; /* Add a border */
     background-color: #4a97a8; /* Set background color */
     color: #333; /* Set text color */
@@ -35,3 +35,54 @@
       color: rgb(10, 6, 6); /* Set text color for Saturdays and Sundays */
   }
   
+
+
+
+/* CSS for Select Date section */
+.select-date {
+  margin-bottom: 20px; /* Adds bottom margin for spacing */
+  text-align: center; /* Aligns content to center */
+}
+
+.select-date h3 {
+  margin-bottom: 10px; /* Adds bottom margin for spacing */
+  font-size: 18px; /* Sets font size */
+  color: #333; /* Sets text color */
+  text-align: center; /* Aligns text to center */
+}
+
+
+/* CSS for Select Time section */
+.select-time {
+  margin-bottom: 20px; /* Adds bottom margin for spacing */
+  text-align: center; /* Aligns content to center */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds shadow */
+  padding: 20px; /* Adds padding inside the div */
+  border-radius: 8px; /* Adds border radius */
+  background-color: #fff; /* Sets background color */
+}
+
+.select-time h3 {
+  margin-bottom: 10px; /* Adds bottom margin for spacing */
+  font-size: 18px; /* Sets font size */
+  color: #333; /* Sets text color */
+  text-align: center; /* Aligns text to center */
+  margin-right: 80px;
+}
+
+.select-time select {
+  width: 100%; /* Sets select element width to fill its container */
+  max-width: 300px; /* Limits maximum width */
+  height: 40px; /* Sets select element height */
+  padding: 8px; /* Adds padding inside select element */
+  font-size: 16px; /* Sets font size */
+  border: 1px solid #ccc; /* Adds border */
+  border-radius: 4px; /* Adds border radius */
+  background-color: #fff; /* Sets background color */
+  color: #333; /* Sets text color */
+  margin: 0 auto; /* Centers the select element horizontally */
+}
+
+.select-time select option {
+  font-size: 14px; /* Sets font size for options */
+}
