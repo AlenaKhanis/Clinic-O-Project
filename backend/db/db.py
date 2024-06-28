@@ -1,31 +1,38 @@
+# db.py
 
-from pathlib import Path
-from flask import g
+import os
 import psycopg2
-import os 
-from dotenv import load_dotenv
+from flask import g
 
+def get_db():
+    if "db" not in g:
+        DB_HOST = os.getenv("DB_HOST")
+        DB_PORT = int(os.getenv("DB_PORT"))
+        DB_NAME = os.getenv("DB_NAME")
+        DB_USER = os.getenv("DB_USER")
+        DB_PASS = os.getenv("DB_PASSWORD")
 
-load_dotenv()
-CURRENT_DIR = Path(__file__).parent
-DB_PATH = CURRENT_DIR / "../sql/schema.sql"
+        print("DB_HOST:", os.getenv('DB_HOST'))
+        print("DB_PORT:", os.getenv('DB_PORT'))
+        print("DB_NAME:", os.getenv('DB_NAME'))
+        print("DB_USER:", os.getenv('DB_USER'))
+        print("DB_PASSWORD:", os.getenv('DB_PASSWORD'))
+        
+        try:
+            g.db = psycopg2.connect(
+                dbname=DB_NAME,
+                user=DB_USER,
+                password=DB_PASS,
+                host=DB_HOST,
+                port=DB_PORT,
+            )
+        except psycopg2.OperationalError as e:
+            # Handle connection error (e.g., log it)
+            raise e  # Propagate the exception for handling upstream
 
-
-def get_db() -> psycopg2.extensions.connection:
-    """Connect to the PostgreSQL database, and return the connection object"""
-    if 'db' not in g:
-        g.db = psycopg2.connect(dbname=os.getenv("DB_NAME", "default_db_name"),
-                                user=os.getenv("DB_USER", "default_user"),
-                                password=os.getenv("DB_PASSWORD", "default_password"),
-                                host=os.getenv("DB_HOST", "localhost"),
-                                port=os.getenv("DB_PORT", "5432"))
     return g.db
 
-
-def close_db(_e=None) -> None:
-    """Close the connection to the PostgreSQL database"""
-    db = g.pop('db', None)
+def close_db(_e=None):
+    db = g.pop("db", None)
     if db is not None:
         db.close()
-
-

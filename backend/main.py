@@ -1,7 +1,8 @@
 from pathlib import Path
 import bcrypt
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt, get_jwt_identity, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+from db.create_schema import create_schema_and_load_data
 from psycopg2.extras import RealDictCursor
 from db.db import get_db, close_db
 from flask_cors import CORS
@@ -9,7 +10,6 @@ from dotenv import load_dotenv
 import os
 import httpx
 
-from models.users import User
 from models.patient import Patient
 from models.doctor import Doctor
 from models.owner import Owner
@@ -40,23 +40,9 @@ app.register_blueprint(owner_bp)
 app.register_blueprint(clinic_bp)
 
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.json
-#     db = get_db()
-#     cursor = db.cursor(cursor_factory=RealDictCursor)
-#     print(data)
+with app.app_context():
+    create_schema_and_load_data()
 
-#     # Assuming your users table has a 'role' column
-#     cursor.execute("SELECT id, role FROM users WHERE username = %s AND password = %s", (data["username"], data["password"]))
-#     user = cursor.fetchone()
-
-#     if user:
-#         # Include the user's role in the token
-#         access_token = create_access_token(identity=user["id"], additional_claims={"role": user["role"]})
-#         return {"access_token": access_token}, 200
-#     else:
-#         return {"error": "Invalid username or password"}, 401
 
 @app.route('/login', methods=['POST'])
 def login():
