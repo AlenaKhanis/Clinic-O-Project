@@ -1,4 +1,3 @@
-# db.py
 
 import os
 import psycopg2
@@ -12,12 +11,6 @@ def get_db():
         DB_USER = os.getenv("DB_USER")
         DB_PASS = os.getenv("DB_PASSWORD")
 
-        print("DB_HOST:", os.getenv('DB_HOST'))
-        print("DB_PORT:", os.getenv('DB_PORT'))
-        print("DB_NAME:", os.getenv('DB_NAME'))
-        print("DB_USER:", os.getenv('DB_USER'))
-        print("DB_PASSWORD:", os.getenv('DB_PASSWORD'))
-        
         try:
             g.db = psycopg2.connect(
                 dbname=DB_NAME,
@@ -27,8 +20,7 @@ def get_db():
                 port=DB_PORT,
             )
         except psycopg2.OperationalError as e:
-            # Handle connection error (e.g., log it)
-            raise e  # Propagate the exception for handling upstream
+            raise e  
 
     return g.db
 
