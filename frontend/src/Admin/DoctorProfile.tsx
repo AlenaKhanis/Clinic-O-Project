@@ -29,6 +29,8 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
   const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments(); 
   const {handleDeleteUser} = useGlobalFunctions();
 
+
+
   useEffect(() => {
     if (doctorID) {
       getDoctorById(doctorID)

@@ -28,7 +28,7 @@ const AdminRoutes = ({ userRole , subID }: { userRole: string , subID : string |
       }
       />
       <Route
-        path='patient_detail/:patient_id'
+        path='/patient_detail/:patient_id'
         element={
           <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
             <PatientProfile

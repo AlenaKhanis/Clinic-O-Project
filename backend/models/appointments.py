@@ -237,3 +237,17 @@ class Appointment:
             logging.error(f"Unexpected error occurred while adding summary: {e}")
             cursor.connection.rollback()
             return False
+
+    @classmethod
+    def delete_appointment(cls, cursor, appointment_id: int) -> bool:
+        try:
+            cursor.execute("DELETE FROM appointments WHERE id = %s", (appointment_id,))
+            return True
+        except psycopg2.Error as e:
+            logging.error(f"PostgreSQL error occurred while deleting appointment: {e}")
+            cursor.connection.rollback()
+            return False
+        except Exception as e:
+            logging.error(f"Unexpected error occurred while deleting appointment: {e}")
+            cursor.connection.rollback()
+            return False

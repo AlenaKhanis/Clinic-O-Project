@@ -152,33 +152,6 @@ def get_history_patient_appointments(patient_id):
         return jsonify({'error': str(e)}), 500
 
 
-# @bp.route("/add_summary/<appointment_id>/<patient_id>", methods=["POST"])
-# def add_summary(appointment_id, patient_id):
-#     """
-#     Endpoint to add a summary (diagnosis, prescription) to an appointment by doctor.
-#     """
-#     try:
-#         data = request.json
-#         summary = data.get('summary')
-#         diagnosis = data.get('diagnosis')
-#         prescription = data.get('prescription')
-
-#         with get_db() as db:
-#             with db.cursor() as cursor:
-#                 success = Appointment.add_summary(cursor, summary, diagnosis, prescription, appointment_id, patient_id)
-
-#                 if success:
-#                     db.commit()
-#                     return jsonify({"message": "Form data received and processed successfully"}), 200
-#                 else:
-#                     return jsonify({'error': 'Failed to update appointment and patient records'}), 500
-
-#     except KeyError as e:
-#         return jsonify({'error': f'Missing key: {str(e)}'}), 400
-
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
-
 @bp.route("/add_summary/<appointment_id>/<patient_id>", methods=["POST"])
 def add_summary(appointment_id, patient_id):
     """
@@ -249,6 +222,21 @@ def get_all_appt():
             with db.cursor(cursor_factory=RealDictCursor) as cursor:
                 appointments = Appointment.get_all_appt(cursor)
         return jsonify(appointments), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@bp.route("/delete_appointment/<appointment_id>", methods=["DELETE"])
+def delete_appointment(appointment_id):
+    """
+    Endpoint to delete an appointment.
+    """
+    try:
+        with get_db() as db:
+            with db.cursor() as cursor:
+                Appointment.delete_appointment(cursor, appointment_id)
+                db.commit()
+        return jsonify({'message': 'Appointment deleted successfully'}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

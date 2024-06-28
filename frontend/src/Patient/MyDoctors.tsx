@@ -12,7 +12,6 @@ function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner
                 fetch(`${BACKEND_URL}/get_patient_doctors/${patientId}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log("Fetched doctors:", data);
                         setDoctor(data);
                     })
                     .catch(error => {

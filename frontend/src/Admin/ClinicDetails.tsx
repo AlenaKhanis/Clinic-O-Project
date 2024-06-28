@@ -24,7 +24,6 @@ function ClinicDetails() {
         return response.json();
       })
       .then((data: Clinic) => {
-        console.log(data)
         setClinicDetails(data);
         setEditedClinicName(data.clinic_name);
         setEditedClinicAddress(data.clinic_address);
@@ -69,7 +68,6 @@ function ClinicDetails() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
-    console.log('submitting form');
     if (clinicDetails) {
       if (editedClinicName !== clinicDetails.clinic_name) {
         updateClinicDetail('clinic_name', editedClinicName);

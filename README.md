@@ -2,26 +2,40 @@
 
 This is a demo project for managing clinic appointments for doctors and patients. This backend application is built with Python and PostgreSQL.
 
-- [Clinic-O Project](#clinic-o-project)
-  - [Description](#description)
-  - [Prerequisites](#prerequisites)
-  - [Usage](#usage)
-- [Database](#database)
-  - [Option 1: Running PostgreSQL with Docker](#option-1-running-postgresql-with-docker)
-  - [Option 2: Setting Up PostgreSQL with SQL Dump](#option-2-setting-up-postgresql-with-sql-dump)
-    - [Database Configuration](#database-configuration)
-  - [Running the Application](#running-the-application)
-  - [Frontend (React / Vite / TypeScript)](#frontend-react--vite--typescript)
-  - [Docker Setup](#docker-setup)
-    - [Configuration](#configuration)
-    - [Running the Application with Docker Compose](#running-the-application-with-docker-compose)
-
-
-
 
 ## Description
 
 Clinic-O is a backend system designed to manage clinic appointments for doctors and patients. It provides functionality to handle user management, appointment scheduling, and clinic details.
+
+## Usage
+
+To run the project locally, (with docker desktop installed) follow these steps:
+
+```bash
+git clone https://github.com/AlenaKhanis/Clinic-O-Project
+cd clinic-o
+cp example.env .env  # copy the example.env file to .env
+# edit the .env file and set the values for the environment variables as needed in the main folder and in the backend directory
+docker compose up --build --detach
+```
+### Example Users
+
+The Clinic-O Project comes with three example users to help you get started. These users represent different roles within the system: a doctor, a patient, and an admin. You can use these accounts to log in and explore the various features of the application.
+
+Once the project is running, you can log in using the example users:
+
+## Admin
+* Username: admin
+* Password: 1234
+### Doctor
+* Username: doctor
+* Password: 1234
+## Patient
+* Username: user
+* Password: 1234
+
+
+Follow the other instructions in this README.md file for setting up the project for development or for running the project without Docker.
 
 ## Prerequisites
 
@@ -40,7 +54,7 @@ To run the project locally, follow these steps:
 1. **Clone the Repository**
 
     ```sh
-    git clone https://github.com/AlenaKhanis/Clinic-O_Project
+    git clone https://github.com/AlenaKhanis/Clinic-O-Project
     cd clinic-o-project
     ```
 **Backend API Server (Flask)**
@@ -84,6 +98,12 @@ python -m venv venv
     ⚠️[!CAUTION]
     The database credentials and API keys should be kept secret. Do not share them publicly.
 
+    If you need to run the backend tests in **backend** directory:
+
+  ```bash
+  pytest
+  ```
+
 # Database
 
 The backend uses PostgreSQL as the database. You have the following options to set up and use PostgreSQL:
@@ -108,13 +128,6 @@ docker ps
 ```
 You should see clinic-postgres listed in the output.
 
-**Creating the Database Schema**
-
-Run the database migrations to set up the database schema and load the example data:
-
-```sh
-python create_shema.py
-```
 
 
 ## Option 2: Setting Up PostgreSQL with SQL Dump
@@ -175,55 +188,3 @@ npm run dev
 You should be able to access the project at http://localhost:5173 in your browser (the port may change, check the output of the npm run dev command).
 
 
-
-
-## Docker Setup
-
-### Configuration
-Create a `.env` file in the root directory with the following variables:
-```
-FRONTEND_URL=http://localhost
-FRONTEND_PORT=3000
-BACKEND_PORT=8080
-NEWS_API_KEY=your_news_api_key
-```
-
-These variables will be used by Docker Compose to configure the services defined in your `docker-compose.yml` file.
-
-### Running the Application with Docker Compose
-
-After setting up the `.env` file, you can start the application using Docker Compose. This will create and start all the services defined in your `docker-compose.yml` file, including the frontend, backend, and any databases or other dependencies.
-
-1. **Build and Start the Containers**
-
-   Run the following command in the terminal:
-
-   ```sh
-   docker-compose up --build
-
-2. Accessing the Application
-
-Once the containers are up and running, you can access the frontend application by navigating to http://localhost:3000 in your web browser. The backend API will be available at http://localhost:8080.
-
-3. Stopping the Containers
-
-To stop and remove all running containers, use the following command:
-```
-docker-compose down
-```
-
-This setup ensures that your application components are containerized, making it easier to manage dependencies, environments, and deployments.
-
-
-```
-docker build -t backend . 
-docker run --env-file=.env -p 8081:8080 backend
-```
-
-```
-docker build -t frontend .
-docker run -p 8080:80 frontend
-```
-
-```
-docker run --name some-postgres -p 5432:5432 -ePOSTGRES_PASSWORD=mysecretpassword -d postgres```

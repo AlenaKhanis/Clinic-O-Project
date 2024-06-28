@@ -1,7 +1,7 @@
 -- Insert data into the users table with hashed passwords
 INSERT INTO users (username, password, email, age, full_name, phone, role, created_date, updated_date)
 VALUES 
-    ('Alona', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'owner', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('admin', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'alona@mysite.com', 30, 'Alona Khanis', '05462224455', 'owner', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('user', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'user@mysite.com', 25, 'user', '456445', 'patient', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('doctor','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctor@mysite.com', 45, 'doctor', '555', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('doctorTwo','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctorTwo@mysite.com', 45, 'doctorTwo', '05045454545', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

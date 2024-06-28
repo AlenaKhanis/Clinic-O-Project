@@ -21,8 +21,6 @@ from views.doctor import bp as doctors_bp
 from views.owner import bp as owner_bp
 from views.clinic import bp as clinic_bp
 
-#### Must Use in WSL Python 3.11!!!! ####
-
 load_dotenv()
 app = Flask(__name__)
 app.config.from_prefixed_env()

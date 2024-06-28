@@ -8,16 +8,6 @@ import { useBackendUrl } from '../BackendUrlContext';
 import { Button } from 'react-bootstrap';
 import '../css/SearchDoctors.css';
 
-/**
- * SearchDoctors Component
- *
- * @param {number} patientId - The ID of the patient using the component.
- * @param {Function} refreshAppointments - A function to refresh the patient's appointments after scheduling a new one.
- *
- * This component allows patients to search for doctors based on specialty or name and view available appointments.
- * Patients can schedule appointments directly through this interface. The component handles fetching data from a backend,
- * managing state, and displaying alert messages for user actions.
- */
 function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
     const [searchDoctor, setSearchDoctor] = useState<Doctor[]>([]);
     const [specialties, setSpecialties] = useState<string[]>([]);
@@ -31,12 +21,10 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
     const [showAlert, setShowAlert] = useState(false);
     const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'error'>('success');
     const [alertMessage, setAlertMessage] = useState<string>('');
-    const [showNoDoctorsFound,setShowNoDoctorsFound] = useState(false);
+    const [showNoDoctorsFound, setShowNoDoctorsFound] = useState(false);
 
-    // Fetch the backend URL from context
     const BACKEND_URL = useBackendUrl();
 
-    // Effect to fetch patient appointments on component mount and whenever patientId or refreshAppointments change
     useEffect(() => {
         if (patientId) {
             getPatientAppointments(patientId)
@@ -45,7 +33,6 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         }
     }, [patientId, refreshAppointments]);
 
-    // Effect to fetch available specialties from the backend
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_specialties`)
             .then(response => {
@@ -62,13 +49,10 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
             });
     }, []);
 
-  
-    // Effect to handle search when selectedSpecialty or searchName changes
     useEffect(() => {
         handleSearch();
     }, [selectedSpecialty, searchName]);
 
-    // Function to handle the search for doctors based on selected specialty and name
     const handleSearch = () => {
         let query = `${BACKEND_URL}/get_doctor`;
         if (selectedSpecialty || searchName) {
@@ -78,7 +62,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
             if (searchName) {
                 query += `/by_name/${searchName}`;
             }
-    
+
             fetch(query)
                 .then(response => {
                     if (!response.ok) {
@@ -89,26 +73,25 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                 .then((data: { doctors: Doctor[] }) => {
                     if (data.doctors.length === 0) {
                         setSearchDoctor([]);
-                        setShowNoDoctorsFound(true); // Set state to indicate no doctors found
+                        setShowNoDoctorsFound(true);
                     } else {
                         setSearchDoctor(data.doctors);
                         setSelectedDoctorId(null);
                         setSelectedDoctorAppointments([]);
-                        setShowNoDoctorsFound(false); // Reset state if doctors are found
+                        setShowNoDoctorsFound(false);
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching doctors:', error);
                     setSearchDoctor([]);
-                    setShowNoDoctorsFound(true); // Set state on error
+                    setShowNoDoctorsFound(true);
                 });
         }
     };
-    
-    // Function to handle clicking on a doctor to view their appointments
+
     const handleDoctorClick = (doctorId: number) => {
         if (selectedDoctorId === doctorId) {
-            setSelectedDoctorId(null); // Collapse the appointments if clicking on the same doctor again
+            setSelectedDoctorId(null);
         } else {
             setSelectedDoctorId(doctorId);
             fetchDoctorAppointments(doctorId)
@@ -118,9 +101,8 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                 })
                 .catch(error => console.error('Error fetching doctor appointments:', error));
         }
-    }
+    };
 
-    // Function to schedule an appointment
     const scheduleAppointment = (appointmentId: number, appointmentDate: string, appointmentTime: string) => {
         const formattedAppointmentTime = appointmentTime.split(':').map(part => part.padStart(2, '0')).join(':');
 
@@ -156,14 +138,12 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         }
     };
 
-    // Function to hide the alert message after a delay of 3 seconds
     const hideAlertAfterDelay = () => {
         setTimeout(() => {
             setShowAlert(false);
-        }, 1000);
+        }, 3000); 
     };
 
-    // Function to check if an appointment already exists for the patient at the given date and time
     const isAppointmentExists = (date: string, time: string) => {
         return appointments.some(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -176,7 +156,6 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         });
     };
 
-    // Filter and sort the appointments for the selected doctor
     const filteredAppointments = selectedDoctorAppointments
         .filter(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -184,7 +163,6 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         })
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime());
 
-    // Effect to hide alert message when the document becomes hidden (e.g., if the user switches tabs)
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -210,7 +188,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                             setSearchName('');
                             setSelectedDoctorId(null);
                             setSelectedDoctorAppointments([]);
-                            setShowNoDoctorsFound(false); // Reset state when filters change
+                            setShowNoDoctorsFound(false);
                         }}
                     >
                         <option value="">Select Specialty</option>
@@ -278,7 +256,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                                         const year = appointmentDateTime.getUTCFullYear();
                                         const hours = appointmentDateTime.getUTCHours().toString().padStart(2, '0');
                                         const minutes = appointmentDateTime.getUTCMinutes().toString().padStart(2, '0');
-    
+
                                         return (
                                             <tr key={index}>
                                                 <td>{`${day}.${month}.${year}`}</td>
@@ -306,14 +284,14 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
                     </div>
                 </>
             )}
+            
             {showAlert && (
-                <div className="alert-container">
-                    <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
-                        {alertMessage}
-                    </Alert>
-                </div>
+                <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                    {alertMessage}
+                </Alert>
             )}
         </div>
     );
 }
-export default SearchDoctors;    
+
+export default SearchDoctors;

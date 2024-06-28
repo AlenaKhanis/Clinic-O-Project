@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from main import app, jwt
 from flask_jwt_extended import create_access_token
+import bcrypt
 
 @pytest.fixture
 def client():
@@ -17,8 +18,11 @@ def mock_db():
         yield mock_cursor
 
 def test_login_valid(client, mock_db):
-    mock_db.fetchone.return_value = {'id': 1, 'role': 'patient'}
+    hashed_password = bcrypt.hashpw('1234'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    mock_db.fetchone.return_value = {'id': 1, 'role': 'patient', 'password': hashed_password}
+    
     response = client.post('/login', json={"username": "user", "password": "1234"})
+    
     assert response.status_code == 200
     assert "access_token" in response.json
 

@@ -4,9 +4,10 @@ import { Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { Table } from 'react-bootstrap';
 
-function DoctorPatients({ doctorId }: { doctorId: number }) {
+function DoctorPatients({ doctorId }: { doctorId: number}) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const { getDoctorPatients } = useDoctorAppointments();
+
 
   useEffect(() => {
     if (doctorId) {
@@ -36,11 +37,10 @@ function DoctorPatients({ doctorId }: { doctorId: number }) {
           </thead>
           <tbody>
             {patients.map((patient) => (
-              console.log(patient.patient_id),
               <tr key={patient.id}>
                 <td>{patient.package}</td>
                 <td>
-                  <Link to={`/admin/patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
+                  <Link to={`../patient_detail/${patient.patient_id}`}>{patient.full_name}</Link>
                 </td>
                 <td>{patient.age}</td>
                 <td>{patient.email}</td>

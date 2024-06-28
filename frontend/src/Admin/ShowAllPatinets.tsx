@@ -9,7 +9,6 @@ export default function ShowAllPatients({onPatientAdded} : {onPatientAdded : boo
     const BACKEND_URL = useBackendUrl();
 
     useEffect(() => {
-        console.log('fetching all patients');
         fetch(`${BACKEND_URL}/get_patients`)
             .then(response => {
                 if (!response.ok) {
