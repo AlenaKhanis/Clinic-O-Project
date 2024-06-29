@@ -181,7 +181,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                 <h3>Select Time:</h3>
                 <select onChange={handleTimeChange} value={selectedTime}>
                     <option value="">Select Time</option>
-                    {renderTimeOptions(8, 21, 30)}
+                    {renderTimeOptions(8, 19, 30)}
                 </select>
             
             <Button style={{ margin: '20px' }} variant="outline-dark" onClick={handleFormSubmit} disabled={isDisabled()}>Submit</Button>

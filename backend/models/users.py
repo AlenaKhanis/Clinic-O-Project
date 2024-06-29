@@ -42,8 +42,9 @@ class User:
             )
 
             inserted_row = cursor.fetchone()
+            print(f"Inserted row: {inserted_row}")
             if inserted_row:
-                self.id = inserted_row['id']
+                self.id = inserted_row["id"]
                 return self.id
             else:
                 print("No ID returned after insertion")

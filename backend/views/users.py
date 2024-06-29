@@ -5,6 +5,7 @@ import bcrypt
 from models.users import User
 from models.patient import Patient
 from datetime import datetime
+from psycopg2.extras import RealDictCursor
 
 bp = Blueprint("users", __name__)
 
@@ -79,18 +80,25 @@ def register():
     role = data.get('role', 'patient')
     phone = data.get('phone')
     birthday = data.get('birthday')
+
+  
     
     # Calculate age from birthday
     def calculate_age(born):
         today = datetime.today()
         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
-    age = calculate_age(datetime.strptime(birthday, '%Y-%m-%d'))
-    
+    try:
+        age = calculate_age(datetime.strptime(birthday, '%Y-%m-%d'))
+    except ValueError as e:
+        return jsonify({'error': f'Invalid birthday format: {str(e)}'}), 400
+
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
+   
+
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     try:
         user = User(
@@ -107,6 +115,7 @@ def register():
 
         user_id = user.add_user(cursor)
 
+
         if not user_id:
             db.rollback()
             return jsonify({'message': 'Failed to register user'}), 500
@@ -118,7 +127,6 @@ def register():
                 package=package,
                 username=username
             )
-            print(patient)
 
             if not patient.add_patient(cursor):
                 db.rollback()
@@ -147,7 +155,7 @@ def register():
     
     except Exception as e:
         db.rollback()
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+        return jsonify({'error': f'Unexpected error occurred while inserting user: {str(e)}'}), 500
 
 
 # @bp.route("/verify_password", methods=["POST"])

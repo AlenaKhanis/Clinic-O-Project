@@ -28,10 +28,7 @@ function AdminPagePatient() {
 
   return (
     <>
-      <div className='welcome-div'>
-        <h1>Here doctor panel</h1>
-        <p>Welcome here you can do operations</p>
-      </div>
+
       <div className='container'>
         <Tabs id='uncontrolled-tab-example' className='custom-tabs'>
           <Tab eventKey='clinicDetails' title='Clinic Details' className='tabs'>

@@ -49,24 +49,59 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         }
     }, []);
 
+    const getStartOfWeek = (date: Date): Date => {
+        const startOfWeek = new Date(date);
+        startOfWeek.setDate(date.getDate() - date.getDay()); // start of the week (Sunday)
+        startOfWeek.setHours(0, 0, 0, 0); // Start at midnight
+        return startOfWeek;
+    };
+    
+    const getEndOfWeek = (date: Date): Date => {
+        const endOfWeek = new Date(date);
+        endOfWeek.setDate(date.getDate() - date.getDay() + 6); // end of the week (Saturday)
+        endOfWeek.setHours(23, 59, 59, 999); // End of the day
+        return endOfWeek;
+    };
+    
+    const isSameDay = (date1: Date, date2: Date): boolean => {
+        return (
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate()
+        );
+    };
+    
+
     const filterAppointments = useMemo(() => {
         const today = new Date();
         return appointments.filter(appt => {
             const apptDate = new Date(appt.date_time);
-            if (filter === 'today' && apptDate.toDateString() !== today.toDateString()) return false;
+            
+            // Filter by 'today'
+            if (filter === 'today' && !isSameDay(apptDate, today)) return false;
+    
+            // Filter by 'thisWeek'
             if (filter === 'thisWeek') {
-                const startOfWeek = new Date(today);
-                const endOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+                const startOfWeek = getStartOfWeek(today);
+                const endOfWeek = getEndOfWeek(today);
                 if (apptDate < startOfWeek || apptDate > endOfWeek) return false;
             }
+    
+            // Filter by 'thisMonth'
             if (filter === 'thisMonth' && apptDate.getMonth() !== today.getMonth()) return false;
+    
+            // Filter by selected status
             if (selectedStatus !== 'all' && appt.status !== selectedStatus) return false;
+    
+            // Filter by selected doctor
             if (selectedDoctor !== 'all' && appt.doctor_id !== Number(selectedDoctor)) return false;
+    
             return true;
         });
     }, [appointments, filter, selectedStatus, selectedDoctor]);
+    
+
+
 
     useEffect(() => {
         setFilteredAppointments(filterAppointments);

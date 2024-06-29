@@ -70,9 +70,9 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
                 Register
               </Nav.Link>
             )}
-              {role === 'owner' && <Nav.Link style={{ color: 'white' }}  href={`/admin`}>Actions</Nav.Link>}
-              {role === 'doctor' && <Nav.Link style={{ color: 'white' }} href={`/doctor`}>Actions</Nav.Link>}
-              {role === 'patient' && <Nav.Link style={{ color: 'white' }} href={`/patient`}>Actions</Nav.Link>}
+              {role === 'owner' && <Nav.Link style={{ color: 'white' }} href='/admin'>Actions</Nav.Link >}
+              {role === 'doctor' && <Nav.Link style={{ color: 'white' }} href='/doctor'>Actions</Nav.Link>}
+              {role === 'patient' && <Nav.Link style={{ color: 'white' }} href='/patient'>Actions</Nav.Link>}
               {role !== 'owner' && role !== 'doctor' && role !== 'patient' && <Nav.Link style={{ color: 'white' }} href="/about">About</Nav.Link>} 
             </Nav>
             <Nav.Item>{greeting}, {userToken ? userName : "Guest"}.<br /> {formattedDate}.</Nav.Item>

@@ -42,34 +42,35 @@ def user():
         updated_date=datetime.now()
     )
 
+def test_check_username_exists(db_cursor):
+    db_cursor.execute("INSERT INTO users (id, username, password, full_name,role) VALUES (%s, %s, %s, %s,%s)", (999, 'testuser', 'testpass', 'Test User' , 'patient'))
 
-
-# def test_check_username_exists(db_cursor):
-#     db_cursor.execute("INSERT INTO users (id, username, password, full_name,role) VALUES (%s, %s, %s, %s,%s)", (999, 'testuser', 'testpass', 'Test User' , 'patient'))
-
-#     try:
-#         exists = User.check_username_exists("testuser", db_cursor)
-#         assert exists == True
-    
-#         not_exists = User.check_username_exists("nonexistentuser", db_cursor)
-#         assert not_exists == False
-#     finally:
-#         cleanup(db_cursor)
-
-def test_add_user(db_cursor , user):
     try:
+        exists = User.check_username_exists("testuser", db_cursor)
+        assert exists == True
+    
+        not_exists = User.check_username_exists("nonexistentuser", db_cursor)
+        assert not_exists == False
+    finally:
+        cleanup(db_cursor)
 
+def test_add_user(db_cursor, user):
+    try:
         user_id = user.add_user(db_cursor)
-        assert user_id is not None     
-        db_cursor.execute("SELECT * FROM users WHERE username = %s", ('testuser',))
+        print(f"Returned User ID: {user_id}") 
+        
+        assert user_id is not None
+        
+        db_cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         added_user = db_cursor.fetchone()
-
         
         assert added_user is not None
         assert added_user['username'] == 'testuser'
         assert added_user['full_name'] == 'Test User'
     finally:
         cleanup(db_cursor)
+
+
 
 
 def test_get_user(db_cursor, user):

@@ -33,10 +33,6 @@ function DoctorHomePage() {
     
     return (
         <>
-        <div className='welcome-div'>
-            <h1>Here doctor panel</h1>
-            <p>Welcome here you can do oparators</p>
-        </div>
         <div className="container">
             
                     <Tabs id="uncontrolled-tab-example" className="custom-tabs">

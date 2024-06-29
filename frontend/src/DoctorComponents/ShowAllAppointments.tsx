@@ -96,10 +96,10 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
 
     return (
         <>
-            <div className={`tab-content ${filteredAppointments.length > 0 ? "with-scrollbar" : ""}`}>
-                <h2>Appointments</h2>
+             <div className={`appointment-container ${filteredAppointments.length > 0 ? "with-scrollbar" : ""}`}>
+                <h2 className="appointment-title">Appointments</h2>
                 {filteredAppointments.length > 0 ? (
-                    <table>
+                    <table className="appointments-table">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -112,7 +112,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                             {filteredAppointments.map((appointment: Appointment, index: number) => (
                                 <tr key={index}>
                                     <td>{appointment.date}</td>
-                                    <td>{appointment.time}</td>
+                                    <td>{appointment.time} PM</td>
                                     <td>{appointment.status}</td>
                                     <td>
                                         {appointment.status === 'schedule' && (

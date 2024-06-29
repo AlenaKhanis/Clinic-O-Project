@@ -10,6 +10,7 @@ import NotFoundPage from './NotFoundPage';
 import PatientRoutes from './Routes/PatientRoutes';
 import DoctorRoutes from './Routes/DoctorRoutes';
 import AdminRoutes from './Routes/AdminRoutes';
+import About from './About';
 import './css/App.css';
 import {jwtDecode} from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
@@ -97,6 +98,7 @@ function App() {
               }
             />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
             <Route path="/404" element={<NotFoundPage userRole={userRole} />} />
             <Route path="*" element={<Navigate to="/404" />} />
           </Routes>

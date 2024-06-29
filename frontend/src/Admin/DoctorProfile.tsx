@@ -60,26 +60,57 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
 
   const filterAppointments = (filterType: string) => {
     const today = new Date();
+    console.log(`Today: ${today}`);
+  
     const filteredAppointments = appointments.filter((appt) => {
       const apptDate = new Date(appt.date_time);
+      console.log(`Appointment Date: ${apptDate}`);
+  
       switch (filterType) {
         case 'today':
-          return apptDate.toDateString() === today.toDateString();
+          console.log(`Is Today? ${isSameDay(apptDate, today)}`);
+          return isSameDay(apptDate, today);
         case 'thisWeek':
-          const startOfWeek = new Date(today);
-          const endOfWeek = new Date(today);
-          startOfWeek.setDate(today.getDate() - today.getDay());
-          endOfWeek.setDate(today.getDate() - today.getDay() + 6);
+          const startOfWeek = getStartOfWeek(today);
+          const endOfWeek = getEndOfWeek(today);
+          console.log(`Is in Week? ${apptDate >= startOfWeek && apptDate <= endOfWeek}`);
           return apptDate >= startOfWeek && apptDate <= endOfWeek;
         case 'thisMonth':
+          console.log(`Is This Month? ${apptDate.getMonth() === today.getMonth()}`);
           return apptDate.getMonth() === today.getMonth();
         default:
           return true;
       }
     });
+  
+    console.log(`Filtered Appointments:`, filteredAppointments);
     setFilteredAppointments(filteredAppointments);
   };
+  
 
+  const isSameDay = (date1: Date, date2: Date): boolean => {
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
+  };
+  
+  const getStartOfWeek = (date: Date): Date => {
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+    return startOfWeek;
+  };
+  
+  const getEndOfWeek = (date: Date): Date => {
+    const endOfWeek = new Date(date);
+    endOfWeek.setDate(date.getDate() - date.getDay() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+    return endOfWeek;
+  };
+  
+  
   const handleAppointmentClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setShowAppointmentDetails(true);
