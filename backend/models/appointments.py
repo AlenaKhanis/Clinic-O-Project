@@ -153,6 +153,7 @@ class Appointment:
             return []
         
     @classmethod
+    # Get all history appointments for a doctor that status is completed
     def get_appointments_history(cls, cursor, doctor_id: int) -> List[dict]:
         sql_query = """
             SELECT * FROM appointments 

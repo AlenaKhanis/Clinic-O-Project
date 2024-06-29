@@ -4,6 +4,15 @@ import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useBackendUrl } from '../BackendUrlContext';
 
+/**
+ * DoctorsList Component:
+ * 
+ * This component fetches and displays a list of doctors from the backend.
+ * It renders a table with columns for doctor's name, specialty, email, and phone.
+ * Each doctor's name is linked to their individual profile page using React Router's Link component.
+ */
+
+
 function DoctorsList({ onDoctorAdded }: {onDoctorAdded : boolean}) {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const BACKEND_URL = useBackendUrl();

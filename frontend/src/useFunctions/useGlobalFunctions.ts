@@ -115,6 +115,7 @@ export const useGlobalFunctions = () => {
 
     };
 
+
     return {
         parseDateTime,
         handleSaveChanges,

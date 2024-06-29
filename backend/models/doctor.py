@@ -69,6 +69,7 @@ class Doctor(User):
         
 
     @classmethod
+    # This method is used to get all the patients of a doctor 
     def get_doctor_patients(cls, cursor, doctor_id: int) -> List[dict]:
         try:
             cursor.execute("""

@@ -11,32 +11,40 @@ bp = Blueprint("users", __name__)
 
 @bp.route('/check-username', methods=['GET'])
 def check_username():
+    """
+    Check if a username exists in the database.
+    """
     username = request.args.get('username')
     db = get_db()
     cursor = db.cursor()
 
-    if User.check_username_exists(username , cursor):
+    if User.check_username_exists(username, cursor):
         return jsonify({'exists': True}), 200
     else:
         return jsonify({'exists': False}), 200
     
 @bp.route('/delete_user/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
+    """
+    Delete a user from the database by user ID.
+    """
     try:
         db = get_db()
         cursor = db.cursor()
-        result = User.delete_user(cursor, user_id )
+        result = User.delete_user(cursor, user_id)
         db.commit()
         return jsonify({"message": result}), 200
     except Exception as e:
         db.rollback()
-        return jsonify({"error": f"An error occurred while deleting the doctor: {str(e)}"}), 500
+        return jsonify({"error": f"An error occurred while deleting the user: {str(e)}"}), 500
     finally:
-        cursor.close()   
-
+        cursor.close()
 
 @bp.route('/edit_user_profile/<user_id>', methods=['POST'])
 def edit_user_profile_route(user_id):
+    """
+    Update user profile details in the database.
+    """
     db = get_db()
     cursor = db.cursor()
 
@@ -72,6 +80,9 @@ def edit_user_profile_route(user_id):
     
 @bp.route('/register', methods=['POST'])
 def register():
+    """
+    Register a new user in the system.
+    """
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -81,8 +92,6 @@ def register():
     phone = data.get('phone')
     birthday = data.get('birthday')
 
-  
-    
     # Calculate age from birthday
     def calculate_age(born):
         today = datetime.today()
@@ -94,8 +103,6 @@ def register():
         return jsonify({'error': f'Invalid birthday format: {str(e)}'}), 400
 
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-   
 
     db = get_db()
     cursor = db.cursor(cursor_factory=RealDictCursor)
@@ -114,7 +121,6 @@ def register():
         )
 
         user_id = user.add_user(cursor)
-
 
         if not user_id:
             db.rollback()
@@ -156,53 +162,3 @@ def register():
     except Exception as e:
         db.rollback()
         return jsonify({'error': f'Unexpected error occurred while inserting user: {str(e)}'}), 500
-
-
-# @bp.route("/verify_password", methods=["POST"])
-# def verify_password():
-#     data = request.get_json()
-#     current_password = data.get("currentPassword")
-#     username = data.get("username")
-
-#     db = get_db()
-#     cursor = db.cursor()
-
-#     # Retrieve the hashed password from the database
-#     cursor.execute("SELECT hashed_password FROM users WHERE username = ?", (username,))
-#     user_data = cursor.fetchone()
-
-#     if user_data:
-#         hashed_password = user_data[0]
-
-#         # Check if the provided password matches the hashed password
-#         if bcrypt.checkpw(current_password.encode('utf-8'), hashed_password.encode('utf-8')):
-#             return jsonify({"message": "Password verification successful"}), 200
-#         else:
-#             return jsonify({"error": "Incorrect username or password"}), 401
-#     else:
-#         return jsonify({"error": "User not found"}), 404
-
-# @bp.route("/change_password", methods=["POST"])
-# def change_password():
-#     data = request.get_json()
-#     new_password = data.get("newPassword")
-#     username = data.get("username")
-
-#     db = get_db()
-#     cursor = db.cursor()
-
-#     # Hash the new password before storing it in the database
-#     hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-#     try:
-#         # Update the password for the user in the database
-#         cursor.execute("UPDATE users SET hashed_password = ? WHERE username = ?", (hashed_new_password, username))
-#         db.commit()
-
-#         return jsonify({"message": "Password changed successfully"}), 200
-#     except Exception as e:
-#         db.rollback()
-#         return jsonify({"error": "Failed to change password", "details": str(e)}), 500
-#     finally:
-#         cursor.close()
-#         db.close()

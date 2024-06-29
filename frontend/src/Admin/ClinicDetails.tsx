@@ -4,6 +4,14 @@ import Alert from 'react-bootstrap/Alert';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useBackendUrl } from '../BackendUrlContext';
 
+/**
+ * 
+ * ClinicDetails component that displays the clinic details and allows the user to edit them.
+ * 
+ * The component fetches the clinic details from the backend and displays them.
+ * The admin can edit the clinic name, address, and phone number.
+ */
+
 function ClinicDetails() {
   const [clinicDetails, setClinicDetails] = useState<Clinic | null>(null);
   const [editing, setEditing] = useState(false);
@@ -57,14 +65,17 @@ function ClinicDetails() {
         setSuccessMessage('Clinic details updated successfully');
         setErrorMessage(null);
         setShowModal(false);
+        handleMassageTime();
       })
       .catch(error => {
         console.error('Error updating clinic details:', error);
         setErrorMessage('An error occurred while updating the clinic details');
         setSuccessMessage(null);
+        handleMassageTime();
       });
   };
   
+
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
@@ -82,6 +93,14 @@ function ClinicDetails() {
   
     setShowModal(false);
   };
+
+  const handleMassageTime = () => {
+    setTimeout(() => {
+      setSuccessMessage(null);
+      setErrorMessage(null);
+    }, 2000);
+  }
+
   
 
   return (

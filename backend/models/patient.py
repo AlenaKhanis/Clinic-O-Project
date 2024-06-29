@@ -41,6 +41,7 @@ class Patient(User):
             return None
 
     @classmethod
+    # This method returns a list of doctors treating the patient
     def get_patient_doctors(cls, cursor, patient_id: int) -> List[dict]: 
         try:
             cursor.execute("""

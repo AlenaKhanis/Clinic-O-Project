@@ -100,9 +100,6 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         });
     }, [appointments, filter, selectedStatus, selectedDoctor]);
     
-
-
-
     useEffect(() => {
         setFilteredAppointments(filterAppointments);
     }, [filterAppointments]);

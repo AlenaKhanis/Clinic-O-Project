@@ -49,9 +49,58 @@ export const useAppointmentActions = () => {
 
 
 
+const filterAppointments = (appointments: Appointment[], filterType: string): Appointment[] => {
+  const today = new Date();
+
+  const filteredAppointments = appointments.filter((appt) => {
+    const apptDate = new Date(appt.date_time);
+
+    switch (filterType) {
+      case 'today':
+        return isSameDay(apptDate, today);
+      case 'thisWeek':
+        const startOfWeek = getStartOfWeek(today);
+        const endOfWeek = getEndOfWeek(today);
+        return apptDate >= startOfWeek && apptDate <= endOfWeek;
+      case 'thisMonth':
+        return apptDate.getMonth() === today.getMonth();
+      default:
+        return true;
+    }
+  });
+
+  return filteredAppointments;
+};
+
+const isSameDay = (date1: Date, date2: Date): boolean => {
+  return (
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+};
+
+const getStartOfWeek = (date: Date): Date => {
+  const startOfWeek = new Date(date);
+  startOfWeek.setDate(date.getDate() - date.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+  return startOfWeek;
+};
+
+const getEndOfWeek = (date: Date): Date => {
+  const endOfWeek = new Date(date);
+  endOfWeek.setDate(date.getDate() - date.getDay() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+  return endOfWeek;
+};
+
+
+
+
   return {
      handleSubmit,
-     getAppointmentsbyID
+     getAppointmentsbyID,
+     filterAppointments
 
     };
 };

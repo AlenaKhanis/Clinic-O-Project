@@ -67,7 +67,6 @@ def check_appointment() -> Response:
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# get appointments by doctor id
 @bp.route("/get_appointments/<doctor_id>", methods=['GET'])
 def get_appointments(doctor_id) -> Response:
     """

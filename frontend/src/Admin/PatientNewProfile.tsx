@@ -12,12 +12,32 @@ import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
 import { useBackendUrl } from '../BackendUrlContext';
 
 import '../css/doctorProfile.css';
+import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
+
+/**
+ * 
+ * PatientProfile Component:
+ * 
+ * This component fetches and displays a patient's details and appointments.
+ * It renders a patient's full name, age, package, phone, and email.
+ * It also renders a list of appointments with date, time, and status.
+ * The appointments can be filtered by today, this week, this month, or all.
+ * The component also renders a list of doctors assigned to the patient.
+ * The patient's diagnosis and prescriptions can be viewed by clicking on the respective buttons.
+ * The patient's details can be edited or deleted by the owner of the patient.
+ * The patient's details can be edited by the owner of the patient.
+ * The patient can be deleted by the owner of the patient.
+ * The appointment details can be viewed by clicking on the appointment.
+ *  
+ * 
+ */
 
 
 export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
     const { patient_id } = useParams<{ patient_id: string }>();
     const patientId = Number(patient_id);
     const  BACKEND_URL  = useBackendUrl();
+    const {filterAppointments} = useAppointmentActions();
      // State variables
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [patient, setPatient] = useState<Patient | null>(null);
@@ -69,28 +89,11 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
         }
     }, [selectedAppointment]);
 
+    
     // Filter appointments based on filterType
-    const filterAppointments = (filterType: string) => {
-        const today = new Date();
-        const filteredAppointments = appointments.filter((appt) => {
-        const apptDate = new Date(appt.date_time);
-        switch (filterType) {
-            case 'today':
-            return apptDate.toDateString() === today.toDateString();
-            case 'thisWeek':
-            const startOfWeek = new Date(today);
-            const endOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay());
-            endOfWeek.setDate(today.getDate() - today.getDay() + 6);
-            return apptDate >= startOfWeek && apptDate <= endOfWeek;
-            case 'thisMonth':
-            return apptDate.getMonth() === today.getMonth();
-            default:
-            return true;
-        }
-        });
-        setFilteredAppointments(filteredAppointments);
-    };
+    const filterAppt = (filterType: string) => {
+        setFilteredAppointments(filterAppointments(appointments, filterType));
+    }
 
     // Handle appointment click event
     const handleAppointmentClick = (appointment: Appointment) => {
@@ -204,10 +207,10 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
         <div className='appointments-sidebar'>
           <h2>Appointments</h2>
           <div className='filter-buttons'>
-            <Button variant={filter === 'today' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('today')}>Today</Button>
-            <Button variant={filter === 'thisWeek' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('thisWeek')}>This Week</Button>
-            <Button variant={filter === 'thisMonth' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('thisMonth')}>This Month</Button>
-            <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppointments('all')}>All</Button>
+            <Button variant={filter === 'today' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('today')}>Today</Button>
+            <Button variant={filter === 'thisWeek' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisWeek')}>This Week</Button>
+            <Button variant={filter === 'thisMonth' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisMonth')}>This Month</Button>
+            <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('all')}>All</Button>
           </div>
           <ListGroup>
             {filteredAppointments.length === 0 ? (

@@ -4,6 +4,15 @@ import { Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { Table } from 'react-bootstrap';
 
+
+/**
+ * DoctorPatients Component:
+ * 
+ * This component fetches and displays a list of patients for a specific doctor.
+ * It renders a table with columns for patient's package, full name, age, email, and phone.
+ * Each patient's full name is linked to their individual patient detail page using React Router's Link component.
+ */
+
 function DoctorPatients({ doctorId }: { doctorId: number}) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const { getDoctorPatients } = useDoctorAppointments();
