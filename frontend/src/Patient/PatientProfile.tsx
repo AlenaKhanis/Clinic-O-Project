@@ -3,7 +3,7 @@ import { Patient, PatientProps } from "../Types";
 import { Button, Collapse, ListGroup } from "react-bootstrap";
 import "../css/PatientProfile.css";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
-import EditProfile from "../useFunctions/EditProfileProps";
+
 
 
 
@@ -13,7 +13,7 @@ function PatientProfile({  patientId }: PatientProps) {
 
     const [openDiagnosis, setOpenDiagnosis] = useState(false);
     const [openPrescription, setOpenPrescription] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+   
 
 
     useEffect(() => {
@@ -24,7 +24,7 @@ function PatientProfile({  patientId }: PatientProps) {
                 })
                 .catch(error => console.error("Error fetching patient details:", error));
         }
-    }, [patientId ,showEditModal]);
+    }, [patientId]);
   
     return (
         <div className="patient-profile-container">
@@ -43,6 +43,7 @@ function PatientProfile({  patientId }: PatientProps) {
                                 onClick={() => setOpenDiagnosis(!openDiagnosis)}
                                 aria-controls="collapse-diagnosis"
                                 aria-expanded={openDiagnosis}
+                                className="collapse-button"
                             >
                                 Diagnosis
                             </Button>
@@ -65,6 +66,7 @@ function PatientProfile({  patientId }: PatientProps) {
                                 onClick={() => setOpenPrescription(!openPrescription)}
                                 aria-controls="collapse-prescription"
                                 aria-expanded={openPrescription}
+                                className="collapse-button"
                             >
                                 Prescriptions
                             </Button>
@@ -83,15 +85,6 @@ function PatientProfile({  patientId }: PatientProps) {
                                 </div>
                             </Collapse>
                         </ListGroup.Item>
-                        <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
-                       {selectedPatientDetails && (
-                            <EditProfile
-                                profile={selectedPatientDetails}
-                                onCancel={() => setShowEditModal(false)}
-                                showEditModal={showEditModal}
-                                isOwner={false}
-                            />
-                        )}
                     </ListGroup>
                             
                     </>               

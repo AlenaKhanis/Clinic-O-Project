@@ -216,7 +216,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
   return (
     <div className='register-form'>
       <form onSubmit={handleRegister}>
-        <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">{isAdmin ? 'Add Doctor/Patient' : 'Register'}</p>
+        <p className="text-center">{isAdmin ? 'Add Doctor/Patient' : 'Register'}</p>
 
         {isAdmin && (
           <div className="role-selection">

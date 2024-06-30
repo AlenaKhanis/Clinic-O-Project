@@ -15,8 +15,11 @@ type HomePageProps = {
 function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
 
   return (
-    <>
-      <h1>Welcome clinic-O <br />Caring for You<br /> Caring for Life</h1>
+    <div className="main-div">
+       <div className="text-container">
+          <h1 className="special-heading">Welcome Clinic-O</h1>
+          <span className="subheading">Caring for You Caring for Life</span>
+        </div>
       {userRole === 'patient' ? (
         <Link to="/patient">
           <Button className="main-button" variant="outline-dark">Panel</Button>
@@ -34,7 +37,7 @@ function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
           Login
         </Button>
       )}
-    </>
+    </div>
   );
 }
 

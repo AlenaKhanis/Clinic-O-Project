@@ -62,7 +62,7 @@ function HomePagePatient() {
                         refreshAppointments={refreshAppointments}
                     />
                 </Tab>
-                <Tab eventKey="My profile" title="My profile" className='tabs'>
+                <Tab eventKey="My profile" title="Profile" className='tabs'>
                    <PatientProfile
                     BACKEND_URL={BACKEND_URL}
                     patientId={patientId}

@@ -7,13 +7,13 @@ body {
 
 }
 .main-container {
-  /* background-image: url('/img/Artboard2.jpg'); */
+  background-image: url('/img/Second_Page_Page.png');
   background-size: cover;
 }
 
 
 .homepage-container{
-  /* background-image: url('/img/test.png'); */
+  background-image: url('/img/Main_Page.png');
   background-size: cover;
   background-repeat: no-repeat;
   margin: 0;
@@ -40,5 +40,11 @@ p {
 
 .app-container {
   position: relative; /* Ensure relative positioning */
-  min-height: 100vh; /* Set minimum height to fill the viewport */
+  min-height: 100vh; 
+}
+
+.main-div{
+  top: 20%;
+  position: relative;
+  transform: translateY(20%);
 }

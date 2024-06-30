@@ -43,7 +43,7 @@ function AdminPagePatient() {
           <Tab eventKey='doctors' title='Doctors' className='tabs'>
             <DoctorsList onDoctorAdded={refreshDoctorsList} />
           </Tab>
-          <Tab eventKey='addDoctor' title='Add Doctor/Patient' className='tabs'>
+          <Tab eventKey='addDoctor' title='Add Doctor/Patient' className='tabs' style={{ border: 'none' }}>
             <AdminAddUser onPatientAdded={handlePatientAdded} onDoctorAdded={handleDoctorAdded} />
           </Tab>
           <Tab eventKey='showAppointment' title='Show Appointment' className='tabs'>

@@ -47,6 +47,13 @@ const BlogSection: React.FC = () => {
       });
   }, []);
 
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength - 0) + '...'; // Adjust the length as per your requirement
+    }
+    return text;
+  };
+
   return (
     <Container className='blog-container'>
       <Row xs={1} md={2} lg={4} className="g-4">
@@ -63,7 +70,7 @@ const BlogSection: React.FC = () => {
                     <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
                     <Placeholder xs={6} /> <Placeholder xs={8} />
                   </Placeholder>
-                  <Placeholder.Button variant="primary" xs={6} />
+                  <Placeholder.Button xs={6} />
                 </Card.Body>
               </Card>
             </Col>
@@ -71,12 +78,12 @@ const BlogSection: React.FC = () => {
         ) : (
           posts.map(post => (
             <Col key={post.id} className="mb-4">
-              <Card style={{ width: '18rem', height: '24rem' }}>
+              <Card style={{ width: '18rem', height: '20rem' }}>
                 <Card.Img variant="top" src={post.imageUrl} style={{ height: '150px', objectFit: 'cover' }} />
                 <Card.Body>
-                  <Card.Title>{post.title}</Card.Title>
+                  <Card.Title className="card-title">{truncateText(post.title, 60)}</Card.Title> 
                   <div className="d-grid card-button">
-                    <Button variant="primary" href={post.url} target="_blank">Read More</Button>
+                    <Button style={{backgroundColor: '#205a66'}} href={post.url} target="_blank">Read More</Button>
                   </div>
                 </Card.Body>
               </Card>

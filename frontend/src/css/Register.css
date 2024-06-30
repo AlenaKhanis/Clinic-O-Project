@@ -1,33 +1,28 @@
 .register-form {
   width: fit-content;
-  margin: 150px auto;
+  position: absolute;
+  left: 50%;
+  top: 270px; /* Adjusted top position */
+  transform: translateX(-50%);
 }
 
 .package-picker {
   display: flex;
   justify-content: center;
-  margin-top: 0px !important;
-} 
+  margin-top: 0; /* No need for !important unless absolutely necessary */
+}
 
 .doctor-add-form {
   width: 100%;
   margin: 0 auto;
-  align-items: center;
-  
-}
-
-.form-add-doctor {
-  align-items: center;
 }
 
 .input-form-container {
-
-  margin-left: 250px;
-  justify-content: center;
+  margin-left: 250px; /* Adjusted margin if needed */
 }
 
 .packegeSelect {
-  margin: 10 px;
+  margin: 10px; /* Corrected spacing */
 }
 
 .role-selection {
@@ -41,4 +36,16 @@
 /* Optional: Style for the inputs to improve alignment */
 .role-selection input[type="radio"] {
   cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+  margin: 0 auto; /* Centers the element horizontally */
+  display: block; /* Ensures the element is a block-level element */
+  width: fit-content; /* Adjusts width to fit content */
+  max-width: 100%; /* Ensures element does not exceed container width */
+  padding: 0; /* Removes any default padding */
+  font-weight: bold; /* Makes text bold */
+  font-size: 2rem; /* Adjusts font size to be larger */
+  /* Additional styles or adjustments as needed */
 }
