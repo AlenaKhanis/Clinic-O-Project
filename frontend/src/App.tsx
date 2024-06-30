@@ -15,10 +15,8 @@ import './css/App.css';
 import {jwtDecode} from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
 import ErrorBoundary from './ErrorBoundary';
-import { useBackendUrl } from './BackendUrlContext';
 
 function App() {
-  const Backend = useBackendUrl()
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [userToken, setUserToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [userRole, setUserRole] = useState<string>(() => {
