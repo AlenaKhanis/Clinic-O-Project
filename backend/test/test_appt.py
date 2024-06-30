@@ -1,11 +1,13 @@
-from datetime import datetime
 import os
+from datetime import datetime
 from unittest.mock import MagicMock
-import pytest
+
 import psycopg2
-from psycopg2.extras import RealDictCursor
-from models.appointments import Appointment
+import pytest
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
+
+from models.appointments import Appointment
 
 load_dotenv()
 

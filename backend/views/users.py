@@ -1,11 +1,13 @@
-from flask import Blueprint, jsonify, request
-from models.doctor import Doctor
-from db.db import get_db
-import bcrypt
-from models.users import User
-from models.patient import Patient
 from datetime import datetime
+
+import bcrypt
+from flask import Blueprint, jsonify, request
 from psycopg2.extras import RealDictCursor
+
+from db.db import get_db
+from models.doctor import Doctor
+from models.patient import Patient
+from models.users import User
 
 bp = Blueprint("users", __name__)
 

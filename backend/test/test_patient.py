@@ -1,10 +1,12 @@
 import os
-import pytest
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from models.patient import Patient
-from dotenv import load_dotenv
 from unittest.mock import MagicMock
+
+import psycopg2
+import pytest
+from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
+
+from models.patient import Patient
 
 load_dotenv()
 

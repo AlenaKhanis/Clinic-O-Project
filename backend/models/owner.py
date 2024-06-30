@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
-from models.users import User
-from psycopg2 import Error
 from typing import Optional
+
+from psycopg2 import Error
+
+from models.users import User
 
 
 @dataclass

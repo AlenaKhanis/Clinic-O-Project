@@ -1,9 +1,12 @@
-import pytest
-from models.clinic import Clinic  # Ensure this is the correct path to your Clinic class
 import os
+
 import psycopg2
-from psycopg2.extras import RealDictCursor
+import pytest
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
+
+from models.clinic import \
+    Clinic  # Ensure this is the correct path to your Clinic class
 
 load_dotenv()
 

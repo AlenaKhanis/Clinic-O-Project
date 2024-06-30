@@ -1,7 +1,9 @@
 
 import os
+
 import psycopg2
 from flask import g
+
 
 def get_db():
     if "db" not in g:

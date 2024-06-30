@@ -1,8 +1,10 @@
-from flask import Blueprint, Response, jsonify, request
-from models.appointments import Appointment
-from db.db import get_db
-from psycopg2.extras import RealDictCursor
 from datetime import datetime
+
+from flask import Blueprint, Response, jsonify, request
+from psycopg2.extras import RealDictCursor
+
+from db.db import get_db
+from models.appointments import Appointment
 
 bp = Blueprint("appointments", __name__)
 

@@ -1,7 +1,7 @@
 import logging
-from db.db import get_db
 from pathlib import Path
 
+from db.db import get_db
 
 CURRENT_DIR = Path(__file__).resolve().parent
 SQL_DIR = CURRENT_DIR.parent / 'sql'

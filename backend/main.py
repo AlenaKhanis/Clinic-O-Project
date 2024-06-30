@@ -1,25 +1,26 @@
-from pathlib import Path
-import bcrypt
-from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
-from db.create_schema import create_schema_and_load_data
-from psycopg2.extras import RealDictCursor
-from db.db import get_db, close_db
-from flask_cors import CORS
-from dotenv import load_dotenv
 import os
-import httpx
+from pathlib import Path
 
-from models.patient import Patient
+import bcrypt
+import httpx
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from flask_jwt_extended import (JWTManager, create_access_token,
+                                get_jwt_identity, jwt_required)
+from psycopg2.extras import RealDictCursor
+
+from db.create_schema import create_schema_and_load_data
+from db.db import close_db, get_db
 from models.doctor import Doctor
 from models.owner import Owner
-
-from views.users import bp as users_bp
+from models.patient import Patient
 from views.appointments import bp as appointments_bp
-from views.patient import bp as patient
+from views.clinic import bp as clinic_bp
 from views.doctor import bp as doctors_bp
 from views.owner import bp as owner_bp
-from views.clinic import bp as clinic_bp
+from views.patient import bp as patient
+from views.users import bp as users_bp
 
 load_dotenv()
 app = Flask(__name__)

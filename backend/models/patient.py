@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from typing import List, Optional
+
+from psycopg2 import DatabaseError, Error
+
 from models.users import User
-from psycopg2 import Error, DatabaseError
-from typing import Optional ,List
 
 
 @dataclass

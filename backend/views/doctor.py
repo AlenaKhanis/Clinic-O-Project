@@ -1,8 +1,9 @@
 from flask import Blueprint, Response, jsonify, request
-from models.users import User
+from psycopg2.extras import RealDictCursor
+
 from db.db import get_db
 from models.doctor import Doctor
-from psycopg2.extras import RealDictCursor
+from models.users import User
 
 bp = Blueprint("doctors", __name__)
 

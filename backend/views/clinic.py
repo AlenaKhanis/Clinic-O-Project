@@ -1,8 +1,9 @@
 from flask import Blueprint, Response, jsonify, request
-from models.clinic import Clinic
-from db.db import get_db
 from psycopg2 import Error
 from psycopg2.extras import RealDictCursor
+
+from db.db import get_db
+from models.clinic import Clinic
 
 bp = Blueprint("clinic", __name__)
 

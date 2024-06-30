@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Optional
+
 import psycopg2
-from typing import Optional , List
 
 
 @dataclass

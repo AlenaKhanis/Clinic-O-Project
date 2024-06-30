@@ -1,10 +1,11 @@
-import pytest
-from models.owner import Owner
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
 
+import psycopg2
+import pytest
+from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
+
+from models.owner import Owner
 
 load_dotenv()
 

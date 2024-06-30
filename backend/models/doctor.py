@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
+
 import psycopg2
+
 from models.users import User
 
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
-from db.db import get_db
 from psycopg2.extras import RealDictCursor
+
+from db.db import get_db
 
 bp = Blueprint("owner", __name__)
 

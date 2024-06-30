@@ -1,8 +1,10 @@
+import logging
 from dataclasses import dataclass
 from datetime import datetime
-import logging
-import psycopg2
 from typing import List, Optional
+
+import psycopg2
+
 
 @dataclass
 class Appointment:

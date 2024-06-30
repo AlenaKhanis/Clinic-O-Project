@@ -1,8 +1,11 @@
-import pytest
-from unittest.mock import patch, MagicMock
-from main import app, jwt
-from flask_jwt_extended import create_access_token
+from unittest.mock import MagicMock, patch
+
 import bcrypt
+import pytest
+from flask_jwt_extended import create_access_token
+
+from main import app, jwt
+
 
 @pytest.fixture
 def client():

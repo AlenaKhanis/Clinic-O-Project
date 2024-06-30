@@ -1,10 +1,12 @@
-import pytest
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
 from datetime import datetime
-from models.users import User  
+
+import psycopg2
+import pytest
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
+
+from models.users import User
 
 load_dotenv()
 
