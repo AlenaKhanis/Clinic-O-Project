@@ -14,8 +14,10 @@ To run the project locally, (with docker desktop installed) follow these steps:
 ```bash
 git clone https://github.com/AlenaKhanis/Clinic-O-Project
 cd clinic-o
-cp example.env .env  # copy the example.env file to .env
-# edit the .env file and set the values for the environment variables as needed in the main folder and in the backend directory
+cp example.env .env 
+# copy the example.env file to .env 
+# edit the .env file and set the values for the environment variables as needed 
+# in the main folder and in the backend directory
 docker compose up --build --detach
 ```
 ### Example Users

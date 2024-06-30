@@ -1,5 +1,5 @@
-import React, {useRef, useState } from 'react';
-import { Modal} from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { Modal } from 'react-bootstrap';
 import { Patient, Doctor, Owner } from '../Types';
 import '../css/newLogin.css';
 
@@ -10,11 +10,11 @@ type LoginFormProps = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   setUserToken: (token: string | null) => void;
   setUserName: (userName: string) => void;
-
 };
 
-function LoginForm({ show, setShow, setUserToken, setUserName}: LoginFormProps) {
+function LoginForm({ show, setShow, setUserToken, setUserName }: LoginFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -70,6 +70,10 @@ function LoginForm({ show, setShow, setUserToken, setUserName}: LoginFormProps) 
       });
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Modal show={show} onHide={() => setShow(false)} centered>
       <Modal.Body>
@@ -90,14 +94,21 @@ function LoginForm({ show, setShow, setUserToken, setUserName}: LoginFormProps) 
               <span className="required">Username</span>
             </label>
           </div>
-          <input type="checkbox" name="show-password" className="show-password a11y-hidden" id="show-password" tabIndex={3} />
+          <input
+            type="checkbox"
+            name="show-password"
+            className="show-password a11y-hidden"
+            id="show-password"
+            tabIndex={3}
+            onChange={toggleShowPassword}
+          />
           <label className="label-show-password" htmlFor="show-password">
             <span>Show Password</span>
           </label>
           <div style={{ order: 2 }}>
             <label className="label-password">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="text"
                 name="password"
                 placeholder="Password"
@@ -110,7 +121,6 @@ function LoginForm({ show, setShow, setUserToken, setUserName}: LoginFormProps) 
           </div>
           <input type="submit" value="Log In" />
           <div style={{ order: 2 }} className="email">
-            <a href="#">Forgot password?</a>
           </div>
           <figure aria-hidden="true">
             <div className="person-body"></div>
