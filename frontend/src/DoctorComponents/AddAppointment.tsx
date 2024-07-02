@@ -26,7 +26,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
     const [alertMessage, setAlertMessage] = useState<string>('');
     const [alertVariant, setAlertVariant] = useState<'danger' | 'success'>('danger');
     const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [alertTimer, setAlertTimer] = useState<number | null>(null); // Use 'number | null' for setTimeout return type
+    const [alertTimer, setAlertTimer] = useState<NodeJS.Timeout | null>(null); 
 
     useEffect(() => {
         // Clear the alert timer when component unmounts or when alert state changes
