@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Button } from 'react-bootstrap';
-import InputField from './InputFields';
+
+import InputField from './InputFields';  // Custom input field component
+
 import {
   validateUsername,
   validateEmail,
@@ -10,7 +12,8 @@ import {
   validatePhone,
   validateBirthday,
   checkPasswordMatch
-} from './validations';
+} from './validations';  // Validation functions for form fields
+
 import {
   faEnvelope,
   faKey,
@@ -36,7 +39,7 @@ interface UserFormProps {
     phone?: string;
     birthday?: string;
   };
-  onSuccess: () => void;
+  onSuccess: () => void; // Callback function after successful registration
 }
 
 interface RegistrationData {
@@ -51,6 +54,14 @@ interface RegistrationData {
   phone: string;
   birthday: string;
 }
+
+
+/*
+UserForm component
+user registration form that can be used for registering both patients and doctors,with role-specific fields and validations. 
+It handles form submission, validation, error handling, and success messages
+*/
+
 
 const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSuccess }) => {
   const [registrationError, setRegistrationError] = useState<string>('');
@@ -68,6 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
   const phoneRef = useRef<HTMLInputElement>(null);
   const birthdayRef = useRef<HTMLInputElement>(null);
 
+  // Registration data state
   const [registrationData, setRegistrationData] = useState<RegistrationData>({
     username: initialData.username || '',
     fullName: initialData.fullName || '',
@@ -81,6 +93,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     birthday: initialData.birthday || '',
   });
 
+  // Form errors state
   const [formErrors, setFormErrors] = useState({
     username: '',
     fullName: '',
@@ -92,6 +105,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     specialty: '',
   });
 
+   // List of specialties for doctors
   const specialties = [
     "Cardiology",
     "Dermatology",
@@ -105,6 +119,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     "Radiology"
   ];
 
+   // Effect hook to handle registration success
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     if (registrationSuccess) {
@@ -117,6 +132,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     return () => clearTimeout(timeoutId);
   }, [registrationSuccess, onSuccess]);
 
+  // Effect hook to validate form inputs and update form validity
   useEffect(() => {
     const fields = [usernameRef, emailRef, passwordRef, confirmPasswordRef, fullNameRef, phoneRef, birthdayRef];
     const errors = Object.values(formErrors);
@@ -136,6 +152,8 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     }));
   }, [selectedRole, selectedPackage, specialty, formErrors]);
 
+
+   // Handle registration form submission
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -162,6 +180,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     }
   };
 
+   // Handle input change for form fields
   const handleInputChange = (field: keyof RegistrationData, value: string) => {
     if (field === 'role') {
       setRegistrationData(prevData => ({
@@ -177,6 +196,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     }
   };
 
+  // Clear all form fields and reset states
   const clearFormFields = () => {
     setRegistrationData({
       username: '',
@@ -191,6 +211,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
       birthday: '',
     });
 
+
     setSelectedPackage('');
     setSpecialty('');
     setFormErrors({
@@ -204,6 +225,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
       specialty: '',
     });
 
+     // Clear input field values using refs
     if (usernameRef.current) usernameRef.current.value = '';
     if (passwordRef.current) passwordRef.current.value = '';
     if (confirmPasswordRef.current) confirmPasswordRef.current.value = '';

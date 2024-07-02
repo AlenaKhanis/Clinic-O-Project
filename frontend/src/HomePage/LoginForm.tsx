@@ -1,9 +1,19 @@
 import React, { useRef, useState } from 'react';
+
 import { Modal } from 'react-bootstrap';
 import { Patient, Doctor, Owner } from '../Types';
+
+import { useBackendUrl } from '../BackendUrlContext';
+
 import '../css/newLogin.css';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+/**
+ * The LoginForm component renders a login form inside a modal.
+ * It allows users to input their username and password, and upon submission,
+ * it sends a login request to the backend and handles authentication.
+ * If login is successful, it fetches user information and stores the token in localStorage.
+ * It also provides a checkbox to toggle password visibility.
+ */
 
 type LoginFormProps = {
   show: boolean;
@@ -13,10 +23,14 @@ type LoginFormProps = {
 };
 
 function LoginForm({ show, setShow, setUserToken, setUserName }: LoginFormProps) {
+
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const BACKEND_URL = useBackendUrl()
 
   const handleLoginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -70,6 +84,7 @@ function LoginForm({ show, setShow, setUserToken, setUserName }: LoginFormProps)
       });
   };
 
+  // Toggle password visibility
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };

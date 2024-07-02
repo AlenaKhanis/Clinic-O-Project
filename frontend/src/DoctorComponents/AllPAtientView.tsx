@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 import { DoctorProps, Patient } from "../Types";
 import { Link } from "react-router-dom";
-import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
-//TODO: add css
-//TODO: when no patients are found, display a message
+
+
+/**
+ * AllPatientView component
+ * Displays a list of all patients associated with a specific doctor.
+ **/
 
 function AllPatientView({ doctorId }: DoctorProps) {
   const [patients, setPatients] = useState<Patient[]>([]);

@@ -1,16 +1,25 @@
-import { useEffect, useState } from "react";
-import { Appointment, Doctor, PatientProps } from "../Types";
-import { Button, Collapse, Table } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
-import React from "react";
 
-function PatientHistoryAppointments({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
+import { Appointment, Doctor} from "../Types";
+import { Button, Collapse, Table } from 'react-bootstrap';
+
+/**
+ * IndividualAppointmentDetails component
+ * isplay detailed information about historical appointments for a specific patient.
+ *  It fetches and renders appointment data, including summary, diagnosis, prescription, and associated doctor details
+ *
+ */
+
+
+function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patientId: number | null , refreshAppointments: () => void }) {
     const [selectHistoryAppointments, setSelectHistoryAppointments] = useState<Appointment[]>([]);
-    const { getPatientHistoryAppointments } = usePatientDetails();
-    const { getDoctorById } = useDoctorAppointments();
     const [doctors, setDoctors] = useState<{ [key: number]: Doctor }>({});
     const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({});
+
+    const { getPatientHistoryAppointments } = usePatientDetails();
+    const { getDoctorById } = useDoctorAppointments();
 
     const toggleAppointmentDetails = (id: number) => {
         setOpenAppointments(prevState => ({ ...prevState, [id]: !prevState[id] }));
@@ -21,7 +30,6 @@ function PatientHistoryAppointments({ patientId, refreshAppointments }: PatientP
             getPatientHistoryAppointments(patientId)
                 .then((data: Appointment[]) => { 
                     setSelectHistoryAppointments(data);
-                    // Fetch doctors for each appointment
                     const doctorIds = data.map(appointment => appointment.doctor_id);
                     const uniqueDoctorIds = Array.from(new Set(doctorIds));
                     uniqueDoctorIds.forEach(doctorId => {
@@ -79,4 +87,4 @@ function PatientHistoryAppointments({ patientId, refreshAppointments }: PatientP
     );
 }
 
-export default PatientHistoryAppointments;
+export default IndividualAppointmentDetails;

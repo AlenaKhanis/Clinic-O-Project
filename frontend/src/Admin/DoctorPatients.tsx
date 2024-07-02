@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
+
+import { Patient } from '../Types';
+
 import { Table } from 'react-bootstrap';
 
 

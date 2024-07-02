@@ -1,18 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { usePatientDetails } from '../useFunctions/usePatientDetails';
+
 import { Button, Collapse, ListGroup } from 'react-bootstrap';
-import { Patient } from './Types';
-import './css/AppointmentSummeryForm.css';
-import './css/Tabs.css';
-import { usePatientDetails } from './useFunctions/usePatientDetails';
-import EditProfile from './useFunctions/EditProfileProps';
+import { Patient } from '../Types';
+
+
+import EditProfile from '../useFunctions/EditProfileProps';
+
+import '../css/AppointmentSummeryForm.css';
+import '../css/Tabs.css';
+
+/*
+PatientDetails component 
+designed to display detailed information about a specific patient.
+provides an option to edit the patient's profile if the user has the appropriate permissions.
+*/
 
 const PatientDetails = ({isowner} : {isowner : boolean}) => {
   const { patient_id } = useParams<{ patient_id: string }>();
   const patientIdNumber = Number(patient_id);
+
   const [patient, setPatient] = useState<Patient | null>(null);
+  
   const [openDiagnosis, setOpenDiagnosis] = useState(false);
   const [openPrescriptions, setOpenPrescriptions] = useState(false);
+
   const { getPatientById } = usePatientDetails();
 
   useEffect(() => {

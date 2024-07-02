@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from 'react';
 
+//Provides the BACKEND_URL value to all components that use useBackendUrl
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 const BackendUrlContext = createContext<string>(BACKEND_URL);

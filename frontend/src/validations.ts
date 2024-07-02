@@ -1,4 +1,13 @@
 
+
+
+/*
+These functions cover various validation checks commonly needed in form inputs, ensuring data entered meets specific criteria
+such as length, format, and uniqueness (in the case of username). 
+Each function returns an error message if validation fails, or an empty string if the input is valid.
+*/
+
+
 export const validateUsername = async (username: string, backendUrl: string): Promise<string> => {
   console.log(backendUrl);
   if (username.length < 3) return "Username must be at least 3 characters long";

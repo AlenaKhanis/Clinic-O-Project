@@ -1,23 +1,38 @@
 import { useState, useEffect } from 'react';
+
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
-import { Appointment, Doctor, PatientProps } from '../Types';
+import { Button } from 'react-bootstrap';
+
+import { Appointment, Doctor } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { useBackendUrl } from '../BackendUrlContext';
-import { Button } from 'react-bootstrap';
+
 import '../css/SearchDoctors.css';
 
-function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
+
+/**
+ * SearchDoctors component 
+ * provides a user interface for patients to search for doctors based on their specialty or name.
+ * schedule appointments with selected doctors. 
+ */
+
+
+function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number | null , refreshAppointments: () => void }) {
     const [searchDoctor, setSearchDoctor] = useState<Doctor[]>([]);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+
     const [specialties, setSpecialties] = useState<string[]>([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState('');
+    const [searchName, setSearchName] = useState('');
     const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
     const [selectedDoctorAppointments, setSelectedDoctorAppointments] = useState<Appointment[]>([]);
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    
     const { fetchDoctorAppointments } = useDoctorAppointments();
     const { getPatientAppointments } = usePatientDetails();
-    const [searchName, setSearchName] = useState('');
+
+
     const [showAlert, setShowAlert] = useState(false);
     const [alertVariant, setAlertVariant] = useState<'success' | 'danger' | 'error'>('success');
     const [alertMessage, setAlertMessage] = useState<string>('');
@@ -49,10 +64,12 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
             });
     }, []);
 
+    // Perform search whenever selectedSpecialty or searchName changes
     useEffect(() => {
         handleSearch();
     }, [selectedSpecialty, searchName]);
 
+    // Function to handle search for doctors based on specialty or name
     const handleSearch = () => {
         let query = `${BACKEND_URL}/get_doctor`;
         if (selectedSpecialty || searchName) {
@@ -89,6 +106,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         }
     };
 
+     // Handle clicking on a doctor's row to fetch and display their appointments
     const handleDoctorClick = (doctorId: number) => {
         if (selectedDoctorId === doctorId) {
             setSelectedDoctorId(null);
@@ -144,6 +162,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         }, 3000); 
     };
 
+    // Check if the patient already has an appointment at the given date and time
     const isAppointmentExists = (date: string, time: string) => {
         return appointments.some(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -156,6 +175,7 @@ function SearchDoctors({ patientId, refreshAppointments }: PatientProps & { refr
         });
     };
 
+    // Filter and sort appointments for the selected doctor
     const filteredAppointments = selectedDoctorAppointments
         .filter(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);

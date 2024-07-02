@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
+import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
+
 import { Doctor, DoctorProps } from "../Types";
+
+import { Button } from "react-bootstrap";
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/doctorProfile.css';
-import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
-import { Button } from "react-bootstrap";
-import EditProfile from "../useFunctions/EditProfileProps";
+
+/**
+ * DoctorProfile component
+ * Displays the profile of a specific doctor and allows editing of the profile.
+ **/ 
 
 function DoctorProfile({ doctorId}:  DoctorProps ) {
     const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
-    const {getDoctorById} = useDoctorAppointments();
     const [showEditModal, setShowEditModal] = useState(false);
+
+    const {getDoctorById} = useDoctorAppointments();
     
 
     
@@ -25,7 +32,7 @@ function DoctorProfile({ doctorId}:  DoctorProps ) {
     return (
         <div>
             {selectedDoctorDetails ? (
-                <>
+               
                 <ListGroup>
                     <h2>Doctor Profile</h2>
                     <ListGroup.Item>Full Name: {selectedDoctorDetails.full_name}</ListGroup.Item>
@@ -36,16 +43,6 @@ function DoctorProfile({ doctorId}:  DoctorProps ) {
                     <ListGroup.Item>Specialty: {selectedDoctorDetails.specialty}</ListGroup.Item>
                     <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
                 </ListGroup>
-
-                {selectedDoctorDetails && (
-                     <EditProfile
-                     profile={selectedDoctorDetails}
-                     onCancel={() => setShowEditModal(false)}
-                     showEditModal={showEditModal}
-                     isOwner={false}
-                   />
-                )}
-                </>
             ) : (
                 <p>Loading doctor profile...</p>
             )}

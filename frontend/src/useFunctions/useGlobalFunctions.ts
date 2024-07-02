@@ -3,6 +3,9 @@ import { Appointment, Doctor, Owner, Patient } from "../Types";
 import { useBackendUrl } from '../BackendUrlContext';
 
 
+//useGlobalFunctions hook provides several utility functions and type guards for handling profile updates
+//date-time parsing, and user deletions.
+
 export const useGlobalFunctions = () => {
   
     const BACKEND_URL = useBackendUrl();

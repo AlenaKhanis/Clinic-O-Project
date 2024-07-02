@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
-import { Appointment, PatientProps } from "../Types";
 import { Button, Table, Modal } from "react-bootstrap"; 
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { Appointment } from "../Types";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
-function ShowPatientAppointments({ patientId, refreshAppointments }: PatientProps & { refreshAppointments: () => void }) {
-    const { getPatientAppointments , cancelAppointment } = usePatientDetails();
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+/**
+ * ShowPatientAppointments component
+ * manages the display and cancellation of future appointments for a patient.
+ */
+
+function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId: number | null , refreshAppointments: () => void }) {
     const [confirmCancel, setConfirmCancel] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+
     const {getDoctorById , selectedDoctorDetails , setSelectedDoctorDetails} = useDoctorAppointments();
+    const { getPatientAppointments , cancelAppointment } = usePatientDetails();
+
+
 
     useEffect(() => {
         if (patientId) {
@@ -55,7 +65,7 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: PatientProp
       return isFuture && isNotCompleted;
     } else {
       console.error('Invalid date:', appointment.date_time);
-      return false; // or handle this case differently
+      return false; 
     }
   })
   .sort((a, b) => {

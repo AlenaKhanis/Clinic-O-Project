@@ -1,22 +1,30 @@
 import { Appointment } from "../Types";
+import { useBackendUrl } from "../BackendUrlContext";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+/*
+  useAppointmentActions hook provides several useful functions related to managing appointments.
+*/
+
 
 export const useAppointmentActions = () => {
 
-    const getAppointmentsbyID = (appointmentID: number) => {
-        return fetch(`${BACKEND_URL}/get_appointment_by_id/${appointmentID}`)
-        .then(response => response.json())
-        .then((data: Appointment) => {
-            return data;
-            })
-            .catch(error => {
-                console.error('Error fetching appointment by ID:', error);
-                throw error;
-            });
-    }
+  const BACKEND_URL = useBackendUrl();
+  
 
+  // Fetches a specific appointment from the backend based on its ID  
+  const getAppointmentsbyID = (appointmentID: number) => {
+      return fetch(`${BACKEND_URL}/get_appointment_by_id/${appointmentID}`)
+      .then(response => response.json())
+      .then((data: Appointment) => {
+          return data;
+          })
+          .catch(error => {
+              console.error('Error fetching appointment by ID:', error);
+              throw error;
+          });
+  }
 
+  // Handles the submission of summary, diagnosis, and prescription data for an appointment to the backend.
   const handleSubmit = (
     summaryRef: React.RefObject<HTMLTextAreaElement>,
     diagnosisRef: React.RefObject<HTMLInputElement>,
@@ -48,7 +56,7 @@ export const useAppointmentActions = () => {
   };
 
 
-
+//  Filters appointments based on the specified filterType (e.g., 'today', 'thisWeek', 'thisMonth').
 const filterAppointments = (appointments: Appointment[], filterType: string): Appointment[] => {
   const today = new Date();
 

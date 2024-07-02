@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Doctor } from '../Types';
-import { Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { useBackendUrl } from '../BackendUrlContext';
+import { Link } from 'react-router-dom';
+
+import { Doctor } from '../Types';
+
+import { Table } from 'react-bootstrap';
 
 /**
  * DoctorsList Component:

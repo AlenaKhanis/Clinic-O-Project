@@ -1,20 +1,34 @@
 import { useEffect, useState } from "react";
-import "../css/displayAppontments.css";
-import { DoctorProps, Appointment } from '../Types';
-import { Link } from "react-router-dom";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 import { useBackendUrl } from "../BackendUrlContext"; 
+
+import { DoctorProps, Appointment } from '../Types';
+import { Link } from "react-router-dom";
+
+import "../css/displayAppontments.css";
 import { Alert, Modal, Button } from "react-bootstrap";
 
+
+/**
+ * DisplayAppointments component
+ * manages and displays appointments for a specific doctor.
+ * It provides functionality to view, filter, and delete appointments, enhancing doctor-patient management within the application.
+ */
+
 function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
-    const { fetchDoctorAppointments } = useDoctorAppointments();
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
     const backendUrl = useBackendUrl();
-    const [showAlert, setShowAlert] = useState(false);
+
+    const { fetchDoctorAppointments } = useDoctorAppointments();
+
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [appointmentToDelete, setAppointmentToDelete] = useState<number | null>(null);
+
+
     const [alertVariant, setAlertVariant] = useState<'success' | 'danger'>('success');
     const [alertMessage, setAlertMessage] = useState<string>('');
     const [showModal, setShowModal] = useState(false);
-    const [appointmentToDelete, setAppointmentToDelete] = useState<number | null>(null);
+    const [showAlert, setShowAlert] = useState(false);
+
 
     useEffect(() => {
         if (doctorId) {
@@ -26,6 +40,11 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
         }
     }, [doctorId, onAppointmentAdded]);
 
+    /**
+     * Filters and sorts fetched appointments based on specific criteria
+     * Ensures only future appointments that are not yet completed are displayed.
+     * Orders appointments chronologically by their date and time.
+     * */ 
     const filteredAppointments = appointments
         .filter(appointment => {
             const appointmentDateTime = new Date(appointment.date_time);
@@ -38,7 +57,7 @@ function DisplayAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                 return isFuture && isNotCompleted;
             } else {
                 console.error('Invalid date:', appointment.date_time);
-                return false; // or handle this case differently
+                return false; 
             }
         })
         .sort((a, b) => {

@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { Appointment, Doctor, Patient } from "../Types";
 import { useGlobalFunctions } from "./useGlobalFunctions";
+import { useBackendUrl } from "../BackendUrlContext";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+//useDoctorAppointments hook provides functions related to managing doctor appointments and details.
 
 export const useDoctorAppointments = () => {
+
+  const BACKEND_URL = useBackendUrl();
+
   const [appointments, ] = useState<Appointment[]>([]);
   const [selectedDoctorAppointments, ] = useState<Appointment[]>([]);
   const [selectHistoryAppointments, setSelectHistoryAppointments] = useState<Appointment[]>([]);
   const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
   const { parseDateTime } = useGlobalFunctions();
-
+  
+  // Fetches appointments for a specific doctor from the backend.
   const fetchDoctorAppointments = async (doctorID: number) => {
     try {
       const response = await fetch(`${BACKEND_URL}/get_appointments/${doctorID}`);
@@ -29,6 +34,7 @@ export const useDoctorAppointments = () => {
     }
   };
 
+  //Fetches details of a specific doctor based on their ID.
   const getDoctorById = async (doctorID: number) => {
     try {
       const response = await fetch(`${BACKEND_URL}/get_doctors_by_Id/${doctorID}`);
@@ -41,6 +47,7 @@ export const useDoctorAppointments = () => {
     }
   };
 
+  //Fetches historical appointments for a specific doctor from the backend.
   const getHistoryDoctorAppointments = async (doctorID: number) => {
     try {
       const response = await fetch(`${BACKEND_URL}/get_appointments_history/${doctorID}`);
@@ -54,6 +61,7 @@ export const useDoctorAppointments = () => {
     }
   };
 
+  //Fetches patients associated with a specific doctor from the backend.
   const getDoctorPatients = async (doctorID: number): Promise<Patient[]> => {
     try {
       const response = await fetch(`${BACKEND_URL}/get_doctor_patients/${doctorID}`);

@@ -72,17 +72,5 @@ export type Clinic = {
 export type DoctorProps = {
   doctorId: number | null;
   onAppointmentAdded: () => void;
-  BACKEND_URL: string;
 };
 
-export type PatientProps = {
-  BACKEND_URL: string;
-  patientId : number | null;
-  
-};
-
-
-export type OwnerProps = {
-  BACKEND_URL: string;
-
-};

@@ -2,6 +2,8 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// NotFoundPage component that handles the "Page Not Found" scenario
+
 export const NotFoundPage = ({ userRole }: { userRole: string }) => {
     const navigate = useNavigate();
     console.log(userRole);

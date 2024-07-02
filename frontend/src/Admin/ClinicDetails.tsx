@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { useBackendUrl } from '../BackendUrlContext';
 import { Clinic } from '../Types';
+import { validatePhone } from '../validations';
+
 import Alert from 'react-bootstrap/Alert';
 import { Button, Modal, Form } from 'react-bootstrap';
-import { useBackendUrl } from '../BackendUrlContext';
 
-/**
- * 
- * ClinicDetails component that displays the clinic details and allows the user to edit them.
- * 
- * The component fetches the clinic details from the backend and displays them.
- * The admin can edit the clinic name, address, and phone number.
- */
+
 
 function ClinicDetails() {
   const [clinicDetails, setClinicDetails] = useState<Clinic | null>(null);
+  
   const [editing, setEditing] = useState(false);
   const [editedClinicName, setEditedClinicName] = useState('');
   const [editedClinicAddress, setEditedClinicAddress] = useState('');
   const [editedClinicPhone, setEditedClinicPhone] = useState('');
+
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [showModal, setShowModal] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
   const BACKEND_URL = useBackendUrl();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function ClinicDetails() {
         console.error('Error fetching clinic details:', error);
         setErrorMessage('Error fetching clinic details');
       });
-  }, []);
+  }, [BACKEND_URL]);
 
   const handleEditToggle = () => {
     setEditing(!editing);
@@ -61,7 +62,7 @@ function ClinicDetails() {
         return response.json();
       })
       .then(() => {
-        setClinicDetails(prevDetails => ({ ...prevDetails, [field]: value } as Clinic)); // TODO: check this!
+        setClinicDetails(prevDetails => ({ ...prevDetails, [field]: value } as Clinic));
         setSuccessMessage('Clinic details updated successfully');
         setErrorMessage(null);
         setShowModal(false);
@@ -74,23 +75,30 @@ function ClinicDetails() {
         handleMassageTime();
       });
   };
-  
-
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
-    if (clinicDetails) {
-      if (editedClinicName !== clinicDetails.clinic_name) {
-        updateClinicDetail('clinic_name', editedClinicName);
-      }
-      if (editedClinicAddress !== clinicDetails.clinic_address) {
-        updateClinicDetail('clinic_address', editedClinicAddress);
-      }
-      if (editedClinicPhone !== clinicDetails.clinic_phone) {
-        updateClinicDetail('clinic_phone', editedClinicPhone);
-      }
+    event.preventDefault();
+
+    const phoneValidationError = validatePhone(editedClinicPhone);
+    if (phoneValidationError) {
+        setPhoneError(phoneValidationError);
+        return;
+    } else {
+        setPhoneError(null);
     }
-  
+
+    if (clinicDetails) {
+        if (editedClinicName !== clinicDetails.clinic_name) {
+            updateClinicDetail('clinic_name', editedClinicName);
+        }
+        if (editedClinicAddress !== clinicDetails.clinic_address) {
+            updateClinicDetail('clinic_address', editedClinicAddress);
+        }
+        if (editedClinicPhone !== clinicDetails.clinic_phone) {
+            updateClinicDetail('clinic_phone', editedClinicPhone);
+        }
+    }
+
     setShowModal(false);
   };
 
@@ -100,8 +108,6 @@ function ClinicDetails() {
       setErrorMessage(null);
     }, 2000);
   }
-
-  
 
   return (
     <div>
@@ -127,51 +133,55 @@ function ClinicDetails() {
               Edit Clinic Details
             </Button>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
-          ` <Modal.Header closeButton>
-              <Modal.Title>Edit Clinic Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formClinicName">
-                  <Form.Label>Clinic Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editedClinicName}
-                    onChange={(e) => setEditedClinicName(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formClinicAddress">
-                  <Form.Label>Clinic Address</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editedClinicAddress}
-                    onChange={(e) => setEditedClinicAddress(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formClinicPhone">
-                  <Form.Label>Clinic Phone</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={editedClinicPhone}
-                    onChange={(e) => setEditedClinicPhone(e.target.value)}
-                  />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                  Save Changes
-                </Button>
-              </Form>
+              <Modal.Header closeButton>
+                <Modal.Title>Edit Clinic Details</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group controlId="formClinicName">
+                    <Form.Label>Clinic Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={editedClinicName}
+                      onChange={(e) => setEditedClinicName(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formClinicAddress">
+                    <Form.Label>Clinic Address</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={editedClinicAddress}
+                      onChange={(e) => setEditedClinicAddress(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formClinicPhone">
+                    <Form.Label>Clinic Phone</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={editedClinicPhone}
+                      onChange={(e) => setEditedClinicPhone(e.target.value)}
+                      isInvalid={!!phoneError}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {phoneError}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
+                    Save Changes
+                  </Button>
+                </Form>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowModal(false)}>
                   Close
                 </Button>
               </Modal.Footer>
-            </Modal>  
-            </>
+            </Modal>
+          </>
         )}
       </div>
     </div>
   );
-};
+}
 
 export default ClinicDetails;

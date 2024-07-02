@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FiAlignJustify } from "react-icons/fi";
 import '../css/OffCanvas.css';
-import { Link } from 'react-router-dom';
+
 
 
 interface OffCanvasExampleProps {
@@ -11,6 +13,11 @@ interface OffCanvasExampleProps {
   role: string; // 'owner' | 'doctor' | 'patient';
   subId : string | null;
 }
+
+/**
+ * OffCanvasExample component displays an off-canvas menu triggered by a button click.
+ * It shows different links based on the user's role (owner, doctor, patient).
+ */
 
 export function OffCanvasExample({ subId, placement = 'end', role, ...props }: OffCanvasExampleProps) {
   const [show, setShow] = useState(false);

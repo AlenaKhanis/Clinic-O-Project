@@ -1,33 +1,49 @@
-import  { useEffect, useRef, useState } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useBackendUrl } from "../BackendUrlContext";
+
+import { Alert, Button } from "react-bootstrap";
 import Collapse from 'react-bootstrap/Collapse';
-import { useAppointmentActions } from "../useFunctions/useAppointmentActions";
+
+import { Appointment } from "../Types";
 import HistoryAppointments from "../Patient/HistoryPatientAppointments";
-import PatientDetails from "../PatientDetails";
+import PatientDetails from  "../Patient/PatientDetails";
+
+import { useAppointmentActions } from "../useFunctions/useAppointmentActions";
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
+
 import '../css/AppointmentSummeryForm.css';
 import '../css/Tabs.css';
-import { Appointment } from "../Types";
-import { useBackendUrl } from "../BackendUrlContext";
+
+/**
+ * StartAppt component
+ * managing and interact for starting and ending appointments for a specific patient.
+ */
+
+
 
 const StartAppt = () => {
     const { patient_id, appointment_id } = useParams<{ patient_id: string, appointment_id: string }>();
     const patientIdNumber = Number(patient_id);
     const appointmentIdNumber = Number(appointment_id);
+
     const { getAppointmentsbyID } = useAppointmentActions();
-    const [showForm, setShowForm] = useState(false);
+    const { getPatientHistoryAppointments } = usePatientDetails();
+
     const summaryRef = useRef<HTMLTextAreaElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
     const prescriptionRef = useRef<HTMLInputElement>(null);
-    const [appointmentEnded, setAppointmentEnded] = useState(false);
+
+    const [showForm, setShowForm] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [collision, setCollision] = useState(false);
+    const [showErrorAlert, setShowErrorAlert] = useState(false); 
+    
+    const [appointmentEnded, setAppointmentEnded] = useState(false);
     const [appointment, setAppointment] = useState<Appointment | null>(null);
     const [patientHistoryAppointments, setPatientHistoryAppointments] = useState<Appointment[]>([]);
-    const [showErrorAlert, setShowErrorAlert] = useState(false); 
-    const { getPatientHistoryAppointments } = usePatientDetails();
+    
 
     const BACKEND_URL = useBackendUrl();
 
@@ -58,6 +74,7 @@ const StartAppt = () => {
         }
     }, [appointment_id]);
 
+    // Determining whether a new appointment can be started for a patient based on certain conditions,
     const handleStartAppointment = () => {
         if (!appointment) return;
 
@@ -108,16 +125,16 @@ const StartAppt = () => {
             return response.json();
         })
         .then(() => {
-            // Handle successful response
+           
             setShowForm(false);
             setAppointmentEnded(true);
             setShowSuccess(true);
-            setShowErrorAlert(false); // Reset error alert state
+            setShowErrorAlert(false); 
         })
         .catch(error => {
             console.error('Error:', error);
-            // Handle error response from server
-            setShowErrorAlert(true); // Set state to display error alert
+            
+            setShowErrorAlert(true); 
         });
     };
     

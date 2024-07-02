@@ -1,23 +1,34 @@
 import { useEffect, useState, useMemo } from "react";
-import { Appointment, Doctor, Patient } from "../Types";
-import { Button, Dropdown, ListGroup, Modal } from "react-bootstrap";
+
 import { useGlobalFunctions } from "../useFunctions/useGlobalFunctions";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
+import { usePatientDetails } from "../useFunctions/usePatientDetails";
+
+import { Appointment, Doctor, Patient } from "../Types";
+
+import { Button, Dropdown, ListGroup, Modal } from "react-bootstrap";
 import '../css/Tabs.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { usePatientDetails } from "../useFunctions/usePatientDetails";
+
+/**
+ * ShowAllAppt component
+ * Displays all appointments with filtering options and detailed view.
+ *
+ **/ 
 
 export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
-    const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
-    const [filter, setFilter] = useState<string>('all');
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [patient, setPatient] = useState<Patient | null>(null);
+
+    const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
+    const [filter, setFilter] = useState<string>('all');
+
     const [selectedStatus, setSelectedStatus] = useState<string>('all');
     const [selectedDoctor, setSelectedDoctor] = useState<string>('all');
+    const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
 
     const { parseDateTime } = useGlobalFunctions();
     const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments();
@@ -104,10 +115,12 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         setFilteredAppointments(filterAppointments);
     }, [filterAppointments]);
 
+    // Handle status filter change
     const handleStatusFilter = (status: string | null) => {
         if (status !== null) setSelectedStatus(status);
     };
 
+     // Handle doctor filter change
     const handleDoctorFilter = (eventKey: string | null) => {
         if (eventKey !== null) setSelectedDoctor(eventKey);
     };
@@ -133,6 +146,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         setShowAppointmentDetails(false);
     };
 
+    // Get unique statuses for status filter dropdown
     const uniqueStatuses = useMemo(() => Array.from(new Set(appointments.map(appt => appt.status))), [appointments]);
 
     return (

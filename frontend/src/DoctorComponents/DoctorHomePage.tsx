@@ -1,19 +1,27 @@
+
+import { useEffect, useState } from 'react';
+
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/Tabs.css';
+
 import AddApointment from './AddAppointment';
 import DisplayAppointments from './ShowAllAppointments';
-import { useEffect, useState } from 'react';
 import SummeryAppointments from './HistoryAppointments';
 import DoctorProfile from './DocotrProfile';
 import AllPatientView from './AllPAtientView';
 
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
+/**
+ * DoctorHomePage component
+ * Displays a tabbed interface for a doctor's home page with various functionalities.
+ */
 
 function DoctorHomePage() {
     const userInfo = localStorage.getItem('userinfo');
     const [doctorId, setDoctorId] = useState<number | null>(null);
+
+    // Refresh key to force component updates
     const [, setAppointmentsKey] = useState<string>("app"); 
  
     useEffect(() => {
@@ -25,7 +33,7 @@ function DoctorHomePage() {
         }
     }, [userInfo]);
 
-   
+   // Function to refresh appointments by updating the key
     const refreshAppointments = () => {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };
@@ -41,7 +49,6 @@ function DoctorHomePage() {
                         </Tab>
                         <Tab eventKey="appointments" title="Appointments" className='tabs'>
                             <DisplayAppointments
-                                BACKEND_URL={BACKEND_URL}
                                 doctorId={doctorId}
                                 onAppointmentAdded={refreshAppointments}
                             />
@@ -50,21 +57,18 @@ function DoctorHomePage() {
                             <SummeryAppointments
                                 doctorId={doctorId}
                                 onAppointmentAdded={refreshAppointments}
-                                BACKEND_URL={BACKEND_URL}
                             />
                         </Tab>
                         <Tab eventKey="MyPatients" title="My Patients" className='tabs'>
                             <AllPatientView
                                 doctorId={doctorId}
                                 onAppointmentAdded={refreshAppointments}
-                                BACKEND_URL={BACKEND_URL}
                             />
                         </Tab>
                         <Tab eventKey="My profile" title="My profile" className='tabs'>
                             <DoctorProfile
                                 doctorId={doctorId}
                                 onAppointmentAdded={refreshAppointments}
-                                BACKEND_URL={BACKEND_URL}
                             />
                         </Tab>
                     </Tabs>

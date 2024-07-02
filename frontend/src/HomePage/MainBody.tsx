@@ -12,6 +12,13 @@ type HomePageProps = {
   setUserToken: React.Dispatch<React.SetStateAction<string | null>>
 };
 
+/**
+ * The MainBody component is a functional component that displays a welcome message and a button
+ * based on the user's role. Depending on the user's role, it shows different buttons that link
+ * to different panels (patient, doctor, or admin). If the user is not logged in, it shows a login
+ * button that triggers a login popup.
+ */
+
 function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
 
   return (
@@ -37,6 +44,7 @@ function MainBody({ userRole , setShowLoginPopup }: HomePageProps) {
           Login
         </Button>
       )}
+      
     </div>
   );
 }

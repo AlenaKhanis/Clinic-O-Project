@@ -1,8 +1,10 @@
 import { Button, Card, Col, Container, Placeholder, Row } from 'react-bootstrap';
-import '../css/BlogSection.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useState, useEffect } from 'react';
 import { useBackendUrl } from '../BackendUrlContext';
+
+import '../css/BlogSection.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface BlogPost {
   id: number;
@@ -12,10 +14,17 @@ interface BlogPost {
   url: string;
 }
 
+/**
+ * BlogSection component
+ * designed to fetch and display blog posts from an API endpoint
+ * 
+ */
+
 const BlogSection: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
+
   const BACKEND_URL = useBackendUrl();
 
   useEffect(() => {
@@ -49,7 +58,7 @@ const BlogSection: React.FC = () => {
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length > maxLength) {
-      return text.substring(0, maxLength - 0) + '...'; // Adjust the length as per your requirement
+      return text.substring(0, maxLength) + '...'; // Set the maximum length of the truncated text
     }
     return text;
   };

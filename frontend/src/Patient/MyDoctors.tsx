@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Doctor, PatientProps } from "../Types";
+import { Doctor} from "../Types";
+import { useBackendUrl } from "../BackendUrlContext";
 
-function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner: boolean }) {
+/**
+ * MyDoctors component
+ * displaying a list of doctors associated with a specific patient
+ */
+
+
+function MyDoctors({ patientId, isOwner }: {patientId : number | null , isOwner: boolean }) {
     const [doctor, setDoctor] = useState<Doctor[]>([]);
 
+    const BACKEND_URL = useBackendUrl();
 
     useEffect(() => {
         if (patientId) {
@@ -20,7 +28,7 @@ function MyDoctors({ BACKEND_URL, patientId, isOwner }: PatientProps & { isOwner
             };
             fetchPatients();
         }
-    }, [patientId, BACKEND_URL]);
+    }, [patientId]);
 
     return (
         <div>

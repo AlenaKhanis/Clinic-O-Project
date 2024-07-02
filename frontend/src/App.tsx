@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
+
 import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
+
 import BlogSection from './HomePage/BlogSection';
 import LoginForm from './HomePage/LoginForm';
 import Register from './HomePage/RegisterForm';
@@ -10,15 +12,23 @@ import NotFoundPage from './NotFoundPage';
 import PatientRoutes from './Routes/PatientRoutes';
 import DoctorRoutes from './Routes/DoctorRoutes';
 import AdminRoutes from './Routes/AdminRoutes';
+
 import About from './About';
 import './css/App.css';
 import {jwtDecode} from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
 import ErrorBoundary from './ErrorBoundary';
 
+
+/*App component sets up the main structure of your React application
+ incorporating routing, user authentication, and various routes for different user roles. 
+*/
+
+
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [userToken, setUserToken] = useState<string | null>(localStorage.getItem('access_token'));
+
   const [userRole, setUserRole] = useState<string>(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
@@ -32,6 +42,7 @@ function App() {
     return '';
   });
 
+  //Watches changes in userToken to decode the JWT token and update userRole
   useEffect(() => {
     if (userToken) {
       try {
@@ -43,6 +54,7 @@ function App() {
     }
   }, [userToken]);
 
+  //Determines if the Footer component should be rendered based on the current route (location.pathname === '/').
   function Cover({ children }: { children: React.ReactNode }) {
     const location = useLocation();
     return (

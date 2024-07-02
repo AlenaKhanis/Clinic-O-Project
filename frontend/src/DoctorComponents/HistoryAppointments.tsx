@@ -1,16 +1,24 @@
-import { useEffect, useState } from 'react';
-import '../css/displayAppontments.css';
-import { Appointment, DoctorProps, Patient } from '../Types';
-import { Button, Collapse, Table } from 'react-bootstrap';
+import React , { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
-import React from 'react';
+
+import { Appointment, DoctorProps, Patient } from '../Types';
+
+import { Button, Collapse, Table } from 'react-bootstrap';
+import '../css/displayAppontments.css';
+
+/**
+ * HistoryAppointments component
+ * Displays a list of historical appointments for a doctor.
+ **/
 
 function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
     const { getHistoryDoctorAppointments} = useDoctorAppointments();
     const {getPatientById} = usePatientDetails();
-    const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({}); //TODO: ----?
+
+    // State to track open/closed state of appointment details
+    const [openAppointments, setOpenAppointments] = useState<{ [key: number]: boolean }>({}); 
     const [patient, setPatient] = useState<Patient>();
     const [selectHistoryAppointments , setSelectHistoryAppointments] = useState<Appointment[]>([]);
     
@@ -36,6 +44,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
         });
     }, [selectHistoryAppointments]);
 
+    // Toggle visibility of appointment details
     const toggleAppointmentDetails = (appointmentId: number) => {
         setOpenAppointments(prevState => ({
             ...prevState,

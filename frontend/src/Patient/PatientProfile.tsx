@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import { Patient, PatientProps } from "../Types";
 import { Button, Collapse, ListGroup } from "react-bootstrap";
-import "../css/PatientProfile.css";
+
 import { usePatientDetails } from "../useFunctions/usePatientDetails";
+import { Patient } from "../Types";
+
+import "../css/PatientProfile.css";
+
+/**
+ * PatientProfile component
+ * display detailed information about a patient, including their personal details, diagnosis, and prescriptions. 
+ */
 
 
-
-
-function PatientProfile({  patientId }: PatientProps) {
+function PatientProfile({  patientId }: {patientId : number | null}) {
     const [selectedPatientDetails, setSelectedPatientDetails] = useState<Patient | null>(null);
     const { getPatientById } = usePatientDetails();
 
     const [openDiagnosis, setOpenDiagnosis] = useState(false);
     const [openPrescription, setOpenPrescription] = useState(false);
    
-
 
     useEffect(() => {
         if (patientId) {

@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Appointment, Doctor } from '../Types';
-import { Button, Collapse, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
+
+import { Appointment, Doctor } from '../Types';
+
+import { Button, Collapse, Table } from 'react-bootstrap';
 import '../css/HistoryAppt.css';
 
 /**
  * Component to display historical appointments for a patient, including details about associated doctors.
  */
-const HistoryAppointments = () => {
+const PatientAppointmentHistory = () => {
     const { patient_id } = useParams<{ patient_id: string }>();
     const patientIdNumber = Number(patient_id);
-    const [open, setOpen] = useState(false);
+
     const { getPatientHistoryAppointments } = usePatientDetails();
     const { getDoctorById } = useDoctorAppointments();
+
+    const [open, setOpen] = useState(false);
     const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Record<number, { doctorName: string, doctorSpecialty: string }>>({});
     const [patientHistoryAppointments, setPatientHistoryAppointments] = useState<Appointment[]>([]);
 
-    // Fetch patient's history appointments on component mount or when patient_id changes
     useEffect(() => {
         if (patient_id) {
             getPatientHistoryAppointments(patientIdNumber)
@@ -31,7 +34,6 @@ const HistoryAppointments = () => {
         }
     }, [patient_id]);
 
-    // Fetch details of doctors associated with each unique doctor_id in patientHistoryAppointments
     useEffect(() => {
         const uniqueDoctorIds = new Set<number>();
         patientHistoryAppointments.forEach((appointment: Appointment) => {
@@ -59,7 +61,6 @@ const HistoryAppointments = () => {
 
     return (
         <>
-            {/* Button to toggle visibility of history appointments */}
             <div className="box-histoty_main">
                 <Button
                     className='history-appointments-button'
@@ -71,7 +72,6 @@ const HistoryAppointments = () => {
                     History Appointments
                 </Button>
 
-                {/* Collapsible section for history appointments */}
                 <Collapse in={open}>
                     <div id="example-collapse-text">
                         <Table striped bordered hover>
@@ -88,7 +88,6 @@ const HistoryAppointments = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* Map through patientHistoryAppointments to display each appointment */}
                                 {patientHistoryAppointments.map((appointment: Appointment, index: number) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
@@ -97,7 +96,6 @@ const HistoryAppointments = () => {
                                         <td>{appointment.summary}</td>
                                         <td>{appointment.written_diagnosis}</td>
                                         <td>{appointment.written_prescription}</td>
-                                        {/* Display doctor details for each appointment */}
                                         <td>{selectedDoctorDetails[appointment.doctor_id]?.doctorName || "Unknown"}</td>
                                         <td>{selectedDoctorDetails[appointment.doctor_id]?.doctorSpecialty || "Unknown"}</td>
                                     </tr>
@@ -111,4 +109,4 @@ const HistoryAppointments = () => {
     );
 };
 
-export default HistoryAppointments;
+export default PatientAppointmentHistory;

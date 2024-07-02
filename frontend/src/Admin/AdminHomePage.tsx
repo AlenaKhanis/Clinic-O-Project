@@ -1,13 +1,16 @@
-import { Tab, Tabs } from 'react-bootstrap';
-import '../css/Tabs.css'; 
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { useState } from 'react';
+import { useBackendUrl } from '../BackendUrlContext';
+
 import ClinicDetails from './ClinicDetails';
 import DoctorsList from './DocotorList'; 
 import ShowAllAppt from './ShowAllAppt'; 
 import ShowAllPatients from './ShowAllPatinets'; 
-import { useState } from 'react';
 import AdminAddUser from './AddUserPatienOrDoctor'; 
-import { useBackendUrl } from '../BackendUrlContext';
+
+import { Tab, Tabs } from 'react-bootstrap';
+import '../css/Tabs.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+
 /**
  * AdminPagePatient Component:
  * 

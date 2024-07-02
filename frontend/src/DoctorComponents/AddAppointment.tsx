@@ -1,14 +1,22 @@
 import { useState, useEffect } from "react";
-import Calendar from "react-calendar";
+
+import { Alert, Button } from "react-bootstrap";
+
 import '../css/Tabs.css';
 import 'react-calendar/dist/Calendar.css';
 import '../css/calendar.css';
-import { Alert, Button } from "react-bootstrap";
+import Calendar from "react-calendar";
 
 type AddAppointmentProps = {
     doctorId: number | null;
     onSuccess: () => void;
 }
+
+
+/**
+ * AddAppointment component
+ * Allows doctor to select a date and time to schedule open appointment
+ **/ 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -116,6 +124,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
         }
     };
 
+    // Generate time options for a dropdown menu
     const renderTimeOptions = (startHour: number, endHour: number, step: number) => {
         const options = [];
         const now = new Date();
@@ -134,6 +143,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
         return options;
     };
 
+    // Check if the submit button should be disabled
     const isDisabled = () => {
         if (!selectedDate || !selectedTime) {
             return true;
@@ -156,7 +166,8 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
         }
     };
 
-    const tileDisabled = ({ date, view }: { date: Date, view: string }) => {
+    //  Disable past dates in the calendar
+    const dateDisabled = ({ date, view }: { date: Date, view: string }) => {
         if (view === 'month') {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
@@ -174,7 +185,7 @@ function AddAppointment({ doctorId, onSuccess }: AddAppointmentProps) {
                     value={selectedDate}
 
                     className="custom-calendar"
-                    tileDisabled={tileDisabled}
+                    tileDisabled={dateDisabled}
                 />
             </div>
             <div className="select-time">

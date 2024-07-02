@@ -1,6 +1,11 @@
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 import '../css/footer.css';
 
+/**
+ * The Footer component represents the footer section of the Clinic-O application.
+ * It includes the company description, social media links, and copyright information.
+ */
+
 const Footer = () => {
   return (
     <footer className="footer">

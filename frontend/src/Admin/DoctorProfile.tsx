@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Button, Modal, ListGroup } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
-import '../css/doctorProfile.css';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
-import DoctorPatients from './DoctorPatients';
-import { Doctor,Appointment, Patient } from '../Types';
-import EditProfile from '../useFunctions/EditProfileProps';
+import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
 import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
+
+import { Doctor,Appointment, Patient } from '../Types';
+
+import DoctorPatients from './DoctorPatients';
+import EditProfile from '../useFunctions/EditProfileProps';
+
+import { Button, Modal, ListGroup } from 'react-bootstrap';
+import '../css/doctorProfile.css';
 
 /** 
  * DoctorProfile Component:
@@ -23,22 +26,26 @@ import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
 export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
   const { doctorId } = useParams<{ doctorId: string }>();
   const doctorID = Number(doctorId);
+
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+
   const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
   const [filter, ] = useState<string>('all');
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
-  const { getPatientById } = usePatientDetails();
   const [showEditModal, setShowEditModal] = useState(false);
   const [, setShowAlert] = useState<boolean>(false);
   const [ massage , setAlertMessage] = useState<string | null>(null);
   const [ variant , setAlertVariant] = useState<'success' | 'danger'>('success');
+
   const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments(); 
   const {handleDeleteUser} = useGlobalFunctions();
   const {filterAppointments} = useAppointmentActions();
+  const { getPatientById } = usePatientDetails();
 
 
 

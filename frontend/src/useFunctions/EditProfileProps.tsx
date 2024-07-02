@@ -3,10 +3,8 @@ import { Modal, Button, Alert, Form } from 'react-bootstrap';
 import { Doctor, Patient, Owner } from '../Types';
 import { validateUsername, validateEmail, validateFullName, validatePhone, validateSpecialty } from '../validations'; 
 import { useGlobalFunctions } from './useGlobalFunctions';
+import { useBackendUrl } from '../BackendUrlContext';
 
-
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 type EditProfileProps = {
   profile: Doctor | Patient | Owner;
@@ -17,7 +15,16 @@ type EditProfileProps = {
 
 type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
+/**
+ * EditProfile component
+ * handles the editing of user profiles within a modal
+ * providing validation for fields and options based on the user's role (Doctor, Patient, or Owner). 
+ */
+
 const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditModal, isOwner }) => {
+
+  const BACKEND_URL = useBackendUrl();
+
   const [editedProfile, setEditedProfile] = useState<Doctor | Patient | Owner>(profile);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);

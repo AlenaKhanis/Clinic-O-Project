@@ -78,3 +78,13 @@ body {
 
 }
 
+
+.navbar .navbar-brand,
+.navbar .navbar-text,
+.navbar .nav-link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  
+}
+

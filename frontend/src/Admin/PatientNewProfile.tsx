@@ -9,15 +9,13 @@ import { Doctor, Appointment, Patient } from '../Types';
 import { useDoctorAppointments } from '../useFunctions/useDoctorAppointments';
 import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { useGlobalFunctions } from '../useFunctions/useGlobalFunctions';
-import { useBackendUrl } from '../BackendUrlContext';
+
 
 import '../css/doctorProfile.css';
 import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
 
 /**
- * 
  * PatientProfile Component:
- * 
  * This component fetches and displays a patient's details and appointments.
  * It renders a patient's full name, age, package, phone, and email.
  * It also renders a list of appointments with date, time, and status.
@@ -28,16 +26,14 @@ import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
  * The patient's details can be edited by the owner of the patient.
  * The patient can be deleted by the owner of the patient.
  * The appointment details can be viewed by clicking on the appointment.
- *  
- * 
  */
 
 
 export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
     const { patient_id } = useParams<{ patient_id: string }>();
     const patientId = Number(patient_id);
-    const  BACKEND_URL  = useBackendUrl();
     const {filterAppointments} = useAppointmentActions();
+    
      // State variables
     const [doctor, setDoctor] = useState<Doctor | null>(null);
     const [patient, setPatient] = useState<Patient | null>(null);
@@ -230,7 +226,6 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
       <div className='doctor-patients-container'>
         <div className='patient-sidebar'>
           <MyDoctors 
-            BACKEND_URL={BACKEND_URL}
             patientId={patientId}
             isOwner={isOwner}
           />

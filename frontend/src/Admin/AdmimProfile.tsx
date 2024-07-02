@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { ListGroup, Button } from "react-bootstrap";
-import { Owner } from "../Types";
 import { useBackendUrl } from "../BackendUrlContext"; 
-import EditProfile from "../useFunctions/EditProfileProps"; 
+
+import { Owner } from "../Types";
+
+import EditProfile from "../useFunctions/EditProfileProps";
+
+import { ListGroup, Button } from "react-bootstrap"; 
 import "../css/AdminProfile.css"; 
 
 /**
  * AdminProfile Component:
- * 
  * This component fetches and displays the profile details of an admin user
  * from the backend based on a provided subId. It allows admins to view their
  * profile information and edit it through an edit modal.
@@ -15,6 +17,7 @@ import "../css/AdminProfile.css";
 function AdminProfile({ subId }: { subId: string | null }) {
   const [admin, setAdmin] = useState<Owner | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  
   const BACKEND_URL = useBackendUrl(); 
 
   useEffect(() => {
