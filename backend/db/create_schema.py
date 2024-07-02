@@ -9,6 +9,17 @@ SQL_DIR = CURRENT_DIR.parent / 'sql'
 SCHEMA_PATH = SQL_DIR / 'schema.sql'
 DATA_PATH = SQL_DIR / 'example.sql'
 
+def table_exists(cursor, table_name):
+    cursor.execute("""
+        SELECT EXISTS (
+            SELECT 1
+            FROM   information_schema.tables 
+            WHERE  table_schema = 'public'
+            AND    table_name = %s
+        )
+    """, (table_name,))
+    return cursor.fetchone()[0]
+
 def run_sql_file(db, file_path):
     try:
         with db.cursor() as cursor:
@@ -20,17 +31,6 @@ def run_sql_file(db, file_path):
         db.rollback()
         logging.error(f"Error running SQL file {file_path}: {e}")
         raise
-
-def table_exists(cursor, table_name):
-    cursor.execute("""
-        SELECT EXISTS (
-            SELECT 1
-            FROM   information_schema.tables 
-            WHERE  table_schema = 'public'
-            AND    table_name = %s
-        )
-    """, (table_name,))
-    return cursor.fetchone()[0]
 
 def create_schema_and_load_data():
     db = get_db()
