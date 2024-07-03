@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 
 import BlogSection from './HomePage/BlogSection';
 import LoginForm from './HomePage/LoginForm';
@@ -11,8 +11,10 @@ import NotFoundPage from './NotFoundPage';
 import PatientRoutes from './Routes/PatientRoutes';
 import DoctorRoutes from './Routes/DoctorRoutes';
 import AdminRoutes from './Routes/AdminRoutes';
-
 import About from './About';
+
+
+
 import './css/App.css';
 import {jwtDecode} from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
@@ -80,7 +82,6 @@ function App() {
     <BackendUrlProvider>
       <BrowserRouter>
       <ErrorBoundary>
-        {/* <Cover> */}
           <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId}  />
           <Routes>
             <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
@@ -101,7 +102,6 @@ function App() {
             <Route path="*" element={<Navigate to="/404" />} />
           </Routes>
           {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} />}
-        {/* </Cover> */}
         </ErrorBoundary>
       </BrowserRouter>
     </BackendUrlProvider>

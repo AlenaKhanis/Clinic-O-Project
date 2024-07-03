@@ -73,22 +73,6 @@ const About: React.FC = () => {
           </Card>
         </Col>
       </Row>
-
-      <Row>
-        <Col>
-          <Card className="about-card">
-            <Card.Body>
-              <Card.Title>Testimonials</Card.Title>
-              <Card.Text>
-                "Clinic-O has been my healthcare provider for years. The staff is always friendly and the doctors are very knowledgeable." - Jane Doe
-              </Card.Text>
-              <Card.Text>
-                "I had a great experience at Clinic-O. They made me feel comfortable and took great care of me." - John Smith
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
     </Container>
   );
 };

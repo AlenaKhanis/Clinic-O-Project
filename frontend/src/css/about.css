@@ -1,38 +1,27 @@
+/* about.css */
+
 .about-container {
-    margin-top: 100px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .about-card {
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .about-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .about-card .card-title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-  
-  .about-card .card-text {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .about-card {
-      margin-bottom: 15px;
-    }
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers content horizontally */
+  margin-top: 7% ;
+}
+
+.about-card {
+  max-width: 400px; /* Example max-width value */
+  width: 100%; /* Ensures cards are responsive */
+  margin-bottom: 20px; /* Adds space between cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adds a subtle box shadow */
+  border-radius: 8px; /* Adds rounded corners */
+  padding: 20px; /* Adds padding inside the card */
+}
+
+.row {
+  display: flex;
+  justify-content: space-between; /* Adds space between columns */
+  margin-bottom: 20px; /* Adds space between rows */
+}
+
+.col {
+  flex: 1; /* Ensures columns take up equal space */
+}

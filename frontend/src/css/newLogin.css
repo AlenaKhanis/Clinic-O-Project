@@ -89,8 +89,13 @@
   
   label input[name="password"] {
     -webkit-text-security: disc;
+    background-color: white;
   }
   
+  label input[name="username"] {
+    background-color: white;
+  }
+
   input[name="show-password"]:checked ~ div label input[name="password"] {
     -webkit-text-security: none;
   }
