@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputGroup, FormControl } from 'react-bootstrap';
+import './css/Register.css';
 
 interface InputFieldProps {
   icon: any;
@@ -41,10 +42,12 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     };
 
     return (
+      <div className='formforregister'>
+      <div className='icons'>
+      <FontAwesomeIcon className='icon_display' icon={icon} />
+      </div>
       <InputGroup className="mb-3">
-        <InputGroup.Text>
-          <FontAwesomeIcon icon={icon} />
-        </InputGroup.Text>
+
         <FormControl
           type={type}
           placeholder={placeholder}
@@ -53,10 +56,11 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           onChange={handleChange}
           isInvalid={!!error}
         />
-        <FormControl.Feedback type="invalid">
+        <FormControl.Feedback className='error-control' type="invalid">
           {error}
         </FormControl.Feedback>
       </InputGroup>
+      </div>
     );
   }
 );

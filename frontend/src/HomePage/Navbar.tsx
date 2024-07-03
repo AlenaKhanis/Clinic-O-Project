@@ -101,6 +101,23 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
                   <Navbar.Text className="ms-3" style={{ color: 'white' }}>About</Navbar.Text>
                 </Link>
               }
+              {role === 'patient' ? (
+                <Link to="/patient" style={{ textDecoration: 'none' }}>
+                  <Navbar.Text className="ms-3" style={{ color: 'white' }} >Panel</Navbar.Text>
+                </Link>
+              ) : role === 'doctor' ? (
+                <Link to="/doctor" style={{ textDecoration: 'none' }}>
+                  <Navbar.Text className="ms-3" style={{ color: 'white' }}>Doctor Panel</Navbar.Text>
+                </Link>
+              ) : role === 'owner' ? (
+                <Link to="/admin" style={{ textDecoration: 'none' }}>
+                  <Navbar.Text className="ms-3" style={{ color: 'white' }} >Admin Panel</Navbar.Text>
+                </Link>
+              ) : (
+                <Navbar.Text className="ms-3" style={{ color: 'white' }} onClick={() => setShowLoginPopup(true)} >
+                  Login
+                </Navbar.Text>
+              )}
             </Nav>
             <Nav className="ms-auto align-items-center">
               <Nav.Item className="text-white ms-3">{greeting}, {userToken ? userName : "Guest"}.<br /> {formattedDate}.</Nav.Item>

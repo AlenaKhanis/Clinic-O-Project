@@ -7,7 +7,6 @@ import LoginForm from './HomePage/LoginForm';
 import Register from './HomePage/RegisterForm';
 import Footer from './HomePage/Footer';
 import HomeNavBar from './HomePage/Navbar';
-import MainBody from './HomePage/MainBody';
 import NotFoundPage from './NotFoundPage';
 import PatientRoutes from './Routes/PatientRoutes';
 import DoctorRoutes from './Routes/DoctorRoutes';
@@ -54,18 +53,7 @@ function App() {
     }
   }, [userToken]);
 
-  //Determines if the Footer component should be rendered based on the current route (location.pathname === '/').
-  function Cover({ children }: { children: React.ReactNode }) {
-    const location = useLocation();
-    return (
-      <div className="main-container">
-        <div className="content">
-          {children}
-        </div>
-        {location.pathname === '/' && <Footer />}
-      </div>
-    );
-  }
+
 
   const [userName, setUserName] = useState<string>(() => {
     const usernameInfo = localStorage.getItem('userinfo');
@@ -92,7 +80,7 @@ function App() {
     <BackendUrlProvider>
       <BrowserRouter>
       <ErrorBoundary>
-        <Cover>
+        {/* <Cover> */}
           <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId}  />
           <Routes>
             <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
@@ -101,11 +89,9 @@ function App() {
             <Route
               path="/"
               element={
-                <div className="homepage-container">
-                  <div className="mainbody">
-                    <MainBody userRole={userRole} userToken={userToken} setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userName={userName} setRole={setUserRole} />
-                  </div>
+                <div className='main-div'>
                   <BlogSection />
+                  <Footer />
                 </div>
               }
             />
@@ -115,7 +101,7 @@ function App() {
             <Route path="*" element={<Navigate to="/404" />} />
           </Routes>
           {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} />}
-        </Cover>
+        {/* </Cover> */}
         </ErrorBoundary>
       </BrowserRouter>
     </BackendUrlProvider>

@@ -64,7 +64,7 @@ const BlogSection: React.FC = () => {
   };
 
   return (
-    <Container className='blog-container'>
+    <div className='blog-container'>
       <Row xs={1} md={2} lg={4} className="g-4">
         {isLoading || hasError ? (
           Array.from({ length: 4 }).map((_, index) => (
@@ -100,7 +100,7 @@ const BlogSection: React.FC = () => {
           ))
         )}
       </Row>
-    </Container>
+      </div>
   );
 };
 

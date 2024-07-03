@@ -9,7 +9,6 @@ Each function returns an error message if validation fails, or an empty string i
 
 
 export const validateUsername = async (username: string, backendUrl: string): Promise<string> => {
-  console.log(backendUrl);
   if (username.length < 3) return "Username must be at least 3 characters long";
 
   const response = await fetch(`${backendUrl}/check-username?username=${username}`, {

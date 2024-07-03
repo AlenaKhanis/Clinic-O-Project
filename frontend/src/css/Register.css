@@ -1,9 +1,6 @@
 .register-form {
-  width: fit-content;
-  position: absolute;
-  left: 50%;
-  top: 270px; /* Adjusted top position */
-  transform: translateX(-50%);
+  width: 100%;
+  align-content: center;
 }
 
 .package-picker {
@@ -36,6 +33,7 @@
 /* Optional: Style for the inputs to improve alignment */
 .role-selection input[type="radio"] {
   cursor: pointer;
+  color: white;
 }
 
 .text-center {
@@ -48,4 +46,48 @@
   font-weight: bold; /* Makes text bold */
   font-size: 2rem; /* Adjusts font size to be larger */
   /* Additional styles or adjustments as needed */
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #010101;
+  background-color: #fff;
+  outline: none;
+  cursor: pointer;
+
+}
+
+/* Style radio button labels */
+input[type="radio"] + label {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Style radio buttons when checked */
+input[type="radio"]:checked {
+  background-color: #205a66;
+}
+
+.register-page {
+  margin-left: 25%;
+  margin-right: 25%;
+  padding-top: 10%;
+}
+
+
+.icons {
+  margin: auto;
+}
+
+.icon_display{
+ margin-right: 20px;
+}
+
+.formforregister {
+  display: flex;
 }

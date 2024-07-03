@@ -1,44 +1,4 @@
-.bg-body-tertiary {
-  background-color: #205a66 !important;
-}
 
-.mainbody h1 {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  padding-left: 200px;
-  padding-top: 150px;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
-  color: #205a66;
-}
-
-
-
-.main-button { 
-  width: 400px;
-  margin-left: 230px;
-  margin-top: 50px;
-}
-
-.main-button:hover {
-  background-color: rgba(255, 0, 0, 0.571);
-
-}
- 
-.bg-body-tertiary {
-  color: white;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f5f5f5;
-}
-
-.navbar {
-  background-color: #007bff; /* Clinic-O brand color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 .navbar-brand {
   color: #fff !important;
@@ -46,45 +6,57 @@ body {
   transition: color 0.3s ease-in-out;
 }
 
-.heading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px; 
-  background-color: #f0f0f0; 
-}
-
-
-.texst-container {
+/* MainBody styles */
+.mainbody {
   text-align: center;
+
 }
 
-.special-heading {
+.mainbody h1 {
+  font-size: 4rem;
+  color: #205a66;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-bottom: 1rem;
+}
+
+.mainbody .main-button {
+  width: 300px; 
+  margin-top: 20px;
+
+}
+
+.mainbody .main-button:hover {
+  background-color: rgba(255, 0, 0, 0.571);
+}
+
+/* Text container styles */
+.text-container {
+  text-align: left;
+  margin-bottom: 20px;
+  margin-left: 150px; /* Adjust margin-left as needed */
+}
+
+.text-container .special-heading {
   font-size: 3rem;
   color: #205a66;
   text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.3);
   margin: 0;
   padding: 10px;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.subheading {
-  font-size: 2.5rem;
+.text-container .subheading {
+  font-size: 2rem; /* Adjust font size */
   color: #333;
   text-shadow: 1px 1px 3px rgba(255, 0, 0, 0.3);
-  padding: 30px;
-  margin: 180px;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
-
+  padding: 20px; /* Adjust padding */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
-.navbar .navbar-brand,
-.navbar .navbar-text,
-.navbar .nav-link {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mainbody .main-button {
+    width: 100%; /* Full width on smaller screens */
+  }
 }
 

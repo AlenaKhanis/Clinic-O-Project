@@ -1,14 +1,33 @@
-
-.blog-container.container {
+/* BlogSection.css */
+.blog-container {
   display: flex;
+  flex-wrap: wrap; /* Ensure flex items wrap to the next line when necessary */
   justify-content: space-between;
-  min-height: auto;
-  padding: 20px 0;
-  
+  padding: 20px 150px; /* Adjust padding as needed */
 }
+
+.card {
+  width: calc(25% - 10px); /* Adjust card width to fit 4 cards per row with spacing */
+  margin-bottom: 0px; /* Adjust bottom margin for spacing between rows */
+}
+
 .card-button {
-  position: absolute;
-  bottom: 1rem;
-  
+  margin-top: auto; /* Aligns the button to the bottom of the card */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Lifts the card slightly on hover */
+}
+
+
+.card-button > .btn {
+  background-color: #205a66; /* Custom button background color */
+  color: #ffffff; /* Text color for the button */
+  border: none; /* Remove button border */
+  transition: background-color 0.3s ease; /* Smooth transition for button color change */
+}
+
+.card-button > .btn:hover {
+  background-color: #0e3c46; /* Darker background color on hover */
 }
 

@@ -1,23 +1,5 @@
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 
-}
-.main-container {
-  background-image: url('/img/Second_Page_Page.png');
-  background-size: cover;
-}
-
-
-.homepage-container{
-  background-image: url('/img/Main_Page.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  margin: 0;
-}
 p {
   font-size: 1rem;
   line-height: 1.5;
@@ -38,13 +20,16 @@ p {
   background-color: #0056b3;
 }
 
-.app-container {
-  position: relative; /* Ensure relative positioning */
-  min-height: 100vh; 
+.main-div {
+  min-height: 100vh; /* Ensures main-div takes up at least the full viewport height */
+  display: flex;
+  flex-direction: column;
 }
 
-.main-div{
-  top: 20%;
-  position: relative;
-  transform: translateY(20%);
+.main-div > .footer {
+  margin-top: auto; /* Pushes the footer to the bottom */
+}
+
+.main-div > .blog-container {
+  margin-top: 407px;
 }

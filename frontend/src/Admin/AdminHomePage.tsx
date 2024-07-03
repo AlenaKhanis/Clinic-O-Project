@@ -37,7 +37,8 @@ function AdminPagePatient() {
 
   return (
     <>
-      <div className='container'>
+      <div className='tab-main-container'>
+        <div className='tab-container'>
         {/* Tabs component for navigation */}
         <Tabs id='uncontrolled-tab-example' className='custom-tabs'>
           <Tab eventKey='clinicDetails' title='Clinic Details' className='tabs'>
@@ -46,7 +47,7 @@ function AdminPagePatient() {
           <Tab eventKey='doctors' title='Doctors' className='tabs'>
             <DoctorsList onDoctorAdded={refreshDoctorsList} />
           </Tab>
-          <Tab eventKey='addDoctor' title='Add Doctor/Patient' className='tabs' style={{ border: 'none' }}>
+          <Tab eventKey='addDoctor' title='Add Doctor/Patient' className='tabs'>
             <AdminAddUser onPatientAdded={handlePatientAdded} onDoctorAdded={handleDoctorAdded} />
           </Tab>
           <Tab eventKey='showAppointment' title='Show Appointment' className='tabs'>
@@ -56,6 +57,10 @@ function AdminPagePatient() {
             <ShowAllPatients onPatientAdded={refreshPatientsList} />
           </Tab>
         </Tabs>
+        </div>
+      </div>
+      <div className='margin-div'>
+
       </div>
     </>
   );

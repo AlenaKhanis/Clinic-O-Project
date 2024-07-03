@@ -236,6 +236,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
   };
 
   return (
+    
     <div className='register-form'>
       <form onSubmit={handleRegister}>
         <p className="text-center">{isAdmin ? 'Add Doctor/Patient' : 'Register'}</p>
@@ -410,6 +411,7 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
         </div>
       </form>
     </div>
+    
   );
 };
 
