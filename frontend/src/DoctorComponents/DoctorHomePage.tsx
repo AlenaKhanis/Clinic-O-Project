@@ -41,8 +41,8 @@ function DoctorHomePage() {
     
     return (
         <>
-        <div className="container">
-            
+        <div className="tab-main-container">
+            <div className='tab-container'>
                     <Tabs id="uncontrolled-tab-example" className="custom-tabs">
                         <Tab eventKey="home" title="Open Appointments" className='tabs'>
                             <AddApointment doctorId={doctorId} onSuccess={refreshAppointments} />
@@ -72,6 +72,7 @@ function DoctorHomePage() {
                             />
                         </Tab>
                     </Tabs>
+                </div>
                 </div>
                 
                 </>

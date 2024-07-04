@@ -1,30 +1,22 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 
-import BlogSection from './HomePage/BlogSection';
-import LoginForm from './HomePage/LoginForm';
-import Register from './HomePage/RegisterForm';
 import Footer from './HomePage/Footer';
 import HomeNavBar from './HomePage/Navbar';
 import NotFoundPage from './NotFoundPage';
-import PatientRoutes from './Routes/PatientRoutes';
-import DoctorRoutes from './Routes/DoctorRoutes';
-import AdminRoutes from './Routes/AdminRoutes';
-import About from './About';
-
-
-
-import './css/App.css';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { BackendUrlProvider } from './BackendUrlContext';
 import ErrorBoundary from './ErrorBoundary';
+import './css/App.css';
 
-
-/*App component sets up the main structure of your React application
- incorporating routing, user authentication, and various routes for different user roles. 
-*/
-
+// Lazy load components
+const BlogSection = lazy(() => import('./HomePage/BlogSection'));
+const LoginForm = lazy(() => import('./HomePage/LoginForm'));
+const Register = lazy(() => import('./HomePage/RegisterForm'));
+const PatientRoutes = lazy(() => import('./Routes/PatientRoutes'));
+const DoctorRoutes = lazy(() => import('./Routes/DoctorRoutes'));
+const AdminRoutes = lazy(() => import('./Routes/AdminRoutes'));
+const About = lazy(() => import('./About'));
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -43,7 +35,6 @@ function App() {
     return '';
   });
 
-  //Watches changes in userToken to decode the JWT token and update userRole
   useEffect(() => {
     if (userToken) {
       try {
@@ -54,8 +45,6 @@ function App() {
       }
     }
   }, [userToken]);
-
-
 
   const [userName, setUserName] = useState<string>(() => {
     const usernameInfo = localStorage.getItem('userinfo');
@@ -81,26 +70,28 @@ function App() {
   return (
     <BackendUrlProvider>
       <BrowserRouter>
-      <ErrorBoundary>
-          <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId}  />
-          <Routes>
-            <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
-            <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
-            <Route path="/admin/*" element={<AdminRoutes userRole={userRole} subID={subId} />} />
-            <Route
-              path="/"
-              element={
-                <div className='main-div'>
-                  <BlogSection />
-                  <Footer />
-                </div>
-              }
-            />
-            <Route path="/register" element={<Register />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/404" element={<NotFoundPage userRole={userRole} />} />
-            <Route path="*" element={<Navigate to="/404" />} />
-          </Routes>
+        <ErrorBoundary>
+          <HomeNavBar setShowLoginPopup={setShowLoginPopup} setUserName={setUserName} setUserToken={setUserToken} userToken={userToken} userName={userName} role={userRole} setRole={setUserRole} subId={subId} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/patient/*" element={<PatientRoutes userRole={userRole} />} />
+              <Route path="/doctor/*" element={<DoctorRoutes userRole={userRole} />} />
+              <Route path="/admin/*" element={<AdminRoutes userRole={userRole} subID={subId} />} />
+              <Route
+                path="/"
+                element={
+                  <div className='main-div'>
+                    <BlogSection />
+                    <Footer />
+                  </div>
+                }
+              />
+              <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/404" element={<NotFoundPage userRole={userRole} />} />
+              <Route path="*" element={<Navigate to="/404" />} />
+            </Routes>
+          </Suspense>
           {showLoginPopup && <LoginForm show={showLoginPopup} setShow={setShowLoginPopup} setUserToken={setUserToken} setUserName={setUserName} />}
         </ErrorBoundary>
       </BrowserRouter>

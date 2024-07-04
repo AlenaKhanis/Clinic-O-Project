@@ -42,8 +42,8 @@ function HomePagePatient() {
 
     return (
         <>
-        <div className="container" style={{marginTop: '300px'}}>
-            <div className="row">
+        <div className="tab-main-container">
+            <div className='tab-container'>
             <Tabs id="uncontrolled-tab-example" className="custom-tabs">
                 <Tab eventKey="searchDoctor" title="Search Doctor" className='tabs'>
                     <SearchDoctors 

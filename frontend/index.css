@@ -82,3 +82,13 @@
     flex-direction: column;
     min-height: 100vh;
   }
+
+  input[type="text"] {
+    background-color: white;
+    color: black;
+  }
+
+  select {
+    background-color: white;
+    color: black;
+  }

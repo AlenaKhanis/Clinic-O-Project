@@ -90,10 +90,12 @@
   label input[name="password"] {
     -webkit-text-security: disc;
     background-color: white;
+    color: black;
   }
   
   label input[name="username"] {
     background-color: white;
+    color: black;
   }
 
   input[name="show-password"]:checked ~ div label input[name="password"] {
