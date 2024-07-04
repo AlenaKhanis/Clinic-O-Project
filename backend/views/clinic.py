@@ -44,9 +44,10 @@ def update_clinic() -> Response:
 
         db = get_db()
         cursor = db.cursor()
+        clinic_id = 1
 
         if field in ['clinic_name', 'clinic_address', 'clinic_phone']:
-            Clinic.update_clinic_details(cursor, {field: value})
+            Clinic.update_clinic_details(cursor,clinic_id, {field: value})
             db.commit()
             return jsonify({"message": "Clinic details updated successfully"}), 200
         else:

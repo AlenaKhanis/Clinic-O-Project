@@ -17,8 +17,6 @@ def get_specialties() -> Response:
     try:
         cursor.execute("SELECT specialty FROM doctors")
         specialties = cursor.fetchall()
-        print(specialties)
-
         specialties = [specialty[0] for specialty in specialties]
         return jsonify({"specialties": specialties})
     except Exception as e:

@@ -17,7 +17,7 @@ class Clinic():
 
 
     @classmethod
-    def update_clinic_details(cls, cursor, data: dict) -> bool:
+    def update_clinic_details(cls, cursor,clinic_id, data: dict) -> bool:
         try:
             for field, value in data.items():
                 cursor.execute(f"""
@@ -25,7 +25,7 @@ class Clinic():
                     SET {field} = %s,
                         updated_date = CURRENT_TIMESTAMP
                     WHERE id = %s;
-                """, (value, 1))
+                """, (value, clinic_id))
                 print(f"{field} updated successfully")
             return True
         except psycopg2.IntegrityError as e:

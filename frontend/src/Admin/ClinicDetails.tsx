@@ -20,7 +20,7 @@ function ClinicDetails() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [showModal, setShowModal] = useState(false);
-  const [phoneError, setPhoneError] = useState<string | null>(null);
+
 
   const BACKEND_URL = useBackendUrl();
 
@@ -79,13 +79,6 @@ function ClinicDetails() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const phoneValidationError = validatePhone(editedClinicPhone);
-    if (phoneValidationError) {
-        setPhoneError(phoneValidationError);
-        return;
-    } else {
-        setPhoneError(null);
-    }
 
     if (clinicDetails) {
         if (editedClinicName !== clinicDetails.clinic_name) {
@@ -160,11 +153,9 @@ function ClinicDetails() {
                       type="text"
                       value={editedClinicPhone}
                       onChange={(e) => setEditedClinicPhone(e.target.value)}
-                      isInvalid={!!phoneError}
+                      
                     />
-                    <Form.Control.Feedback type="invalid">
-                      {phoneError}
-                    </Form.Control.Feedback>
+  
                   </Form.Group>
                   <Button variant="primary" type="submit">
                     Save Changes

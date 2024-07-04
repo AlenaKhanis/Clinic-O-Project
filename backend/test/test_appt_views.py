@@ -9,6 +9,8 @@ from main import app
 
 appt = ['2024-06-17T19:46:07.067892', 999]
 
+#Used to prepare the database state before running each test that requires a clean state.
+#After each test, ensures that any changes made during the test are rolled back, reverting the database to its initial state.
 @pytest.fixture
 def setup_teardown_db():
     with app.app_context():
@@ -24,7 +26,8 @@ def setup_teardown_db():
         conn.commit()
         yield cursor
         conn.rollback()
-
+        
+#This fixture ensures that the database is cleaned up after all tests
 @pytest.fixture(scope="module", autouse=True)
 def cleanup_db():
     yield

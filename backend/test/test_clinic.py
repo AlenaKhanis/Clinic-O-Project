@@ -36,6 +36,7 @@ def db_cursor(request):
     request.addfinalizer(cleanup)
     yield cursor 
 
+
 def test_update_clinic_details(db_cursor):
     db_cursor.execute("""
         INSERT INTO clinic (clinic_name, clinic_address, clinic_phone, owner_id, clinic_description, clinic_email, created_date, updated_date)
@@ -43,6 +44,7 @@ def test_update_clinic_details(db_cursor):
         RETURNING id;
     """, ("Test Clinic", "Test Clinic", "1234567890", 1 , "A test clinic", "clinic@some.com", "2021-01-01 00:00:00", "2021-01-01 00:00:00"))
     clinic_id = db_cursor.fetchone()["id"]
+
 
     data = {
         "clinic_name": "Updated Clinic",
@@ -52,12 +54,13 @@ def test_update_clinic_details(db_cursor):
         "clinic_email": "clinic@some.com"
     }
 
-    clinic = Clinic.update_clinic_details(db_cursor, clinic_id, data)
-    assert clinic == True
-    print(clinic)
-    db_cursor.execute("SELECT * FROM clinic WHERE id = %s", (clinic_id,))
+    clinic_updated = Clinic.update_clinic_details(db_cursor,clinic_id, data)
+    assert clinic_updated is True
 
+
+    db_cursor.execute("SELECT * FROM clinic WHERE id = %s", (clinic_id,))
     clinic_data = db_cursor.fetchone()
+    
 
     assert clinic_data["clinic_name"] == "Updated Clinic"
     assert clinic_data["clinic_address"] == "456 Updated Street"
