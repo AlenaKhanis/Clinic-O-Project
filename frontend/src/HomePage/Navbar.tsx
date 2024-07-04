@@ -114,7 +114,7 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
                   <Navbar.Text className="ms-3" style={{ color: 'white' }} >Admin Panel</Navbar.Text>
                 </Link>
               ) : (
-                <Navbar.Text className="ms-3" style={{ color: 'white' }} onClick={() => setShowLoginPopup(true)} >
+                <Navbar.Text className="ms-3" style={{ color: 'white' ,cursor: 'pointer'   }} onClick={() => setShowLoginPopup(true)} >
                   Login
                 </Navbar.Text>
               )}

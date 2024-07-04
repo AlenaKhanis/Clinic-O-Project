@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Placeholder, Row } from 'react-bootstrap';
+import { Button, Card, Col, Placeholder, Row } from 'react-bootstrap';
 
 import { useState, useEffect } from 'react';
 import { useBackendUrl } from '../BackendUrlContext';

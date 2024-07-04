@@ -7,24 +7,33 @@
 }
 
 .card {
-  width: calc(25% - 10px); /* Adjust card width to fit 4 cards per row with spacing */
-  margin-bottom: 0px; /* Adjust bottom margin for spacing between rows */
+  display: flex;
+  flex-direction: column;
+  width: calc(25% - 10px);
+  margin-bottom: 20px; 
+  padding: 10px;
+  border: 1px solid #ccc; 
+  transition: transform 0.3s ease;
+}
+
+.card-content {
+  flex-grow: 1; 
 }
 
 .card-button {
-  margin-top: auto; /* Aligns the button to the bottom of the card */
+  margin-top: auto;
 }
 
 .card:hover {
-  transform: translateY(-5px); /* Lifts the card slightly on hover */
+  transform: translateY(-5px); 
 }
 
 
 .card-button > .btn {
-  background-color: #205a66; /* Custom button background color */
-  color: #ffffff; /* Text color for the button */
-  border: none; /* Remove button border */
-  transition: background-color 0.3s ease; /* Smooth transition for button color change */
+  background-color: #205a66; 
+  color: #ffffff;
+  border: none; 
+  transition: background-color 0.3s ease;
 }
 
 .card-button > .btn:hover {
