@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useBackendUrl } from '../BackendUrlContext';
 import { Link } from 'react-router-dom';
-
 import { Doctor } from '../Types';
-
 import { Table } from 'react-bootstrap';
+import '../css/doctorList.css';
 
 /**
  * DoctorsList Component:
@@ -14,8 +13,7 @@ import { Table } from 'react-bootstrap';
  * Each doctor's name is linked to their individual profile page using React Router's Link component.
  */
 
-
-function DoctorsList({ onDoctorAdded }: {onDoctorAdded : boolean}) {
+function DoctorsList({ onDoctorAdded }: { onDoctorAdded: boolean }) {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const BACKEND_URL = useBackendUrl();
   
@@ -36,7 +34,7 @@ function DoctorsList({ onDoctorAdded }: {onDoctorAdded : boolean}) {
   }, [onDoctorAdded]);
 
   return (
-    <div>
+    <div className='content-container'>
       <h1>Doctors List</h1>
       <Table striped bordered hover>
         <thead>

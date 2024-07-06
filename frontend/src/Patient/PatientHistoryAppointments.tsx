@@ -5,6 +5,8 @@ import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 import { Appointment, Doctor} from "../Types";
 import { Button, Collapse, Table } from 'react-bootstrap';
 
+import "../css/IndividualAppointmentDetails.css";
+
 /**
  * IndividualAppointmentDetails component
  * isplay detailed information about historical appointments for a specific patient.
@@ -44,7 +46,8 @@ function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patie
     }, [patientId, refreshAppointments]);
 
     return (
-        <div>
+        <div className="content-container">
+            <h2>History Appointments</h2>
             {selectHistoryAppointments.length > 0 ? (
                 <Table>
                     <tbody>
@@ -55,6 +58,7 @@ function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patie
                                     <td>Time: {appointment.time}</td>
                                     <td>
                                         <Button
+                                            className="toggle-appointment-details-button"
                                             onClick={() => toggleAppointmentDetails(appointment.id)}
                                             aria-controls={`appointment-details-${appointment.id}`}
                                             aria-expanded={openAppointments[appointment.id]}
@@ -65,13 +69,13 @@ function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patie
                                 </tr>
                                 <tr>
                                     <td colSpan={3}>
-                                        <Collapse in={openAppointments[appointment.id]}>
+                                        <Collapse in={openAppointments[appointment.id]}  className="collapse-content">
                                             <div id={`appointment-details-${appointment.id}`}>
-                                                <p><span style={{ fontWeight: 'bold' }}>Summary:</span> {appointment.summary}</p>
-                                                <p>Written Diagnosis: {appointment.written_diagnosis}</p>
-                                                <p>Written Prescription: {appointment.written_prescription}</p>
-                                                <p>Doctor: {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].full_name : 'Loading...'}</p>
-                                                <p>Specialty: {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].specialty : 'Loading...'}</p>
+                                                <p><span>Summary:</span> {appointment.summary}</p>
+                                                <p><span>Written Diagnosis:</span> {appointment.written_diagnosis}</p>
+                                                <p><span>Written Prescription:</span> {appointment.written_prescription}</p>
+                                                <p><span>Doctor:</span> {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].full_name : 'Loading...'}</p>
+                                                <p><span>Specialty:</span> {doctors[appointment.doctor_id] ? doctors[appointment.doctor_id].specialty : 'Loading...'}</p>
                                             </div>
                                         </Collapse>
                                     </td>

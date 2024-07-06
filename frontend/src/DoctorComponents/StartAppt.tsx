@@ -104,7 +104,6 @@ const StartAppt = () => {
             setShowAlert(true);
             return;
         }
-    
         const formData = {
             summary: summary,
             diagnosis: diagnosisRef.current?.value || "",
@@ -140,17 +139,17 @@ const StartAppt = () => {
     
 
     return (
-        <>
-            <div className="box-main-div">
-                
+            <div className="tab-main-container">
                 <PatientDetails
                     isowner={false}
                 />
+                <div className="history-div">
                 <HistoryAppointments />
+                </div>
                 <div style={{ textAlign: 'center' }}>
-                    <div style={{ padding: '20px', borderRadius: '8px', display: 'inline-block' }}>
+                    <div className="startAppt">
                         <Button
-                            style={{ width: 'fit-content' }}
+                           className="startButton"
                             variant="outline-dark"
                             onClick={() => {
                                 handleStartAppointment();
@@ -187,7 +186,7 @@ const StartAppt = () => {
                                         <label className="labelSummery">Summary</label>
                                     </div>
                                     <div className="col-75">
-                                        <textarea id="subject" name="subject" placeholder="Write summary.." ref={summaryRef}></textarea>
+                                        <textarea className="subject" id="subject" name="subject" placeholder="Write summary.." ref={summaryRef}></textarea>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -207,7 +206,6 @@ const StartAppt = () => {
                     </Alert>
                 </div>
             </div>
-        </>
     );
 };
 

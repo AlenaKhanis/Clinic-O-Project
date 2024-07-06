@@ -1,46 +1,8 @@
-/* HistoryAppointments.css */
-
-/* Style for the button */
-.history-appointments-button {
-    width: fit-content;
-
-  }
-  
-  /* Style for the table */
-  .history-appointments-table {
-    width: 100%;
-  }
-  
-  /* Style for table headers */
-  .history-appointments-table th {
-    text-align: center;
-    background-color: #f2f2f2;
-  }
-  
-  /* Style for table rows */
-  .history-appointments-table td {
-    text-align: center;
-  }
-  
-  /* Style for collapsed content */
-  .history-appointments-collapse {
-    margin-top: 10px;
-    overflow: hidden;
-    transition: height 0.3s ease-in-out;
-  }
-  
-  /* Style for expanded content */
-  .history-appointments-collapse.show {
-    height: auto;
-  }
-  
-  .box-histoty_main {
-    margin: 20px auto; /* 20px top and bottom, auto left and right */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: fit-content;
-    justify-content: center;
-    align-items: center; /* Center vertically */
-    
-  }
+.box-histoty_main {
+  justify-content: center;
+  align-items: 'center'; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 150px;
+}

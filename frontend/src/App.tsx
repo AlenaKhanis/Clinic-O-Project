@@ -91,6 +91,8 @@ function App() {
               path="/"
               element={
                 <div className='main-div'>
+                  <h1 className='welcome'>Welcome to Clinic-O</h1>
+                  <p className='welcome-text'>Your one-stop solution for all your medical needs</p>
                   <BlogSection />
                   <Footer />
                 </div>

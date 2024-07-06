@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useBackendUrl } from '../BackendUrlContext';
 import { Clinic } from '../Types';
-import { validatePhone } from '../validations';
+
 
 import Alert from 'react-bootstrap/Alert';
 import { Button, Modal, Form } from 'react-bootstrap';
@@ -103,7 +103,7 @@ function ClinicDetails() {
   }
 
   return (
-    <div>
+    <div className='content-container'>
       <h1>Clinic Details</h1>
       {successMessage && (
         <Alert variant="success" onClose={() => setSuccessMessage(null)} dismissible>

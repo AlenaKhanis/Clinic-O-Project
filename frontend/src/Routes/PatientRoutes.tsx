@@ -7,6 +7,7 @@ import PatientProfile from "../Admin/PatientNewProfile";
 
 const PatientRoutes = ({ userRole }: { userRole: string }) => (
 
+  console.log(userRole),
   
   <Routes>
     <Route
@@ -23,6 +24,7 @@ const PatientRoutes = ({ userRole }: { userRole: string }) => (
         <ProtectedRoute userRole={userRole} allowedRoles={['patient']}>
           <PatientProfile 
           isOwner={false}
+          userRole={userRole}
           />
         </ProtectedRoute>
       }

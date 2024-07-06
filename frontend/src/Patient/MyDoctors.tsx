@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Doctor} from "../Types";
 import { useBackendUrl } from "../BackendUrlContext";
 
+import "../css/MyDoctors.css";
 /**
  * MyDoctors component
  * displaying a list of doctors associated with a specific patient
@@ -31,7 +32,7 @@ function MyDoctors({ patientId, isOwner }: {patientId : number | null , isOwner:
     }, [patientId]);
 
     return (
-        <div>
+        <div className="content-container">
             <h1>Patient Doctors</h1>
             {doctor.length === 0 ? (
                 <p>No doctors found.</p>

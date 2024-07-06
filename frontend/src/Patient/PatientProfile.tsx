@@ -31,7 +31,7 @@ function PatientProfile({  patientId }: {patientId : number | null}) {
     }, [patientId]);
   
     return (
-        <div className="patient-profile-container">
+        <div className="content-container">
             {selectedPatientDetails ? (
                 <>
                     <ListGroup>

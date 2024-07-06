@@ -33,6 +33,7 @@ const AdminRoutes = ({ userRole , subID }: { userRole: string , subID : string |
           <ProtectedRoute userRole={userRole} allowedRoles={['owner']}>
             <PatientProfile
              isOwner={true}
+              userRole={userRole}
             />
           </ProtectedRoute>
         }

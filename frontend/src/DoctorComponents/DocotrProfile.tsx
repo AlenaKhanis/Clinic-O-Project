@@ -3,7 +3,7 @@ import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
 import { Doctor, DoctorProps } from "../Types";
 
-import { Button } from "react-bootstrap";
+
 import ListGroup from 'react-bootstrap/ListGroup';
 import '../css/doctorProfile.css';
 
@@ -14,7 +14,7 @@ import '../css/doctorProfile.css';
 
 function DoctorProfile({ doctorId}:  DoctorProps ) {
     const [selectedDoctorDetails, setSelectedDoctorDetails] = useState<Doctor | null>(null);
-    const [showEditModal, setShowEditModal] = useState(false);
+  
 
     const {getDoctorById} = useDoctorAppointments();
     
@@ -27,10 +27,10 @@ function DoctorProfile({ doctorId}:  DoctorProps ) {
                 setSelectedDoctorDetails(data);
             })
         }
-    }, [doctorId ,showEditModal]); 
+    }, [doctorId ]); 
 
     return (
-        <div>
+        <div className="content-container">
             {selectedDoctorDetails ? (
                
                 <ListGroup>
@@ -41,7 +41,7 @@ function DoctorProfile({ doctorId}:  DoctorProps ) {
                     <ListGroup.Item>Email: {selectedDoctorDetails.email}</ListGroup.Item>
                     <ListGroup.Item>Phone: {selectedDoctorDetails.phone}</ListGroup.Item>
                     <ListGroup.Item>Specialty: {selectedDoctorDetails.specialty}</ListGroup.Item>
-                    <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                    
                 </ListGroup>
             ) : (
                 <p>Loading doctor profile...</p>

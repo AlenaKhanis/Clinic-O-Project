@@ -30,7 +30,9 @@ const DoctorRoutes = ({ userRole }: { userRole: string }) => (
       element={
         <ProtectedRoute userRole={userRole} allowedRoles={['doctor']}>
           <PatientProfile 
-          isOwner={false} 
+          isOwner={false}
+          userRole={userRole}
+          
           
            />
         </ProtectedRoute>

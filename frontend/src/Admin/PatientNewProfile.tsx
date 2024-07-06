@@ -29,7 +29,7 @@ import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
  */
 
 
-export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
+export default function PatientProfile({ isOwner , userRole}: { isOwner: boolean , userRole: string}) {
     const { patient_id } = useParams<{ patient_id: string }>();
     const patientId = Number(patient_id);
     const {filterAppointments} = useAppointmentActions();
@@ -119,7 +119,7 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
         }
     };
 
-  
+
   return (
     <div className='doctor-container-profile'>
       <div className='container-profile-for-doctor'>
@@ -186,9 +186,9 @@ export default function PatientProfile({ isOwner}: { isOwner: boolean}) {
                         </div>
                          
                         </>
-                {isOwner &&  patient &&(        
-                <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button> 
-                )}      
+                        {(isOwner || userRole === 'patient' || userRole === 'admin') && (
+                          <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                        )}
                 {isOwner && (
                 <>
                 <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>

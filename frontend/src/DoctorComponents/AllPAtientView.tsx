@@ -3,6 +3,7 @@ import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 import { DoctorProps, Patient } from "../Types";
 import { Link } from "react-router-dom";
 
+import '../css/allPatientView.css';
 
 
 /**
@@ -35,7 +36,7 @@ function AllPatientView({ doctorId }: DoctorProps) {
   }
 
   return (
-    <div>
+    <div className="content-container">
       <h1>All Patients</h1>
       {patients.length === 0 ? (
         <p>No patients yet</p>

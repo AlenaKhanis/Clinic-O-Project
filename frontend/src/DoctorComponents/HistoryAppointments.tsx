@@ -6,7 +6,7 @@ import { usePatientDetails } from '../useFunctions/usePatientDetails';
 import { Appointment, DoctorProps, Patient } from '../Types';
 
 import { Button, Collapse, Table } from 'react-bootstrap';
-import '../css/displayAppontments.css';
+import '../css/displayHistoryAppt.css';
 
 /**
  * HistoryAppointments component
@@ -53,6 +53,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
     };
 
     return (
+        <div className='content-container'>
             <div className={`tab-content ${selectHistoryAppointments.length > 0 ? "with-scrollbar" : ""}`}>
                 <h2>History Appointments</h2>
                 {selectHistoryAppointments.length > 0 ? (
@@ -65,9 +66,12 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                                         <td>Time: {appointment.time}</td>
                                         <td>
                                             {patient && (
-                                                <Link to={`patient_detail/${appointment.patient_id}`}>
-                                                    Patient: {patient.full_name}
-                                                </Link>
+                                                <Link
+                                                to={`patient_detail/${appointment.patient_id}`}
+                                                className="appointment-link"
+                                            >
+                                                Patient: {patient.full_name}
+                                            </Link>
                                             )}
                                         </td>
                                         <td>
@@ -75,6 +79,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                                                 onClick={() => toggleAppointmentDetails(appointment.id)}
                                                 aria-controls={`appointment-details-${appointment.id}`}
                                                 aria-expanded={openAppointments[appointment.id]}
+                                                className='btn-showappt'
                                             >
                                                 {openAppointments[appointment.id] ? 'Hide Details' : 'Show Appointment Details'}
                                             </Button>
@@ -84,9 +89,9 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                                             <td colSpan={4}>
                                                 <Collapse in={openAppointments[appointment.id]}>
                                                     <div>
-                                                        <p>Summary: {appointment.summary}</p>
-                                                        <p>Written Diagnosis: {appointment.written_diagnosis}</p>
-                                                        <p>Written Prescription: {appointment.written_prescription}</p>
+                                                        <p><span>Summary:</span> {appointment.summary}</p>
+                                                        <p><span>Written Diagnosis:</span> {appointment.written_diagnosis}</p>
+                                                        <p><span>Written Prescription:</span> {appointment.written_prescription}</p>
                                                     </div>
                                                 </Collapse>
                                             </td> 
@@ -98,6 +103,7 @@ function HistoryAppointments({ doctorId, onAppointmentAdded }: DoctorProps) {
                 ) : (
                     <p>No history appointments</p>
                 )}
+            </div>
             </div>
     );
     

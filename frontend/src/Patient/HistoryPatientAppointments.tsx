@@ -61,7 +61,6 @@ const PatientAppointmentHistory = () => {
 
     return (
         <>
-            <div className="box-histoty_main">
                 <Button
                     className='history-appointments-button'
                     variant="outline-dark"
@@ -104,7 +103,6 @@ const PatientAppointmentHistory = () => {
                         </Table>
                     </div>
                 </Collapse>
-            </div>
         </>
     );
 };

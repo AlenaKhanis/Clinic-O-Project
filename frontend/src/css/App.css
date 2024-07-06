@@ -30,6 +30,21 @@ p {
   margin-top: auto; /* Pushes the footer to the bottom */
 }
 
-.main-div > .blog-container {
-  margin-top: 407px;
+.welcome {
+  font-size: 5rem !important;
+  top: 250px;
+  position: relative;
+  right: 450px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #205a66;
+}
+
+.welcome-text {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  top: 250px;
+  position: relative;
+  right: 450px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 }

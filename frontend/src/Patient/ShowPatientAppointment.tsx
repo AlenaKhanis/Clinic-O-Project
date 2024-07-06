@@ -6,6 +6,7 @@ import { usePatientDetails } from "../useFunctions/usePatientDetails";
 import { useDoctorAppointments } from "../useFunctions/useDoctorAppointments";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/ShowPatientAppointments.css';
 
 /**
  * ShowPatientAppointments component
@@ -16,8 +17,9 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
     const [confirmCancel, setConfirmCancel] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [showDoctorModal, setShowDoctorModal] = useState(false);
 
-    const {getDoctorById , selectedDoctorDetails , setSelectedDoctorDetails} = useDoctorAppointments();
+    const {getDoctorById , selectedDoctorDetails} = useDoctorAppointments();
     const { getPatientAppointments , cancelAppointment } = usePatientDetails();
 
 
@@ -75,22 +77,28 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
     return dateA - dateB;
   });
 
+  const openDoctorDetailsModal = (doctorId: number) => {
+    getDoctorById(doctorId); // Assuming this fetches the details and updates `selectedDoctorDetails`
+    setShowDoctorModal(true);
+    };
+
     return (
-        <>
+        <div className="content-container">
+         <h1>My Appointments</h1>
             {filteredAppointments.length > 0 ? (
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th></th>
                             <th>Date</th>
                             <th>Time</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{ backgroundColor: 'white' }} >
                         {filteredAppointments.map((appointment, index) => (
-                            <tr key={index}>
+                            <tr key={index}  >
                                 <td>{index + 1}</td>
                                 <td>{appointment.date}</td>
                                 <td>{appointment.time}</td>
@@ -98,7 +106,7 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
                                     <Button
                                         style={{ width: 'fit-content' }}
                                         variant="outline-dark"
-                                        onClick={() => { getDoctorById(appointment.doctor_id) }}
+                                        onClick={() => openDoctorDetailsModal(appointment.doctor_id)}
                                     >
                                         View Details
                                     </Button>
@@ -117,15 +125,17 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
             )}
 
             {selectedDoctorDetails && (
-                <div>
-                    <div
-                        style={{ textAlign: 'right', cursor: 'pointer' }}
-                        onClick={() => setSelectedDoctorDetails(null)}
-                    >
-                        X
-                    </div>
-                    <p>Doctor Name: {selectedDoctorDetails.full_name}</p>
-                </div>
+                <Modal show={showDoctorModal} onHide={() => setShowDoctorModal(false)} className="doctor-details-modal">
+                    <Modal.Header closeButton>
+                        <Modal.Title className="modal-title">Doctor Details</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                            <p><span>Doctor Name:</span> {selectedDoctorDetails.full_name}</p>
+                            <p><span>Specialty:</span> {selectedDoctorDetails.specialty}</p>
+                            <p><span>Email:</span> {selectedDoctorDetails.email}</p>
+                            <p><span>Phone:</span> {selectedDoctorDetails.phone}</p>
+                    </Modal.Body>
+                </Modal>
             )}
 
             <Modal show={confirmCancel} onHide={() => setConfirmCancel(false)}>
@@ -138,7 +148,7 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
                     <Button variant="danger" onClick={confirmCancelAppointment}>Yes</Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </div>
     );
 }
 

@@ -3,8 +3,13 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  position: relative;
+  top: 250px;
+  width: 1000px;
+  left: 450px;
 }
+
+
 
 .row {
   display: flex;
@@ -45,13 +50,16 @@ textarea {
 }
 
 .sendButton {
-  background-color: #007bff;
+  background-color: #3e6e7f;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  width: fit-content;
+  position: relative;
+  left: 50%;
 }
 
 .sendButton:hover {
@@ -85,23 +93,27 @@ textarea {
 .list-group-item:nth-child(even) {
   background-color: #ffffff;
 }
-.box-main-div {
-  display: 'flex'; 
-  justify-content: center;
-  align-items: 'center'; 
-  height: 100vh;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
-}
 
 .box-main-child {
-  display: 'flex';
+
   justify-content: center;
   align-items: 'center'; 
-  padding: 20px;
-  border-radius: 8px; 
-  margin-top: 150px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
- 
+
+  position: relative;
+  top: 150px;
 } 
+
+.subject {
+  background-color: white;
+  color: black;
+}
+
+.history-div {
+  position: relative;
+  top: 150px;
+}
+
+.startAppt {
+  position: relative;
+  top: 200px;
+}

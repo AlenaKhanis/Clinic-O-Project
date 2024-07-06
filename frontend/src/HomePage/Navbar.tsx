@@ -81,26 +81,9 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
                   </Navbar.Text>
                 </Link>
               )}
-              {role === 'owner' &&
-                <Link to='/admin' style={{ textDecoration: 'none' }}>
-                  <Navbar.Text className="ms-3" style={{ color: 'white' }}>Actions</Navbar.Text>
-                </Link>
-              }
-              {role === 'patient' &&
-                <Link to='/patient' style={{ textDecoration: 'none' }}>
-                  <Navbar.Text className="ms-3" style={{ color: 'white' }}>Actions</Navbar.Text>
-                </Link>
-              }
-              {role === 'doctor' &&
-                <Link to='/doctor' style={{ textDecoration: 'none' }}>
-                  <Navbar.Text className="ms-3" style={{ color: 'white' }}>Actions</Navbar.Text>
-                </Link>
-              }
-              {role !== 'owner' && role !== 'doctor' && role !== 'patient' &&
                 <Link to='/about' style={{ textDecoration: 'none' }}>
                   <Navbar.Text className="ms-3" style={{ color: 'white' }}>About</Navbar.Text>
                 </Link>
-              }
               {role === 'patient' ? (
                 <Link to="/patient" style={{ textDecoration: 'none' }}>
                   <Navbar.Text className="ms-3" style={{ color: 'white' }} >Panel</Navbar.Text>
