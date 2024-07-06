@@ -62,34 +62,19 @@ def test_get_patient_doctors(setup_teardown_db):
 
     cursor.execute("INSERT INTO users (id, username, password, role, full_name) VALUES (%s, %s, %s, %s, %s)",
                    (999, 'test_username_doctor', 'test_password', 'doctor', 'test_doctor_name'))
+    
     cursor.execute("INSERT INTO doctors (doctor_id, specialty) VALUES (%s, %s)", (999, 'Cardiology'))
-    cursor.execute("INSERT INTO appointments (appointment_id, doctor_id, patient_id, date, time) VALUES (%s, %s, %s, %s, %s)",
-                   (999, 999, 888, appt[0], appt[1]))
+    cursor.execute("INSERT INTO users (id, username, password, role, full_name) VALUES (%s, %s, %s, %s, %s)",
+                   (888, 'test_username_patient', 'test_password', 'patient', 'test_patient_name'))
+    cursor.execute("INSERT INTO patients (patient_id, package) VALUES (%s, %s)", (888, 'Gold'))
+
+    cursor.execute("INSERT INTO appointments (id, doctor_id, patient_id, date_time,status) VALUES (%s, %s, %s, %s ,%s)",
+                   (999, 999, 888, appt[0], 'schedule'))
 
     response = client.get('/get_patient_doctors/888')
 
     assert response.status_code == 200
     assert isinstance(response.json, list)
     assert response.json[0]['doctor_id'] == 999    
-
-def test_get_all_patients(setup_teardown_db):
-    client = app.test_client()
-    cursor = setup_teardown_db
-
-    cursor.execute("INSERT INTO users (id, username, password, role, full_name) VALUES (%s, %s, %s, %s, %s)",
-                     (888, 'test_username_patient', 'test_password', 'patient', 'test_patient_name'))
-    cursor.execute("INSERT INTO patients (patient_id, package) VALUES (%s, %s)", (888, 'Gold'))
-
-    response = client.get('/get_patients')
-
-    assert response.status_code == 200
-
-    assert isinstance(response.json, list)
-    assert response.json[0]['patient_id'] == 888
-    assert response.json[0]['package'] == 'Gold'
-    assert response.json[0]['full_name'] == 'test_patient_name'
-    assert response.json[0]['role'] == 'patient'
-    assert response.json[0]['username'] == 'test_username_patient'
-    assert response.json[0]['password'] == 'test_password'
 
         

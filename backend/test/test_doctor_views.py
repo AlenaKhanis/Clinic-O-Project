@@ -84,6 +84,7 @@ def test_get_doctor_by_id(setup_teardown_db):
     assert actual_doctor["doctor_id"] == expected_doctor["doctor_id"]
     assert actual_doctor["specialty"] == expected_doctor["specialty"]
     assert actual_doctor["full_name"] == expected_doctor["full_name"]
+    
 def test_get_doctor_patient(setup_teardown_db):
     client = app.test_client()
     cursor = setup_teardown_db

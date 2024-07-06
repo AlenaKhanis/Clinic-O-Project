@@ -1,13 +1,14 @@
 import { toZonedTime, format } from 'date-fns-tz';
 import { Appointment, Doctor, Owner, Patient } from "../Types";
 import { useBackendUrl } from '../BackendUrlContext';
+import { useNavigate } from 'react-router-dom';
 
 
 //useGlobalFunctions hook provides several utility functions and type guards for handling profile updates
 //date-time parsing, and user deletions.
 
 export const useGlobalFunctions = () => {
-  
+    const navigate = useNavigate();
     const BACKEND_URL = useBackendUrl();
 
     // Function to parse and format date-time for appointments
@@ -106,9 +107,10 @@ export const useGlobalFunctions = () => {
             setAlertVariant('success');
             setShowAlert(true);
             setTimeout(() => {
-                window.location.href = '/admin';
+              navigate('/admin');
             }, 2000);
         })
+        
         .catch((error) => {
             console.error('Error deleting doctor:', error);
             setAlertMessage('Error deleting doctor');
