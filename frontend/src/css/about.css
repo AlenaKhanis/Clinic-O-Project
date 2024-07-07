@@ -3,25 +3,25 @@
 .about-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers content horizontally */
+  align-items: center; 
   margin-top: 7% ;
 }
 
 .about-card {
-  max-width: 400px; /* Example max-width value */
-  width: 100%; /* Ensures cards are responsive */
-  margin-bottom: 20px; /* Adds space between cards */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adds a subtle box shadow */
-  border-radius: 8px; /* Adds rounded corners */
-  padding: 20px; /* Adds padding inside the card */
+  max-width: 400px; 
+  width: 100%; 
+  margin-bottom: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+  border-radius: 8px;
+  padding: 20px; 
 }
 
 .row {
   display: flex;
-  justify-content: space-between; /* Adds space between columns */
-  margin-bottom: 20px; /* Adds space between rows */
+  justify-content: space-between; 
+  margin-bottom: 20px; 
 }
 
 .col {
-  flex: 1; /* Ensures columns take up equal space */
+  flex: 1;
 }

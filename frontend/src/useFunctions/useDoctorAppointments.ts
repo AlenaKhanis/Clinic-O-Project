@@ -3,7 +3,7 @@ import { Appointment, Doctor, Patient } from "../Types";
 import { useGlobalFunctions } from "./useGlobalFunctions";
 import { useBackendUrl } from "../BackendUrlContext";
 
-//useDoctorAppointments hook provides functions related to managing doctor appointments and details.
+//useDoctorAppointments  provides functions related to managing doctor appointments and details.
 
 export const useDoctorAppointments = () => {
 
@@ -22,7 +22,6 @@ export const useDoctorAppointments = () => {
       const data = await response.json();
   
       if (data === null) {
-        // No appointments found
         return [];
       }
   
@@ -72,8 +71,6 @@ export const useDoctorAppointments = () => {
       throw error;
     }
   };
-
-
 
   return {
     appointments,

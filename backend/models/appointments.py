@@ -2,7 +2,6 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
-
 import psycopg2
 
 
@@ -139,6 +138,7 @@ class Appointment:
 
 
     @classmethod
+    # Get all history appointments for a patient that status is completed
     def get_history_patient_appointment(cls, cursor, patient_id: int) -> List[dict]:
         sql_query = """
             SELECT * FROM appointments WHERE patient_id = %s AND status = 'completed'
@@ -242,6 +242,7 @@ class Appointment:
             return False
 
     @classmethod
+    # Delete an appointment by its id  
     def delete_appointment(cls, cursor, appointment_id: int) -> bool:
         try:
             cursor.execute("DELETE FROM appointments WHERE id = %s", (appointment_id,))

@@ -62,9 +62,9 @@ export type Clinic = {
   clinic_description: string;
   clinic_address: string;
   clinic_phone: string;
-  email: string; //add
-  created_date: Date; //add
-  updated_date: Date; // add
+  clinic_email: string; 
+  created_date: Date; 
+  updated_date: Date; 
   owner_id: number;
 
 }

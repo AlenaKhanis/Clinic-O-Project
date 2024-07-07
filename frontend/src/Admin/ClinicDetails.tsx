@@ -7,6 +7,13 @@ import Alert from 'react-bootstrap/Alert';
 import { Button, Modal, Form } from 'react-bootstrap';
 
 
+/*
+  ClinicDetails component
+  Fetches and displays the clinic details
+  Allows the admin to edit the clinic details
+*/
+
+
 
 function ClinicDetails() {
   const [clinicDetails, setClinicDetails] = useState<Clinic | null>(null);
@@ -15,6 +22,8 @@ function ClinicDetails() {
   const [editedClinicName, setEditedClinicName] = useState('');
   const [editedClinicAddress, setEditedClinicAddress] = useState('');
   const [editedClinicPhone, setEditedClinicPhone] = useState('');
+  const [editedClinicDescription, setEditedClinicDescription] = useState('');
+  const [editedClinicEmail, setEditedClinicEmail] = useState('');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,6 +32,7 @@ function ClinicDetails() {
 
 
   const BACKEND_URL = useBackendUrl();
+
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/clinic_details`)
@@ -34,15 +44,18 @@ function ClinicDetails() {
       })
       .then((data: Clinic) => {
         setClinicDetails(data);
+        console.log(data.clinic_email);
         setEditedClinicName(data.clinic_name);
         setEditedClinicAddress(data.clinic_address);
         setEditedClinicPhone(data.clinic_phone);
+        setEditedClinicDescription(data.clinic_description);
+        setEditedClinicEmail(data.clinic_email);
       })
       .catch((error) => {
         console.error('Error fetching clinic details:', error);
         setErrorMessage('Error fetching clinic details');
       });
-  }, [BACKEND_URL]);
+  }, []);
 
   const handleEditToggle = () => {
     setEditing(!editing);
@@ -90,6 +103,13 @@ function ClinicDetails() {
         if (editedClinicPhone !== clinicDetails.clinic_phone) {
             updateClinicDetail('clinic_phone', editedClinicPhone);
         }
+        if (editedClinicDescription !== clinicDetails.clinic_description) {
+            updateClinicDetail('clinic_description', editedClinicDescription);
+        }
+        if (editedClinicEmail !== clinicDetails.clinic_email) {
+            updateClinicDetail('clinic_email', editedClinicEmail);
+        }
+        
     }
 
     setShowModal(false);
@@ -121,6 +141,7 @@ function ClinicDetails() {
             <p>Name: {clinicDetails.clinic_name}</p>
             <p>Address: {clinicDetails.clinic_address}</p>
             <p>Phone: {clinicDetails.clinic_phone}</p>
+            <p>Email: {clinicDetails.clinic_email}</p>
             <p>Description: {clinicDetails.clinic_description}</p>
             <Button variant='outline-dark' onClick={handleEditToggle}>
               Edit Clinic Details
@@ -155,7 +176,23 @@ function ClinicDetails() {
                       onChange={(e) => setEditedClinicPhone(e.target.value)}
                       
                     />
-  
+
+                  </Form.Group>
+                  <Form.Group controlId="formClinicEmail">
+                    <Form.Label>Clinic Email</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={editedClinicEmail}
+                      onChange={(e) => setEditedClinicEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formClinicDescription">
+                    <Form.Label>Clinic Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      value={editedClinicDescription}
+                      onChange={(e) => setEditedClinicDescription(e.target.value)}
+                    />
                   </Form.Group>
                   <Button variant="primary" type="submit">
                     Save Changes

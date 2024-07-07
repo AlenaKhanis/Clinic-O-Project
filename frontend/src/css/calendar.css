@@ -1,88 +1,82 @@
-/* Custom styles for the calendar */
+
 .custom-calendar {
-    width: 100%; /* Set desired width */
-    height: 350px; /* Set desired height */
-    border: 2px solid #ccc; /* Add a border */
-    background-color: #4a97a8; /* Set background color */
-    color: #333; /* Set text color */
+    width: 100%; 
+    height: 350px; 
+    border: 2px solid #ccc;
+    background-color: #4a97a8; 
+    color: #333; 
   }
   
   /* Style for the selected date */
   .react-calendar__tile--active {
-    color: black; /* Set text color for selected date */
+    color: black; 
   }
   
   /* Style for hovered date */
   .react-calendar__tile--hover {
-    background-color: #6aa3b8; /* Set background color for hovered date */
+    background-color: #6aa3b8;
   }
   
   /* Style for today's date */
   .react-calendar__tile--now {
-    background-color: #63a1b3 !important; /* Set background color for today's date */
-    color: black; /* Set text color for today's date */
+    background-color: #63a1b3 !important; 
+    color: black;
   }
   
-  /* Style for dates */
   .react-calendar__tile {
-    font-weight: bold; /* Set font weight to bold */
-    font-size: 16px; /* Set font size to desired size */
+    font-weight: bold; 
+    font-size: 16px; 
   }
   
-  /* Style for Saturdays and Sundays */
+
   .react-calendar__month-view__days__day:nth-child(7n+6),
   .react-calendar__month-view__days__day:nth-child(7n+7) {
-      color: rgb(10, 6, 6); /* Set text color for Saturdays and Sundays */
+      color: rgb(10, 6, 6);
   }
   
-
-
-
-/* CSS for Select Date section */
 .select-date {
-  margin-bottom: 20px; /* Adds bottom margin for spacing */
-  text-align: center; /* Aligns content to center */
+  margin-bottom: 20px;
+  text-align: center; 
 }
 
 .select-date h3 {
-  margin-bottom: 10px; /* Adds bottom margin for spacing */
-  font-size: 18px; /* Sets font size */
-  color: #333; /* Sets text color */
-  text-align: center; /* Aligns text to center */
+  margin-bottom: 10px; 
+  font-size: 18px;
+  color: #333; 
+  text-align: center;
 }
 
 
-/* CSS for Select Time section */
 .select-time {
-  margin-bottom: 20px; /* Adds bottom margin for spacing */
-  text-align: center; /* Aligns content to center */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds shadow */
-  padding: 20px; /* Adds padding inside the div */
-  border-radius: 8px; /* Adds border radius */
-  background-color: #fff; /* Sets background color */
+  margin-bottom: 20px; 
+  text-align: center; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px; 
+  border-radius: 8px; 
+  background-color: #fff; 
 }
 
 .select-time h3 {
-  margin-bottom: 10px; /* Adds bottom margin for spacing */
-  font-size: 18px; /* Sets font size */
-  color: #333; /* Sets text color */
-  text-align: center; /* Aligns text to center */
+  margin-bottom: 10px; 
+  font-size: 18px; 
+  color: #333; 
+  text-align: center; 
   margin-right: 80px;
 }
 
 .select-time select {
-  width: 100%; /* Sets select element width to fill its container */
-  max-width: 300px; /* Limits maximum width */
-  height: 40px; /* Sets select element height */
-  padding: 8px; /* Adds padding inside select element */
-  font-size: 16px; /* Sets font size */
-  border: 1px solid #ccc; /* Adds border */
-  border-radius: 4px; /* Adds border radius */
-  background-color: #fff; /* Sets background color */
-  color: #333; /* Sets text color */
-  margin: 0 auto; /* Centers the select element horizontally */
+  width: 100%; 
+  max-width: 300px; 
+  height: 40px; 
+  padding: 8px; 
+  font-size: 16px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  background-color: #fff;
+  color: #333; 
+  margin: 0 auto; 
 }
 
 .select-time select option {
-  font-size: 14px; /* Sets font size for options */
+  font-size: 14px;
 }

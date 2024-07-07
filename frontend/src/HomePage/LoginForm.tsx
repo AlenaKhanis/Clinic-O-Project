@@ -9,8 +9,7 @@ import '../css/newLogin.css';
 
 /**
  * The LoginForm component renders a login form inside a modal.
- * It allows users to input their username and password, and upon submission,
- * it sends a login request to the backend and handles authentication.
+ * It allows users to input their username and password, and submit the form to log in.
  * If login is successful, it fetches user information and stores the token in localStorage.
  * It also provides a checkbox to toggle password visibility.
  */

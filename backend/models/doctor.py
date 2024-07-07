@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Optional
-
 import psycopg2
-
 from models.users import User
 
 
@@ -16,7 +14,6 @@ class Doctor(User):
 
     def add_doctor(self, cursor) -> bool:
         try:
-
             cursor.execute(
                 """
                 INSERT INTO doctors (doctor_id, specialty)
@@ -111,8 +108,6 @@ class Doctor(User):
         except Exception as e:
             print(f"Unexpected error occurred while retrieving doctor by name: {e}")
             return None
-
-        
 
         
     @classmethod

@@ -19,7 +19,7 @@ interface OffCanvasExampleProps {
  * It shows different links based on the user's role (owner, doctor, patient).
  */
 
-export function OffCanvasExample({ subId, placement = 'end', role, ...props }: OffCanvasExampleProps) {
+export function OffCanvasExample({ subId, placement = 'end', role}: OffCanvasExampleProps) {
   const [show, setShow] = useState(false);
 
 
@@ -32,7 +32,7 @@ export function OffCanvasExample({ subId, placement = 'end', role, ...props }: O
       <Button style={{ width: 'fit-content', margin: '20px' }} variant="outline-light" onClick={handleShow} className="me-2">
         <FiAlignJustify />
       </Button>
-      <Offcanvas className="my-offcanvas" show={show} onHide={handleClose} placement={placement} {...props}>
+      <Offcanvas className="my-offcanvas" show={show} onHide={handleClose} placement={placement} >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title className="offcanvas-title">Clinic-O</Offcanvas.Title>
         </Offcanvas.Header>

@@ -81,7 +81,7 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
     setFilteredAppointments(filterAppointments(appointments, filterType));
 }
   
-  
+  // Function to handle appointment click and fetch appointment details
   const handleAppointmentClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setShowAppointmentDetails(true);
@@ -99,6 +99,7 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
     setShowAppointmentDetails(false);
   };
 
+  // Function to handle delete doctor
   const onDeleteClick = () => {
     if (doctor) {
       handleDeleteUser(doctor.doctor_id, setAlertMessage, setAlertVariant, setShowAlert);
@@ -119,6 +120,7 @@ export default function DoctorProfile({isOwner} : {isOwner: boolean}) {
                 <p>Email: {doctor.email}</p>
                 <p>Phone: {doctor.phone}</p>
                 <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
+                {/* Only show delete button if the user is the owner */}
                 {isOwner && (
                   <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
                 )}

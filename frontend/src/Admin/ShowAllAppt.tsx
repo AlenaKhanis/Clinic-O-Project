@@ -34,6 +34,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
     const { getDoctorById, fetchDoctorAppointments } = useDoctorAppointments();
     const { getPatientById } = usePatientDetails();
 
+    // Fetch appointments and doctors on component 
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_all_appt`)
             .then(response => response.json())
@@ -49,6 +50,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
             .catch(error => console.error('Error fetching doctors:', error));
     }, []);
 
+    // Fetch doctor appointments on doctor change
     useEffect(() => {
         if (doctor) {
             fetchDoctorAppointments(doctor.doctor_id)
@@ -60,6 +62,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         }
     }, []);
 
+    // Get start of week
     const getStartOfWeek = (date: Date): Date => {
         const startOfWeek = new Date(date);
         startOfWeek.setDate(date.getDate() - date.getDay()); // start of the week (Sunday)
@@ -67,6 +70,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         return startOfWeek;
     };
     
+    // Get end of week
     const getEndOfWeek = (date: Date): Date => {
         const endOfWeek = new Date(date);
         endOfWeek.setDate(date.getDate() - date.getDay() + 6); // end of the week (Saturday)
@@ -74,6 +78,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         return endOfWeek;
     };
     
+    // Check if two dates are the same day
     const isSameDay = (date1: Date, date2: Date): boolean => {
         return (
             date1.getFullYear() === date2.getFullYear() &&
@@ -82,7 +87,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         );
     };
     
-
+    // Filter appointments based on selected filters
     const filterAppointments = useMemo(() => {
         const today = new Date();
         return appointments.filter(appt => {
@@ -111,11 +116,12 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         });
     }, [appointments, filter, selectedStatus, selectedDoctor]);
     
+    // Update filtered appointments when filter changes
     useEffect(() => {
         setFilteredAppointments(filterAppointments);
     }, [filterAppointments]);
 
-    // Handle status filter change
+    // Handle status filter change                                              
     const handleStatusFilter = (status: string | null) => {
         if (status !== null) setSelectedStatus(status);
     };
@@ -125,6 +131,7 @@ export default function ShowAllAppt({ BACKEND_URL }: { BACKEND_URL: string }) {
         if (eventKey !== null) setSelectedDoctor(eventKey);
     };
 
+    // Handle appointment click and fetch appointment details
     const handleAppointmentClick = (appointment: Appointment) => {
         setSelectedAppointment(appointment);
         if (appointment.doctor_id) {

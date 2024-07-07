@@ -34,7 +34,7 @@ function HomePagePatient() {
         }
     }, [userInfo]);
   
-
+    // Function to refresh the appointments data
     const refreshAppointments = () => {
         setAppointmentsKey((prevKey) => prevKey === "app" ? "app-refresh" : "app");
     };

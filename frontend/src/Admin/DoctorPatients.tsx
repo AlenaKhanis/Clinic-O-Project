@@ -12,7 +12,7 @@ import { Table } from 'react-bootstrap';
  * 
  * This component fetches and displays a list of patients for a specific doctor.
  * It renders a table with columns for patient's package, full name, age, email, and phone.
- * Each patient's full name is linked to their individual patient detail page using React Router's Link component.
+ * Each patient's full name is linked to their individual patient detail page.
  */
 
 function DoctorPatients({ doctorId }: { doctorId: number}) {

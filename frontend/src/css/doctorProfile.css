@@ -16,11 +16,11 @@
 }
 
 .doctor-info {
-  flex: 0 0 300px; /* Fixed width of 300px */
+  flex: 0 0 300px;
   padding: 20px;
-  margin-right: 50px; /* Add margin between doctor-info and appointments-sidebar */
-  background-color: #fff; /* Ensure background is white */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
+  margin-right: 50px; 
+  background-color: #fff; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
   width: 500px;
 }
 
@@ -31,11 +31,11 @@
 }
 
 .appointments-sidebar {
-  flex: 0 0 300px; /* Fixed width of 300px */
+  flex: 0 0 300px;
   padding: 20px;
-  margin-right: 20px; /* Add margin between doctor-info and appointments-sidebar */
-  background-color: #fff; /* Ensure background is white */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
+  margin-right: 20px; 
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
   width: 500px;
 
 }
@@ -66,11 +66,11 @@
   }
 
 .patient-sidebar {
-  flex: 0 0 300px; /* Fixed width of 300px */
+  flex: 0 0 300px; 
   padding: 20px;
-  margin-right: 20px; /* Add margin between doctor-info and appointments-sidebar */
-  background-color: #fff; /* Ensure background is white */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for separation */
+  margin-right: 20px;
+  background-color: #fff; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: fit-content;
 }
 

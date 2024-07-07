@@ -113,11 +113,11 @@
 }
 
 .box-main-child {
-  margin: 20px auto; /* 20px top and bottom, auto left and right */
+  margin: 20px auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 600px; /* Adjust width as needed */
+  width: 600px; 
 }
 
 

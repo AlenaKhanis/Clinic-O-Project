@@ -1,11 +1,11 @@
 
 .my-offcanvas {
-  background-color: #205a66; /* Light background */
+  background-color: #205a66; 
 }
 
 .offcanvas-header {
-  background-color: #f1f4f8; /* Dark header */
-  color: #ffffff; /* White text */
+  background-color: #f1f4f8; 
+  color: #ffffff;
 }
 
 .offcanvas-title {

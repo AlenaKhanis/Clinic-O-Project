@@ -7,6 +7,11 @@ import PatientProfile from '../Admin/PatientNewProfile';
 import AdminProfile from '../Admin/AdmimProfile';
 
 
+/**
+ * AdminRoutes component
+ * Contains all the routes accessible to the admin user
+ */
+
 const AdminRoutes = ({ userRole , subID }: { userRole: string , subID : string | null}) => (
   <Routes>
     <Route

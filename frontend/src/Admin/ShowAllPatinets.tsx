@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useBackendUrl } from '../BackendUrlContext';
 
 // ShowAllPatients component lists all patients fetched from the backend.
-// Displays patients in a table with details such as ID, name (linked to detailed profile), age, email, and phone.
+// Displays patients in a table with details (linked to detailed profile).
 
 
 export default function ShowAllPatients({onPatientAdded} : {onPatientAdded : boolean}) {

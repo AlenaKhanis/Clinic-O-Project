@@ -9,8 +9,8 @@ import "../css/IndividualAppointmentDetails.css";
 
 /**
  * IndividualAppointmentDetails component
- * isplay detailed information about historical appointments for a specific patient.
- *  It fetches and renders appointment data, including summary, diagnosis, prescription, and associated doctor details
+ * display detailed information about historical appointments for a specific patient.
+ * It fetches and renders appointment data, including summary, diagnosis, prescription, and associated doctor details
  *
  */
 
@@ -23,6 +23,7 @@ function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patie
     const { getPatientHistoryAppointments } = usePatientDetails();
     const { getDoctorById } = useDoctorAppointments();
 
+    // Function to toggle the visibility of appointment details
     const toggleAppointmentDetails = (id: number) => {
         setOpenAppointments(prevState => ({ ...prevState, [id]: !prevState[id] }));
     };
@@ -51,6 +52,7 @@ function IndividualAppointmentDetails({ patientId, refreshAppointments }: {patie
             {selectHistoryAppointments.length > 0 ? (
                 <Table>
                     <tbody>
+                        {/* Render each history appointment */}
                         {selectHistoryAppointments.map((appointment) => (
                             <React.Fragment key={appointment.id}>
                                 <tr>

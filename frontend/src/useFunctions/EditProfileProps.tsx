@@ -13,6 +13,7 @@ type EditProfileProps = {
   isOwner: boolean;
 };
 
+// Define the FormControlElement type
 type FormControlElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 /**
@@ -34,11 +35,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditMo
 
   const { handleSaveChanges } = useGlobalFunctions();
 
+  // Reset the edited profile and changed fields when the profile changes
   useEffect(() => {
     setEditedProfile(profile);
     setChangedFields({});
   }, [profile]);
 
+  // Function to save changes to the profile
   const saveChanges = () => {
     handleSaveChanges(editedProfile, (message: string, variant: 'success' | 'danger') => {
       setAlertMessage(message);
@@ -47,19 +50,21 @@ const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditMo
     }, profile);
   };
 
+  // Function to handle changes to the form fields
   const handleChange = async (e: ChangeEvent<FormControlElement>) => {
-    console.log(e.target);
     const { name, value } = e.target;
     setEditedProfile(prevProfile => ({
       ...prevProfile,
       [name]: value
     }));
 
+    // Set the field as changed
     setChangedFields(prevChangedFields => ({
       ...prevChangedFields,
       [name]: true
     }));
 
+    // Validate the field
     const validationErrors = { ...errors };
 
     if (name === 'full_name') {
@@ -73,11 +78,12 @@ const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditMo
     } else if (name === 'specialty' && 'specialty' in profile) {
       validationErrors.specialty = validateSpecialty(value);
     } else if (name === 'package' && 'package' in profile) {
-      // Validate package if needed
+      
     }
 
     setErrors(validationErrors);
   };
+
 
   const handleCloseModal = () => {
     onCancel();
@@ -87,16 +93,20 @@ const EditProfile: React.FC<EditProfileProps> = ({ profile, onCancel, showEditMo
     setErrors({});
   };
 
+  // Type guards for Doctor
   const isDoctor = (profile: Doctor | Patient | Owner): profile is Doctor => {
     return (profile as Doctor).specialty !== undefined;
   };
 
+  // Type guards for Patient
   const isPatient = (profile: Doctor | Patient | Owner): profile is Patient => {
     return (profile as Patient).package !== undefined;
   };
 
+  // Package options for Patient
   const packageOptions = ["Silver", "Gold", "Premium"];
 
+  // Specialty options for Doctor
   const specialties = [
     "Cardiology",
     "Dermatology",

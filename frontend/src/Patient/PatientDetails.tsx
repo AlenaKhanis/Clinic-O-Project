@@ -53,6 +53,8 @@ const PatientDetails = ({isowner} : {isowner : boolean}) => {
             <ListGroup.Item>Email: {patient.email}</ListGroup.Item>
           </ListGroup>
           <div style={{margin: '10px'}} >
+            {/* Render the Diagnosis and Prescriptions sections if the patient has data available */}
+            {/* Otherwise, display a message indicating no data is available */}
             <Button
               style={{ width: 'fit-content', marginBottom: '10px' }}
               variant="outline-dark"
@@ -102,7 +104,7 @@ const PatientDetails = ({isowner} : {isowner : boolean}) => {
           </div>
         </div>
       )}
-      {}
+      {/* Render the EditProfile component if the user is the owner and the patient details are available */}
       {isowner && patient && (
         <EditProfile
         profile={patient}

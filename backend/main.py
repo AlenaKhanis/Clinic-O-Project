@@ -27,7 +27,7 @@ app = Flask(__name__)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-print(FRONTEND_URL)
+
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)
@@ -60,7 +60,6 @@ def login():
         access_token = create_access_token(identity=user["id"], additional_claims={"role": user["role"]})
         return {"access_token": access_token}, 200
     else:
-
         return {"error": "Invalid username or password"}, 401
 
 

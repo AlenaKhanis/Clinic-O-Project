@@ -32,7 +32,7 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
         }
     }, [patientId, refreshAppointments]);
     
-
+    // Function to cancel an appointment
     const handleCancelAppointment = (appointmentId: number) => {
         cancelAppointment(appointmentId)
             .then(() => {
@@ -55,8 +55,9 @@ function ShowPatientAppointments({ patientId, refreshAppointments }: {patientId:
         setSelectedAppointmentId(appointmentId);
     }
 
+    // Filter future appointments and sort them by date
     const filteredAppointments = appointments
-  .filter(appointment => {
+    .filter(appointment => {
     const appointmentDateTime = new Date(appointment.date_time);
     const currentDateTime = new Date();
 

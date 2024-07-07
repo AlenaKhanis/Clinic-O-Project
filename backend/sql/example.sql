@@ -1,14 +1,14 @@
 -- Insert data into the users table with hashed passwords
 INSERT INTO users (username, password, email, age, full_name, phone, role, created_date, updated_date)
 VALUES 
-    ('admin', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'alona@mysite.com', 30, 'Admin', '05462224455', 'owner', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('user', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'user@mysite.com', 25, 'user', '456445', 'patient', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('doctor','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctor@mysite.com', 45, 'doctor', '555', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('doctorTwo','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctorTwo@mysite.com', 45, 'doctorTwo', '05045454545', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    ('admin', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'admin@mysite.com', 30, 'Admin', '064567890.', 'owner', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('user', '$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'user@mysite.com', 25, 'user', '0789815154.', 'patient', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('doctor','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctor@mysite.com', 45, 'doctor', '064567890.', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('doctorTwo','$2b$12$7NM0Hrk2/yJ3hPDwCc.zwuYbJ.dJbMJ3rytb58A.uJETTpvuW4xMS', 'doctorTwo@mysite.com', 45, 'doctorTwo', '074567890.', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert data into the clinic table with a valid owner_id
-INSERT INTO clinic (clinic_name, clinic_phone, clinic_address, clinic_description, owner_id)
-VALUES ('Clinic-O', '*456', 'My Street 4', 'Clinic for all family', 1);
+INSERT INTO clinic (clinic_name, clinic_phone, clinic_address, clinic_description, clinic_email,  owner_id)
+VALUES ('Clinic-O', '4567890', 'My Street 4', 'Clinic for all family', 'info@clinico.com' , 1);
 
 -- Insert data into the owner table
 INSERT INTO owner (owner_id)

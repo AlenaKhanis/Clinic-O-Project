@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-//ErrorBoundary component is set up correctly to catch errors within its child components and display a fallback UI when an error occurs.
+//ErrorBoundary component catch errors within its child components and display a fallback UI when an error occurs.
 
 interface ErrorBoundaryProps {
   children: ReactNode;

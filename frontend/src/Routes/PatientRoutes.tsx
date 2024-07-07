@@ -4,6 +4,11 @@ import HomePagePatient from "../Patient/PatientHomePage";
 import { ProtectedRoute } from "../ProtectedRoute";
 import PatientProfile from "../Admin/PatientNewProfile";
 
+/*
+PatientRoutes component
+Defines the routes available to a patient user.
+
+*/
 
 const PatientRoutes = ({ userRole }: { userRole: string }) => (
 

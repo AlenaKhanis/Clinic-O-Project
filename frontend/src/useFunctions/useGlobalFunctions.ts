@@ -4,7 +4,7 @@ import { useBackendUrl } from '../BackendUrlContext';
 import { useNavigate } from 'react-router-dom';
 
 
-//useGlobalFunctions hook provides several utility functions and type guards for handling profile updates
+//useGlobalFunctionsprovides several functions and type guards for handling profile updates
 //date-time parsing, and user deletions.
 
 export const useGlobalFunctions = () => {
@@ -24,27 +24,31 @@ export const useGlobalFunctions = () => {
         });
     };
 
-    // Function to handle saving changes to a profile
+    // Function to handle saving changes to a profile for a doctor, patient, or owner edit
     const handleSaveChanges = async (
         editedProfile: Doctor | Patient | Owner,
         setAlert: (message: string, variant: 'success' | 'danger') => void,
         originalProfile: Doctor | Patient | Owner
-    ) => {
-        if (!editedProfile || !originalProfile) {
-          setAlert('Invalid profile data', 'danger');
-          return;
+        ) => {
+            if (!editedProfile || !originalProfile) {
+              setAlert('Invalid profile data', 'danger');
+              return;
         }
       
         try {
+          // Initialize an empty object for editedFields with a type that combines Doctor, Patient, and Owner.  
           const editedFields: Partial<Doctor & Patient & Owner> = {};
+          // Iterate over the keys of editedProfile after casting them to the appropriate type
           (Object.keys(editedProfile) as (keyof typeof editedProfile)[]).forEach(key => {
+            // Check if the current key's value in editedProfile differs from that in originalProfile
             if (editedProfile[key] !== originalProfile[key]) {
+              // If the value has changed, assign it to the editedFields object
+              // The value is cast to a type that could belong to Doctor, Patient, or Owner
               editedFields[key] = editedProfile[key] as Doctor[keyof Doctor] & Patient[keyof Patient] & Owner[keyof Owner];
             }
           });
           
-          console.log(editedProfile);
-
+          // Determine the URL based on the profile type
           let url = '';
           if (isDoctorProfile(editedProfile)) {
             url = `${BACKEND_URL}/edit_user_profile/${editedProfile.doctor_id}`;

@@ -36,7 +36,7 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
   const navigate = useNavigate();
 
 
-
+  // Update the date every second
   useEffect(() => {
     const timer = setInterval(() => {
       setDate(new Date());
@@ -46,6 +46,7 @@ function HomeNavBar({ userToken, userName , setShowLoginPopup, setUserName, setR
     };
   }, []);
 
+  // Function to handle user logout
   function logOut() {
     if (userToken) {
       localStorage.removeItem("access_token");

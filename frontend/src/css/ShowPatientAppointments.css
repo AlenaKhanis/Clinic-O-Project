@@ -29,28 +29,27 @@
     padding: 12px;
     text-align: center;
     color: black;
-    background-color: #ffffff !important; /* Set background color for table cells */
+    background-color: #ffffff !important; 
   }
   
   .table th {
-    background-color: #ffffff !important; /* Set background color for table header cells */
+    background-color: #ffffff !important; 
   }
   
   .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* Alternate row background color */
+    background-color: #ffffff; 
   }
   
   .table tbody tr:hover {
-    background-color: #ffffff; /* Hover row background color */
+    background-color: #ffffff; 
   }
   
   .table-body {
-    background-color: white  !important;; /* Set background color to white */
+    background-color: white  !important;; 
   }
 
-  /* Modal Styling */
   .modal-dialog {
-    max-width: 800px; /* Adjust maximum modal width */
+    max-width: 800px;
   }
   
   .modal-content {
@@ -75,12 +74,11 @@
   .modal-footer {
     padding: 15px;
     text-align: right;
-    border-top: none; /* Remove default border */
+    border-top: none;
   }
-  
-  /* Button Styling */
+
   .btn-view-details {
-    background-color: #007bff; /* Primary color */
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -89,11 +87,11 @@
   }
   
   .btn-view-details:hover {
-    background-color: #0056b3; /* Darker shade of primary color */
+    background-color: #0056b3;
   }
   
   .btn-cancel-appointment {
-    background-color: #dc3545; /* Danger color */
+    background-color: #dc3545; 
     color: white;
     border: none;
     padding: 8px 16px;
@@ -102,10 +100,9 @@
   }
   
   .btn-cancel-appointment:hover {
-    background-color: #c82333; /* Darker shade of danger color */
+    background-color: #c82333; 
   }
   
-  /* Responsive Design */
   @media (max-width: 768px) {
     .modal-dialog {
       max-width: 95%;

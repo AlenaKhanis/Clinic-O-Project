@@ -6,7 +6,7 @@
   transition: color 0.3s ease-in-out;
 }
 
-/* MainBody styles */
+
 .mainbody {
   text-align: center;
 
@@ -33,7 +33,7 @@
 .text-container {
   text-align: left;
   margin-bottom: 20px;
-  margin-left: 150px; /* Adjust margin-left as needed */
+  margin-left: 150px; 
 }
 
 .text-container .special-heading {
@@ -46,17 +46,17 @@
 }
 
 .text-container .subheading {
-  font-size: 2rem; /* Adjust font size */
+  font-size: 2rem; 
   color: #333;
   text-shadow: 1px 1px 3px rgba(255, 0, 0, 0.3);
-  padding: 20px; /* Adjust padding */
+  padding: 20px; 
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .mainbody .main-button {
-    width: 100%; /* Full width on smaller screens */
+    width: 100%; 
   }
 }
 

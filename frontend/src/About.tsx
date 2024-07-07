@@ -2,6 +2,8 @@ import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import './css/about.css';
 
+// About component that displays information about the clinic
+
 const About: React.FC = () => {
   return (
     <Container className="about-container">
@@ -44,7 +46,7 @@ const About: React.FC = () => {
             <Card.Body>
               <Card.Title>Contact Us</Card.Title>
               <Card.Text>
-                Have questions or need to make an appointment? Contact us at (123) 456-7890 or email us at info@clinico.com. We are here to help you!
+                Have questions or need to make an appointment? Contact us at 456-7890 or email us at info@clinico.com. We are here to help you!
               </Card.Text>
             </Card.Body>
           </Card>

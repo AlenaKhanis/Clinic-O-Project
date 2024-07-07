@@ -40,6 +40,7 @@ function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number 
 
     const BACKEND_URL = useBackendUrl();
 
+    // Fetch patient appointments 
     useEffect(() => {
         if (patientId) {
             getPatientAppointments(patientId)
@@ -48,6 +49,7 @@ function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number 
         }
     }, [patientId, refreshAppointments]);
 
+    // Fetch specialties
     useEffect(() => {
         fetch(`${BACKEND_URL}/get_specialties`)
             .then(response => {
@@ -121,9 +123,11 @@ function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number 
         }
     };
 
+    // Function to schedule an appointment with the selected doctor at the given date and time 
     const scheduleAppointment = (appointmentId: number, appointmentDate: string, appointmentTime: string) => {
         const formattedAppointmentTime = appointmentTime.split(':').map(part => part.padStart(2, '0')).join(':');
 
+        // Check if the patient already has an appointment at the given date and time
         if (isAppointmentExists(appointmentDate, formattedAppointmentTime)) {
             setAlertMessage('You already have an appointment at this date and time.');
             setAlertVariant('danger');
@@ -183,6 +187,7 @@ function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number 
         })
         .sort((a, b) => new Date(a.date_time).getTime() - new Date(b.date_time).getTime());
 
+    // Hide alert when the document is not visible
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -269,6 +274,7 @@ function SearchDoctors({ patientId, refreshAppointments }: & {patientId: number 
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {/* Render each appointment for the selected doctor */}
                                     {filteredAppointments.map((appointment, index) => {
                                         const appointmentDateTime = new Date(appointment.date_time);
                                         const day = appointmentDateTime.getUTCDate().toString().padStart(2, '0');

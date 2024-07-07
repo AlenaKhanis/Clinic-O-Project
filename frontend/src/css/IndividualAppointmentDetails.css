@@ -28,7 +28,7 @@
   
 
   .toggle-appointment-details-button {
-    background-color: #205a66; /* Primary color */
+    background-color: #205a66;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -36,7 +36,7 @@
     transition: background-color 0.3s ease;
   }
    .toggle-appointment-details-button:hover {
-    background-color: #1b4c56; /* Darken the color */   
+    background-color: #1b4c56; 
     }
   
   .collapse-content {

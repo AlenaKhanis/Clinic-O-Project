@@ -2,9 +2,8 @@ import { Appointment } from "../Types";
 import { useBackendUrl } from "../BackendUrlContext";
 
 /*
-  useAppointmentActions hook provides several useful functions related to managing appointments.
+  useAppointmentActions hook provides several functions related to managing appointments.
 */
-
 
 export const useAppointmentActions = () => {
 
@@ -56,7 +55,7 @@ export const useAppointmentActions = () => {
   };
 
 
-//  Filters appointments based on the specified filterType (e.g., 'today', 'thisWeek', 'thisMonth').
+//  Filters appointments based on the specified filterType ( 'today', 'thisWeek', 'thisMonth').
 const filterAppointments = (appointments: Appointment[], filterType: string): Appointment[] => {
   const today = new Date();
 
@@ -80,6 +79,7 @@ const filterAppointments = (appointments: Appointment[], filterType: string): Ap
   return filteredAppointments;
 };
 
+// Helper function to check if two dates are the same day
 const isSameDay = (date1: Date, date2: Date): boolean => {
   return (
     date1.getDate() === date2.getDate() &&
@@ -88,6 +88,7 @@ const isSameDay = (date1: Date, date2: Date): boolean => {
   );
 };
 
+// Helper function to get the start of the week for a given date
 const getStartOfWeek = (date: Date): Date => {
   const startOfWeek = new Date(date);
   startOfWeek.setDate(date.getDate() - date.getDay());
@@ -95,15 +96,13 @@ const getStartOfWeek = (date: Date): Date => {
   return startOfWeek;
 };
 
+// Helper function to get the end of the week for a given date
 const getEndOfWeek = (date: Date): Date => {
   const endOfWeek = new Date(date);
   endOfWeek.setDate(date.getDate() - date.getDay() + 6);
   endOfWeek.setHours(23, 59, 59, 999);
   return endOfWeek;
 };
-
-
-
 
   return {
      handleSubmit,

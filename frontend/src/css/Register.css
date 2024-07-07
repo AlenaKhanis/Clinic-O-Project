@@ -6,7 +6,7 @@
 .package-picker {
   display: flex;
   justify-content: center;
-  margin-top: 0; /* No need for !important unless absolutely necessary */
+  margin-top: 0; 
 }
 
 .doctor-add-form {
@@ -15,11 +15,11 @@
 }
 
 .input-form-container {
-  margin-left: 250px; /* Adjusted margin if needed */
+  margin-left: 250px;
 }
 
 .packegeSelect {
-  margin: 10px; /* Corrected spacing */
+  margin: 10px;
 }
 
 .role-selection {
@@ -30,7 +30,6 @@
   margin: 10px;
 }
 
-/* Optional: Style for the inputs to improve alignment */
 .role-selection input[type="radio"] {
   cursor: pointer;
   color: white;
@@ -38,14 +37,13 @@
 
 .text-center {
   text-align: center;
-  margin: 0 auto; /* Centers the element horizontally */
-  display: block; /* Ensures the element is a block-level element */
-  width: fit-content; /* Adjusts width to fit content */
-  max-width: 100%; /* Ensures element does not exceed container width */
-  padding: 0; /* Removes any default padding */
-  font-weight: bold; /* Makes text bold */
-  font-size: 2rem; /* Adjusts font size to be larger */
-  /* Additional styles or adjustments as needed */
+  margin: 0 auto; 
+  display: block;
+  width: fit-content; 
+  max-width: 100%; 
+  padding: 0; 
+  font-weight: bold;
+  font-size: 2rem; 
 }
 
 input[type="radio"] {

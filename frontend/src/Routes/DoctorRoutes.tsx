@@ -5,6 +5,10 @@ import StartAppointment from "../DoctorComponents/StartAppt";
 import PatientProfile from "../Admin/PatientNewProfile";
 import DoctorProfile from "../Admin/DoctorProfile";
 
+/**
+ * DoctorRoutes component
+ * Defines the routes available to a doctor user.
+ */
 
 const DoctorRoutes = ({ userRole }: { userRole: string }) => (
 

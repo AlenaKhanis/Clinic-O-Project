@@ -31,7 +31,6 @@ class User:
             return False
 
     def add_user(self, cursor) -> int:
-        
         try:
             cursor.execute("""
                 INSERT INTO users (username, password, email, full_name, role, age, phone, created_date, updated_date)
@@ -73,6 +72,7 @@ class User:
             return None
 
     @classmethod
+    # This method is edit the user profile details base on the field and value provided
     def edit_user_profile(cls, cursor, user_id :int, field :str, value: str) -> Optional[dict]:
         try:
             updated_data = None

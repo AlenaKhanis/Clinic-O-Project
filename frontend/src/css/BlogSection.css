@@ -1,11 +1,11 @@
-/* BlogSection.css */
+
 .blog-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 20px 150px;
-  position: relative; /* Add position relative */
-  top: 250px; /* Adjust top value as needed */
+  position: relative;
+  top: 250px;
 }
 .card {
   display: flex;
@@ -38,6 +38,6 @@
 }
 
 .card-button > .btn:hover {
-  background-color: #0e3c46; /* Darker background color on hover */
+  background-color: #0e3c46; 
 }
 

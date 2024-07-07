@@ -17,14 +17,12 @@ import { useAppointmentActions } from '../useFunctions/useAppointmentActions';
 /**
  * PatientProfile Component:
  * This component fetches and displays a patient's details and appointments.
- * It renders a patient's full name, age, package, phone, and email.
  * It also renders a list of appointments with date, time, and status.
  * The appointments can be filtered by today, this week, this month, or all.
  * The component also renders a list of doctors assigned to the patient.
  * The patient's diagnosis and prescriptions can be viewed by clicking on the respective buttons.
- * The patient's details can be edited or deleted by the owner of the patient.
- * The patient's details can be edited by the owner of the patient.
- * The patient can be deleted by the owner of the patient.
+ * The patient's details can be edited or deleted by the admin.
+ * The patient's details can be edited by the admin of the patient.
  * The appointment details can be viewed by clicking on the appointment.
  */
 
@@ -51,7 +49,6 @@ export default function PatientProfile({ isOwner , userRole}: { isOwner: boolean
     const [ massage , setAlertMessage] = useState<string | null>(null);
     const [variant, setAlertVariant] = useState<'success' | 'danger'>('success');
 
-    // Custom hooks from useDoctorAppointments and useGlobalFunctions
     const { getDoctorById } = useDoctorAppointments();
     const { getPatientById, getPatientAppointments } = usePatientDetails(); 
     const {handleDeleteUser} = useGlobalFunctions();
@@ -186,122 +183,124 @@ export default function PatientProfile({ isOwner , userRole}: { isOwner: boolean
                         </div>
                          
                         </>
+                        {/* Only show edit button if the user is the admin or patient */}
                         {(isOwner || userRole === 'patient' || userRole === 'admin') && (
                           <Button variant='outline-dark' onClick={() => setShowEditModal(true)}>Edit</Button>
                         )}
-                {isOwner && (
-                <>
-                <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
-                </>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className='appointments'>
-        <div className='appointments-sidebar'>
-          <h2>Appointments</h2>
-          <div className='filter-buttons'>
-            <Button variant={filter === 'today' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('today')}>Today</Button>
-            <Button variant={filter === 'thisWeek' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisWeek')}>This Week</Button>
-            <Button variant={filter === 'thisMonth' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisMonth')}>This Month</Button>
-            <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('all')}>All</Button>
-          </div>
-          <ListGroup>
-            {filteredAppointments.length === 0 ? (
-              <ListGroup.Item>No appointments available</ListGroup.Item>
-            ) : (
-              filteredAppointments.map((appointment, index) => (
-                <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}>
-                  <div>Date: {appointment.date}</div>
-                  <div>Time: {appointment.time}</div>
-                  <div>Status: {appointment.status}</div>
-                </ListGroup.Item>
-              ))
-            )}
-          </ListGroup>
-        </div>
-      </div>
-      <div className='doctor-patients-container'>
-        <div className='patient-sidebar'>
-          <MyDoctors 
-            patientId={patientId}
-            isOwner={isOwner}
-          />
-        </div>
-      </div>
-      {patient && (
-        <EditProfile
-          profile={patient}
-          onCancel={() => setShowEditModal(false)}
-          showEditModal={showEditModal}
-          isOwner={isOwner}
-        />
-      )}
-      <Modal
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-      >
-         {massage && <p className={`alert alert-${variant}`}>{massage}</p>}
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete  {patient?.full_name}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowDeleteModal(false)}
-          >
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={onDeleteClick}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal
-        show={showAppointmentDetails}
-        onHide={handleCloseAppointmentDetails}
-        
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Appointment Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedAppointment && (
-            <div>
-              {selectedAppointment.status === 'completed' && patient && (
-                <>
-                  <h4>Doctor: {doctor && doctor.full_name}</h4>
-                  <p>Patient: {patient.full_name}</p>
-                  <p>Summary: {selectedAppointment.summary}</p>
-                  <p>Written diagnosis: {selectedAppointment.written_diagnosis}</p>
-                  <p>Written Prescription: {selectedAppointment.written_prescription}</p>
-                </>
-              )}
-              {selectedAppointment.status === 'schedule' && (
-                <>
-                  <h4>Doctor: {doctor && doctor.full_name}</h4>  
-                  <p>Patient: {patient && patient.full_name}</p>
-                  <p>Information not yet provided.</p>
-                </>
-              )}
-              {selectedAppointment.status === 'open' && (
-                <p>No patient assigned to this appointment.</p>
-              )}
+                        {/* Only show delete button if the user is the admin */}
+                        {isOwner && (
+                        <>
+                        <Button variant='outline-danger' onClick={() => setShowDeleteModal(true)}>Delete</Button>
+                        </>
+                        )}
+                      </>
+                    )}
+              </div>
             </div>
+          </div>
+          <div className='appointments'>
+            <div className='appointments-sidebar'>
+              <h2>Appointments</h2>
+              <div className='filter-buttons'>
+                <Button variant={filter === 'today' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('today')}>Today</Button>
+                <Button variant={filter === 'thisWeek' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisWeek')}>This Week</Button>
+                <Button variant={filter === 'thisMonth' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('thisMonth')}>This Month</Button>
+                <Button variant={filter === 'all' ? 'primary' : 'outline-primary'} onClick={() => filterAppt('all')}>All</Button>
+              </div>
+              <ListGroup>
+                {filteredAppointments.length === 0 ? (
+                  <ListGroup.Item>No appointments available</ListGroup.Item>
+                ) : (
+                  filteredAppointments.map((appointment, index) => (
+                    <ListGroup.Item key={index} onClick={() => handleAppointmentClick(appointment)}>
+                      <div>Date: {appointment.date}</div>
+                      <div>Time: {appointment.time}</div>
+                      <div>Status: {appointment.status}</div>
+                    </ListGroup.Item>
+                  ))
+                )}
+              </ListGroup>
+            </div>
+          </div>
+          <div className='doctor-patients-container'>
+            <div className='patient-sidebar'>
+              <MyDoctors 
+                patientId={patientId}
+                isOwner={isOwner}
+              />
+            </div>
+          </div>
+          {patient && (
+            <EditProfile
+              profile={patient}
+              onCancel={() => setShowEditModal(false)}
+              showEditModal={showEditModal}
+              isOwner={isOwner}
+            />
           )}
-          {!selectedAppointment && <p>No appointment selected.</p>}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAppointmentDetails}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
-  );
-}
+          <Modal
+            show={showDeleteModal}
+            onHide={() => setShowDeleteModal(false)}
+          >
+            {massage && <p className={`alert alert-${variant}`}>{massage}</p>}
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Delete</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Are you sure you want to delete  {patient?.full_name}?
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={onDeleteClick}>
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            show={showAppointmentDetails}
+            onHide={handleCloseAppointmentDetails}
+            
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Appointment Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {selectedAppointment && (
+                <div>
+                  {selectedAppointment.status === 'completed' && patient && (
+                    <>
+                      <h4>Doctor: {doctor && doctor.full_name}</h4>
+                      <p>Patient: {patient.full_name}</p>
+                      <p>Summary: {selectedAppointment.summary}</p>
+                      <p>Written diagnosis: {selectedAppointment.written_diagnosis}</p>
+                      <p>Written Prescription: {selectedAppointment.written_prescription}</p>
+                    </>
+                  )}
+                  {selectedAppointment.status === 'schedule' && (
+                    <>
+                      <h4>Doctor: {doctor && doctor.full_name}</h4>  
+                      <p>Patient: {patient && patient.full_name}</p>
+                      <p>Information not yet provided.</p>
+                    </>
+                  )}
+                  {selectedAppointment.status === 'open' && (
+                    <p>No patient assigned to this appointment.</p>
+                  )}
+                </div>
+              )}
+              {!selectedAppointment && <p>No appointment selected.</p>}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseAppointmentDetails}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      );
+    }

@@ -21,7 +21,7 @@ import { BackendUrlProvider } from './BackendUrlContext';
 import ErrorBoundary from './ErrorBoundary';
 
 
-/*App component sets up the main structure of your React application
+/*App component sets up the main structure of  React application
  incorporating routing, user authentication, and various routes for different user roles. 
 */
 
@@ -66,6 +66,7 @@ function App() {
     return 'Guest';
   });
 
+  //Function to extract sub from JWT token
   const getSubFromToken = (token: string) => {
     try {
       const decodedToken: { sub: string } = jwtDecode(token);
@@ -76,6 +77,7 @@ function App() {
     }
   }
 
+  // Extract sub from token
   const subId = userToken ? getSubFromToken(userToken) : null;
 
   return (

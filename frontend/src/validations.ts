@@ -2,8 +2,8 @@
 
 
 /*
-These functions cover various validation checks commonly needed in form inputs, ensuring data entered meets specific criteria
-such as length, format, and uniqueness (in the case of username). 
+These functions cover various validation checks , ensuring data entered meets specific criteria
+such as length, format, and uniqueness. 
 Each function returns an error message if validation fails, or an empty string if the input is valid.
 */
 
