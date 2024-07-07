@@ -111,9 +111,15 @@ textarea {
 .history-div {
   position: relative;
   top: 150px;
+  width: 1000px;
+  left: 450px;
 }
 
-.startAppt {
+
+
+.startApptText {
   position: relative;
-  top: 200px;
+  top: 50px;
+  left: 380px;
+  width: fit-content;
 }

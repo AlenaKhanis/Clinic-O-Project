@@ -97,3 +97,8 @@
   span {
     font-weight: bold;
   }
+
+  .tab-content {
+    max-height: 800px; 
+    overflow-y: auto; 
+}

@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputGroup, FormControl } from 'react-bootstrap';
 import './css/Register.css';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface InputFieldProps {
   icon: any;
@@ -11,6 +12,8 @@ interface InputFieldProps {
   setError: (error: string) => void;
   validationFunction: (value: string) => Promise<string> | string;
   onChange: (value: string) => void; // New prop for onChange event
+  showPasswordToggle?: boolean; 
+  togglePasswordVisibility?: () => void; 
 }
 
 
@@ -20,8 +23,23 @@ Validating on blur provides immediate feedback to the user, letting them know if
 */
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ icon, placeholder, type, error, setError, validationFunction, onChange }, ref) => {
+  ({
+    icon,
+    placeholder,
+    type,
+    error,
+    setError,
+    validationFunction,
+    onChange,
+    showPasswordToggle,
+    togglePasswordVisibility,
+   }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const handleTogglePasswordVisibility = () => {
+      if (togglePasswordVisibility) {
+        togglePasswordVisibility(); // Call the toggle function passed from props
+      }
+    };
 
     /*
     useImperativeHandle allows the InputField component to control what the parent component can access
@@ -45,9 +63,9 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       <div className='formforregister'>
       <div className='icons'>
       <FontAwesomeIcon className='icon_display' icon={icon} />
+
       </div>
       <InputGroup className="mb-3">
-
         <FormControl
           type={type}
           placeholder={placeholder}
@@ -56,6 +74,14 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           onChange={handleChange}
           isInvalid={!!error}
         />
+        {showPasswordToggle && (
+          <InputGroup.Text
+            onClick={handleTogglePasswordVisibility}
+            style={{ cursor: 'pointer' }}
+          >
+            <FontAwesomeIcon icon={type === 'password' ? faEye : faEyeSlash} />
+          </InputGroup.Text>
+        )}
         <FormControl.Feedback className='error-control' type="invalid">
           {error}
         </FormControl.Feedback>

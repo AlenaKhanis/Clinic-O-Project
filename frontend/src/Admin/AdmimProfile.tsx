@@ -46,10 +46,9 @@ function AdminProfile({ subId }: { subId: string | null }) {
       ) : (
         <ListGroup className="admin-profile-list">
           {/* Display admin profile details in a list */}
-          <ListGroup.Item>ID: {admin.owner_id}</ListGroup.Item>
+          <ListGroup.Item>Username: {admin.username}</ListGroup.Item>
           <ListGroup.Item>Name: {admin.full_name}</ListGroup.Item>
           <ListGroup.Item>Email: {admin.email}</ListGroup.Item>
-          <ListGroup.Item>Role: {admin.role}</ListGroup.Item>
           <ListGroup.Item>Phone: {admin.phone}</ListGroup.Item>
           {/* Button to trigger edit profile modal */}
           <ListGroup.Item className="admin-profile-actions">

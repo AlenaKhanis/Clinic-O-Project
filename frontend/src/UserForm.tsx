@@ -235,6 +235,13 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
     if (birthdayRef.current) birthdayRef.current.value = '';
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Function to toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     
     <div className='register-form'>
@@ -308,19 +315,21 @@ const UserForm: React.FC<UserFormProps> = ({ isAdmin, initialData = {}, onSucces
           onChange={(value) => handleInputChange('email', value)}
         />
 
-        <InputField
-          icon={faLock}
-          placeholder="Password"
-          type="password"
-          error={formErrors.password}
-          setError={(error) => setFormErrors({ ...formErrors, password: error })}
-          validationFunction={validatePassword}
-          ref={passwordRef}
-          onChange={(value) => handleInputChange('password', value)}
-        />
+      <InputField
+        icon={faKey}
+        placeholder="Password"
+        type={showPassword ? 'text' : 'password'}
+        error={formErrors.password}
+        setError={(error) => setFormErrors((prevErrors) => ({ ...prevErrors, password: error }))}
+        validationFunction={validatePassword}
+        ref={passwordRef}
+        onChange={(value) => handleInputChange('password', value)}
+        showPasswordToggle={true} // Pass a prop to indicate password toggle should be shown
+        togglePasswordVisibility={togglePasswordVisibility} // Pass the toggle function
+      />
 
         <InputField
-          icon={faKey}
+          icon={faLock}
           placeholder="Confirm Password"
           type="password"
           error={formErrors.confirmPassword}

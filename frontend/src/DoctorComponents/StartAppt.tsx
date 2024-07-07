@@ -106,8 +106,8 @@ const StartAppt = () => {
         }
         const formData = {
             summary: summary,
-            diagnosis: diagnosisRef.current?.value || "",
-            prescription: prescriptionRef.current?.value || ""
+            diagnosis: diagnosisRef.current?.value || "None",
+            prescription: prescriptionRef.current?.value || "None"
         };
     
         fetch(`${BACKEND_URL}/add_summary/${appointmentIdNumber}/${patientIdNumber}`, {
@@ -145,9 +145,6 @@ const StartAppt = () => {
                 />
                 <div className="history-div">
                 <HistoryAppointments />
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                    <div className="startAppt">
                         <Button
                            className="startButton"
                             variant="outline-dark"
@@ -156,11 +153,12 @@ const StartAppt = () => {
                                 setShowForm(!showForm);
                             }}
                             disabled={appointmentEnded}
-                        >
-                             
+                        >  
                             {showForm ? "Close Appointment" : "Start Appointment"}
                         </Button>
+                        <div className="startApptText">
                         {appointmentEnded && <Alert variant="success" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>Appointment has ended.</Alert>}
+                        </div>
                     </div>
                     <Collapse in={showForm}>
                         <div className="containerSummery">
@@ -205,7 +203,6 @@ const StartAppt = () => {
                         The appointment is within the next 15 minutes from another appointment.
                     </Alert>
                 </div>
-            </div>
     );
 };
 
