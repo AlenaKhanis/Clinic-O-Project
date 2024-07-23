@@ -12,7 +12,7 @@ Clinic-O is a backend system designed to manage clinic appointments for doctors 
 To run the project locally, (with docker desktop installed) follow these steps:
 
 ```bash
-git clone https://github.com/AlenaKhanis/Clinic-O-Project
+git clone https://github.com/AlonaKhanis/Clinic-O-Project
 cd clinic-o
 cp example.env .env 
 # copy the example.env file to .env 
