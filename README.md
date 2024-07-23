@@ -56,7 +56,7 @@ To run the project locally, follow these steps:
 1. **Clone the Repository**
 
     ```sh
-    git clone https://github.com/AlenaKhanis/Clinic-O-Project
+    git clone https://github.com/AlonaKhanis/Clinic-O-Project
     cd clinic-o-project
     ```
 **Backend API Server (Flask)**
@@ -118,7 +118,7 @@ You can use Docker to run a PostgreSQL container. Make sure you have Docker inst
 1. Create and start a PostgreSQL container:
 
 ```sh
-docker run --name clinic-postgres -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+docker run --name postgres-production -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
 ```
 * --name clinic-postgres: Sets the name of the container to clinic-postgres.
 * -e POSTGRES_PASSWORD=password: Sets the password for the PostgreSQL postgres user to password. Replace password with your desired password.
